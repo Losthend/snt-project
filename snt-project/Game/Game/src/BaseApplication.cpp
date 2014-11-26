@@ -217,16 +217,9 @@ bool BaseApplication::frameRenderingQueued(const Ogre::FrameEvent& evt)
 
 bool BaseApplication::processUnbufferedInput(const Ogre::FrameEvent& evt)
 {
-	
-
-	if(mKeyboard->isKeyDown(OIS::KC_ESCAPE)) return false;
-
 	//startFrame();
 
-	//Creamos un vector tridimensional de ceros
-	
-	metodoDePrueba(mKeyboard, mSceneMgr, evt);
-	
+	if(!metodoDePrueba(mKeyboard, mSceneMgr, evt))return false;
 	
 	//endFrame();
 	//duration();

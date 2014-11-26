@@ -1,11 +1,17 @@
 #include "stdafx.h"
 #include "KeyboardMouse.h"
 
-void metodoDePrueba(OIS::Keyboard* mKeyboard, Ogre::SceneManager* mSceneMgr, const Ogre::FrameEvent& evt)
+bool metodoDePrueba(OIS::Keyboard* mKeyboard, Ogre::SceneManager* mSceneMgr, const Ogre::FrameEvent& evt)
 {
-	static Ogre::Real mMove = 125; //Constante de movimiento
 
+	if(mKeyboard->isKeyDown(OIS::KC_ESCAPE)) return false;
+	
+	//Constante de movimiento
+	static Ogre::Real mMove = 125;
+
+	//Creamos un vector tridimensional de ceros
 	Ogre::Vector3 transVector = Ogre::Vector3::ZERO;
+	
 	//Movimiento del personaje	
 	if (mKeyboard->isKeyDown(OIS::KC_W)) //Arriba
 		transVector.y += mMove;
@@ -19,6 +25,9 @@ void metodoDePrueba(OIS::Keyboard* mKeyboard, Ogre::SceneManager* mSceneMgr, con
 	if (mKeyboard->isKeyDown(OIS::KC_D)) // Derecha
 		transVector.x += mMove;
 
+	//aplicar el movimiento al nodo
 	mSceneMgr->getSceneNode("cubeNode1")->translate(transVector * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
+
+	return true;
 }
 
