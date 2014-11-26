@@ -198,6 +198,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\KeyboardMouse.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\Main.cpp"
 				>
 			</File>
@@ -249,6 +253,10 @@
 			</File>
 			<File
 				RelativePath=".\include\GameApplication.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\KeyboardMouse.h"
 				>
 			</File>
 			<File

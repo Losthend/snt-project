@@ -23,6 +23,10 @@ public:
 	//La camara
 	Ogre::Camera*			mCamera;
 	Ogre::Viewport*			mViewport;
+	//Dispositivos de entrada OIS
+	OIS::InputManager*		mInputManager;
+	OIS::Mouse*				mMouse;
+	OIS::Keyboard*			mKeyboard;
 
 private:
 
@@ -39,10 +43,7 @@ private:
 	bool processUnbufferedInput(const Ogre::FrameEvent& evt);
 
 	//VARIABLES
-	//Dispositivos de entrada OIS
-	OIS::InputManager*		mInputManager;
-	OIS::Mouse*				mMouse;
-	OIS::Keyboard*			mKeyboard;
+	
 	//Origen de recursos y plugins, necesario debido al SDK
 	Ogre::String			mResourcesCfg;
 	Ogre::String			mPluginsCfg;
