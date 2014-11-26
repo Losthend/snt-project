@@ -1,0 +1,27 @@
+//TUTORIALES DE LA PAGINA DE OGRE EN ESPAÑOL
+//http://ogrees.wikispaces.com/Tutoriales+Basicos
+//PROYECCION ORTOGONAL (frustum, con heigth y width)
+//http://ogre3d.org/forums/viewtopic.php?f=2&t=55105
+//Como mostrar un fondo 2D en el mundo
+//http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Displaying+2D+Backgrounds
+//Carga de recursos
+//http://ogrees.wikispaces.com/Carga+Manual+de+Recursos
+//Metodos de colisiones
+//http://siondream.com/blog/games/colisiones-iv-tests-de-colision/
+//http://siondream.com/blog/games/colisiones-i-introduccion-requisitos-y-alternativas/
+//Este enlace puede resultar bastante util
+//http://www.genbetadev.com/programacion-de-videojuegos/teoria-de-colisiones-2d-conceptos-basicos
+//http://www.genbetadev.com/programacion-de-videojuegos/teoria-de-colisiones-2d-quadtree
+//CODIGO para colision en esferas
+//http://devmag.org.za/2009/04/13/basic-collision-detection-in-2d-part-1/
+//http://www.bukisa.com/articles/218690_making-a-3d-game-with-ogre-collision-detection
+//Usar AABB para Ogre?
+//http://yosoygames.com.ar/wp/2013/07/good-bye-axisalignedbox-hello-aabb/
+//ALGORITMOS BASICOS de colisiones explicados en C++
+//http://black-byte.com/tutorial/algoritmos-basicos-de-colisiones-para-videojuegos/
+//https://www.packtpub.com/books/content/materials-ogre-3d
+---------------------------------------------------
+//como ver si un objeto esta en el fustrum
+http://ogre3d.org/forums/viewtopic.php?f=2&t=29718
+//como ver si un objeto esta en el fustrum segunda version
+http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Frustum+Culling+In+Object+Space
