@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "ManualObjects.h"
 
-//https://www.packtpub.com/books/content/materials-ogre-3d
+
 
 //---------------------------------------------------------------------
 //--Genera un ManualObject denominado "ManualObjectCube" que puede
