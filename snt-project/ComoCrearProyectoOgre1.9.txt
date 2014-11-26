@@ -1,0 +1,47 @@
+Como crear un proyecto OGRE3D en visual Studio 2008 con la version 1.9:
+
+Primero
+	Seguir los pasos del siguiente tutorial:
+
+	http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Setting+Up+An+Application+-+Visual+Studio&tikiversion=Visual+Studio+2008+-+VC9
+
+Segundo
+	Realizar solo las configuraciones que pone para la version 1.9:
+
+	http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Setting+Up+An+Application+-+Visual+Studio
+
+Tercero
+	Los archivos resources_d y resources que anteriormente guardamos 
+	en la carpeta bin/debug y bin/release, respectivamente, tendran 
+	lineas con el siguiente aspecto:
+
+		Zip=../Media/packs/SdkTrays.zip
+
+	Hay que cambiarlas TODAS por algo asi:
+
+		Zip=C:\Ogre\OgreSDK_vc9_v1-9-0\Media\packs\SdkTrays.zip
+
+	Donde "C:\Ogre\OgreSDK_vc9_v1-9-0" es la ruta al SDK del 1.9.
+
+	Despues, añadir en ambos archivos esta otra linea despues de
+	la parte que pone [POPULAR]:
+
+	
+		FileSystem=C:\Ogre\OgreSDK_vc9_v1-9-0\media\materials\programs\GLSL
+
+Cuarto
+	Ejecutar el codigo de prueba proporcionado en el primer tutorial.
+	Con esto debería funcionar.
+	Se recomienda el uso de headers precompilados.
+
+	http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Precompiled+headers
+
+	Si al compilarlo da un error estilo:
+
+		error C3859: virtual memory range for PCH exceeded..... 
+		error C1076: compiler limit.....
+	
+	Entrar en las propiedades del proyecto, modo "All configurations".
+	Configuration properties --> C/C++ --> Command Line
+	En "Additional Options" escribir " /Zm130 " o lo asi, segun el error.
+
