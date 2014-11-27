@@ -194,6 +194,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\FuncionesGenerales.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\GameApplication.cpp"
 				>
 			</File>
@@ -249,6 +253,10 @@
 			</File>
 			<File
 				RelativePath=".\include\FixedFrameRate.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\FuncionesGenerales.h"
 				>
 			</File>
 			<File

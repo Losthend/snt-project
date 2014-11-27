@@ -2,6 +2,7 @@
 #include "BaseApplication.h"
 #include "FixedFrameRate.h"
 #include "KeyboardMouse.h"
+#include "FuncionesGenerales.h"
 
 //------------------------------------------------------------------
 //Constructor
@@ -218,7 +219,8 @@ bool BaseApplication::frameRenderingQueued(const Ogre::FrameEvent& evt)
 bool BaseApplication::processUnbufferedInput(const Ogre::FrameEvent& evt)
 {
 	//startFrame();
-
+	
+	bool saltar = false;
 	if(!metodoDePrueba(mKeyboard, mSceneMgr, evt))return false;
 	
 	//endFrame();
