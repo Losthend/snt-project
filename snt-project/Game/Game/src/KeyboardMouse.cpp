@@ -13,7 +13,7 @@ bool metodoDePrueba(OIS::Keyboard* mKeyboard, Ogre::SceneManager* mSceneMgr, con
 	//Constante de movimiento
 	static Ogre::Real mMoveX = 125;
 	static Ogre::Real mMoveY = 500;
-	float mGravedad = -2000;
+	float mGravedad = -20000;
 	Ogre::Real mActualY = 0, mActualX = 0, mActualZ = 0;
 
 	//Creamos un vector tridimensional de ceros
@@ -56,6 +56,7 @@ bool metodoDePrueba(OIS::Keyboard* mKeyboard, Ogre::SceneManager* mSceneMgr, con
 
 	if(saltar){
 		imprimir(1);
+		//se esta sobreescribiendo la variable v. Usar otro vector podria arreglarlo.
 		if(v[1] >= -100){	
 			v = mSceneMgr->getSceneNode("cubeNode1")->getPosition();
 			mMoveY = mMoveY + (mGravedad * evt.timeSinceLastFrame);		
