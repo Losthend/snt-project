@@ -43,6 +43,8 @@ void GameApplication::createScene(void)
 	//Personaje
 	CCube* cube1 = new CCube();
 	cube1->createCube(mSceneMgr, "1");
+	//Ogre::SceneNode* nodeCube1 = cube1->getAssociatedNode();
+	//nodeCube1->attachObject(app.mCamera);
 
 	//Suelo
 	CCube* cube2 = new CCube();

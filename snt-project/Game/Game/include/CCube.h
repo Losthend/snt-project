@@ -37,6 +37,7 @@ public:
 	void setPosition(double x, double y, double z);
 	void setScale(double x, double y, double z);
 	void setRotation(double x, double y, double z);
+	Ogre::SceneNode* getAssociatedNode(void);
 
 private:
 

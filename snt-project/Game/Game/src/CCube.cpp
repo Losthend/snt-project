@@ -90,3 +90,8 @@ void CCube::setRotation(double x, double y, double z)
 		cubeNode->rotate(Ogre::Vector3::UNIT_Z,Ogre::Degree(m_roll));
 	}
 }
+
+Ogre::SceneNode* CCube::getAssociatedNode(void)
+{
+	return cubeNode;
+}

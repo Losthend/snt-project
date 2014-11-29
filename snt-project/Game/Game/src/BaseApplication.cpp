@@ -3,6 +3,7 @@
 #include "FixedFrameRate.h"
 #include "KeyboardMouse.h"
 #include "FuncionesGenerales.h"
+#include "Collision.h"
 
 //------------------------------------------------------------------
 //Constructor
@@ -223,6 +224,10 @@ bool BaseApplication::processUnbufferedInput(const Ogre::FrameEvent& evt)
 	bool saltar = false;
 	if(!metodoDePrueba(mKeyboard, mSceneMgr, evt))return false;
 	
+
+	//Objetos dentro del frustum rotan al pulsar F2
+	if(mKeyboard->isKeyDown(OIS::KC_F2)) inCameraFrustumObjects(mCamera, mSceneMgr);
+
 	//endFrame();
 	//duration();
 
