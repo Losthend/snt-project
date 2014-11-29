@@ -50,7 +50,7 @@ void GameApplication::createScene(void)
 	CCube* cube2 = new CCube();
 	cube2->createCube(mSceneMgr, "2");
 	cube2->setScale(14, 1.0, 1.0);
-	cube2->setPosition(0.0, -120.0, 0.0);
+	cube2->setPosition(0.0, -125.0, 0.0);
 
 	//Pared izquierda
 	CCube* cube3 = new CCube();
@@ -68,7 +68,7 @@ void GameApplication::createScene(void)
 	CCube* cube5 = new CCube();
 	cube5->createCube(mSceneMgr, "5");
 	cube5->setScale(14.0, 1.0, 1.0);
-	cube5->setPosition(0.0, 120.0, 0.0);
+	cube5->setPosition(0.0, 125.0, 0.0);
 
 	//Luz ambiente y fondo
 	mSceneMgr->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));

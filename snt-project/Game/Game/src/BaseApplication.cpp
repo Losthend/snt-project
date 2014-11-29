@@ -224,9 +224,12 @@ bool BaseApplication::processUnbufferedInput(const Ogre::FrameEvent& evt)
 	bool saltar = false;
 	if(!metodoDePrueba(mKeyboard, mSceneMgr, evt))return false;
 	
-
 	//Objetos dentro del frustum rotan al pulsar F2
-	if(mKeyboard->isKeyDown(OIS::KC_F2)) inCameraFrustumObjects(mCamera, mSceneMgr);
+	if(mKeyboard->isKeyDown(OIS::KC_F2)) 
+	{		
+		std::vector<Ogre::SceneNode*> sceneNodes = inCameraFrustumObjects(mCamera, mSceneMgr);
+		collisionManager(sceneNodes);
+	}
 
 	//endFrame();
 	//duration();
