@@ -3,7 +3,8 @@
 #include "FuncionesGenerales.h"
 
 bool saltar = false;
-Ogre::Vector3 v;
+Ogre::Vector3 v, v2;
+Ogre::Real mActualY = 0, mActualX = 0, mActualZ = 0;
 
 bool metodoDePrueba(OIS::Keyboard* mKeyboard, Ogre::SceneManager* mSceneMgr, const Ogre::FrameEvent& evt)
 {
@@ -14,7 +15,7 @@ bool metodoDePrueba(OIS::Keyboard* mKeyboard, Ogre::SceneManager* mSceneMgr, con
 	static Ogre::Real mMoveX = 125;
 	static Ogre::Real mMoveY = 500;
 	float mGravedad = -20000;
-	Ogre::Real mActualY = 0, mActualX = 0, mActualZ = 0;
+	
 
 	//Creamos un vector tridimensional de ceros
 	Ogre::Vector3 transVector = Ogre::Vector3::ZERO;
@@ -55,15 +56,26 @@ bool metodoDePrueba(OIS::Keyboard* mKeyboard, Ogre::SceneManager* mSceneMgr, con
 	}
 
 	if(saltar){
-		imprimir(1);
+		/*imprimir("x");
+		imprimir(mActualX);
+		imprimir("y");
+		imprimir(mActualY);
+		imprimir("z");
+		imprimir(mActualZ);*/
+		v2 = mSceneMgr->getSceneNode("cubeNode1")->getPosition();
+		//v2 = v;
+		imprimir(v2[1]);
+		mMoveY = mMoveY + (mGravedad * evt.timeSinceLastFrame);	
+		mSceneMgr->getSceneNode("cubeNode1")->translate(Ogre::Vector3(mActualX, mMoveY*evt.timeSinceLastFrame, mActualZ) * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
 		//se esta sobreescribiendo la variable v. Usar otro vector podria arreglarlo.
-		if(v[1] >= -100){	
-			v = mSceneMgr->getSceneNode("cubeNode1")->getPosition();
+		/*if(v2[1] >= 0){	
+			v2 = mSceneMgr->getSceneNode("cubeNode1")->getPosition();
 			mMoveY = mMoveY + (mGravedad * evt.timeSinceLastFrame);		
 			mSceneMgr->getSceneNode("cubeNode1")->translate(Ogre::Vector3(mActualX, mMoveY*evt.timeSinceLastFrame, mActualZ) * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
 			//transVector.y += mMoveY * evt.timeSinceLastFrame;
 		}
-		else{
+		else*/if(v2[1]<-120){
+			imprimir("fin de salto");
 			mSceneMgr->getSceneNode("cubeNode1")->translate(Ogre::Vector3(mActualX, 0, mActualZ) * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
 			saltar = false;
 			mMoveY = 500;

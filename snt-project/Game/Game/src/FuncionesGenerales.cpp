@@ -9,3 +9,16 @@ void imprimir(int mValue)
 		OutputDebugString("\n");
 	
 }
+
+void imprimir(int* mValue)
+{
+	OutputDebugString(Ogre::StringConverter::toString(mValue).c_str());
+		OutputDebugString("\n");
+	
+}
+void imprimir(Ogre::String mValue)
+{
+	OutputDebugString(mValue.c_str());
+		OutputDebugString("\n");
+	
+}
