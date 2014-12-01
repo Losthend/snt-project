@@ -225,7 +225,7 @@ bool BaseApplication::processUnbufferedInput(const Ogre::FrameEvent& evt)
 	Ogre::SceneNode* mNodePj = mSceneMgr->getSceneNode("cubeNode1");
 
 	bool saltar = false;
-	Ogre::SceneNode* mNodePJ= mSceneMgr->getSceneNode("cubeNode1")
+	Ogre::SceneNode* mNodePJ= mSceneMgr->getSceneNode("cubeNode1");
 	if(!metodoDePrueba(mKeyboard, mNodePJ, evt))return false;
 	
 	//Objetos dentro del frustum rotan al pulsar F2

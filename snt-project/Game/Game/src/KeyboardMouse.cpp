@@ -47,25 +47,23 @@ bool metodoDePrueba(OIS::Keyboard* mKeyboard, Ogre::SceneNode* mNodePJ, const Og
 
 	//espacio	
 	if (mKeyboard->isKeyDown(OIS::KC_SPACE)){
-		saltar = true;	
-		Ogre::Vector3 vPruebas = mSceneMgr->getSceneNode("cubeNode1")->getPosition();
-		imprimir(vPruebas[0]);
+		saltar = true;
 	}
 
 	if(saltar){
-		v = mSceneMgr->getSceneNode("cubeNode1")->getPosition();
+		v = mNodePJ->getPosition();
 		//imprimir(v[0]);
 		//esto está en -120 para poner los límites a mano. En realidad habrá que comprobar si colisiona o no...
 		//Tener en cuenta que al multiplicar por el evt siempre tambien modificamos los valores de 'x' y de 'z' si no valen exactamente 0
 		//Segun mis cuentas el valor del evt es aproximadamente (1/100)
 		if(v[1]>-120){
 			mMoveY = mMoveY + (mGravedad /* * evt.timeSinceLastFrame*/);
-			mSceneMgr->getSceneNode("cubeNode1")->translate(Ogre::Vector3(v[0], mMoveY, v[2]) * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
+			mNodePJ->translate(Ogre::Vector3(v[0], mMoveY, v[2]) * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
 		}
 		else{
 			saltar = false;
 			mMoveY = 125;
-			mSceneMgr->getSceneNode("cubeNode1")->translate(Ogre::Vector3(v[0], -120, v[2]) * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
+			mNodePJ->translate(Ogre::Vector3(v[0], -120, v[2]) * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
 		}
 	}
 
