@@ -3,8 +3,10 @@
 #include "FuncionesGenerales.h"
 
 bool saltar = false;
-Ogre::Vector3 v, v2;
-Ogre::Real mActualY = 0, mActualX = 0, mActualZ = 0;
+Ogre::Vector3 v;
+static Ogre::Real mMoveX = 125;
+static Ogre::Real mMoveY = 125;
+float mGravedad = -.98;
 
 bool metodoDePrueba(OIS::Keyboard* mKeyboard, Ogre::SceneNode* mNodePJ, const Ogre::FrameEvent& evt)
 {
@@ -12,9 +14,7 @@ bool metodoDePrueba(OIS::Keyboard* mKeyboard, Ogre::SceneNode* mNodePJ, const Og
 	if(mKeyboard->isKeyDown(OIS::KC_ESCAPE)) return false;
 	
 	//Constante de movimiento
-	static Ogre::Real mMoveX = 125;
-	static Ogre::Real mMoveY = 500;
-	float mGravedad = -20000;
+	
 	
 
 	//Creamos un vector tridimensional de ceros
@@ -45,40 +45,27 @@ bool metodoDePrueba(OIS::Keyboard* mKeyboard, Ogre::SceneNode* mNodePJ, const Og
 		mNodePJ->translate(transVector * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
 	}
 
-	//espacio
-	
+	//espacio	
 	if (mKeyboard->isKeyDown(OIS::KC_SPACE)){
-		v = mSceneMgr->getSceneNode("cubeNode1")->getPosition();
-		mActualX = v[0];
-		mActualY = v[1];
-		mActualZ = v[2];
 		saltar = true;	
+		Ogre::Vector3 vPruebas = mSceneMgr->getSceneNode("cubeNode1")->getPosition();
+		imprimir(vPruebas[0]);
 	}
 
 	if(saltar){
-		/*imprimir("x");
-		imprimir(mActualX);
-		imprimir("y");
-		imprimir(mActualY);
-		imprimir("z");
-		imprimir(mActualZ);*/
-		v2 = mSceneMgr->getSceneNode("cubeNode1")->getPosition();
-		//v2 = v;
-		imprimir(v2[1]);
-		mMoveY = mMoveY + (mGravedad * evt.timeSinceLastFrame);	
-		mSceneMgr->getSceneNode("cubeNode1")->translate(Ogre::Vector3(mActualX, mMoveY*evt.timeSinceLastFrame, mActualZ) * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
-		//se esta sobreescribiendo la variable v. Usar otro vector podria arreglarlo.
-		/*if(v2[1] >= 0){	
-			v2 = mSceneMgr->getSceneNode("cubeNode1")->getPosition();
-			mMoveY = mMoveY + (mGravedad * evt.timeSinceLastFrame);		
-			mSceneMgr->getSceneNode("cubeNode1")->translate(Ogre::Vector3(mActualX, mMoveY*evt.timeSinceLastFrame, mActualZ) * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
-			//transVector.y += mMoveY * evt.timeSinceLastFrame;
+		v = mSceneMgr->getSceneNode("cubeNode1")->getPosition();
+		//imprimir(v[0]);
+		//esto está en -120 para poner los límites a mano. En realidad habrá que comprobar si colisiona o no...
+		//Tener en cuenta que al multiplicar por el evt siempre tambien modificamos los valores de 'x' y de 'z' si no valen exactamente 0
+		//Segun mis cuentas el valor del evt es aproximadamente (1/100)
+		if(v[1]>-120){
+			mMoveY = mMoveY + (mGravedad /* * evt.timeSinceLastFrame*/);
+			mSceneMgr->getSceneNode("cubeNode1")->translate(Ogre::Vector3(v[0], mMoveY, v[2]) * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
 		}
-		else*/if(v2[1]<-120){
-			imprimir("fin de salto");
-			mSceneMgr->getSceneNode("cubeNode1")->translate(Ogre::Vector3(mActualX, 0, mActualZ) * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
+		else{
 			saltar = false;
-			mMoveY = 500;
+			mMoveY = 125;
+			mSceneMgr->getSceneNode("cubeNode1")->translate(Ogre::Vector3(v[0], -120, v[2]) * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
 		}
 	}
 
