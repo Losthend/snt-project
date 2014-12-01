@@ -221,6 +221,9 @@ bool BaseApplication::processUnbufferedInput(const Ogre::FrameEvent& evt)
 {
 	//startFrame();
 	
+	//Obtenemos el personaje
+	Ogre::SceneNode* mNodePj = mSceneMgr->getSceneNode("cubeNode1");
+
 	bool saltar = false;
 	if(!metodoDePrueba(mKeyboard, mSceneMgr, evt))return false;
 	
@@ -228,7 +231,7 @@ bool BaseApplication::processUnbufferedInput(const Ogre::FrameEvent& evt)
 	if(mKeyboard->isKeyDown(OIS::KC_F2)) 
 	{		
 		std::vector<Ogre::SceneNode*> sceneNodes = inCameraFrustumObjects(mCamera, mSceneMgr);
-		collisionManager(sceneNodes);
+		individualCollisionManager(sceneNodes, mNodePj);
 	}
 
 	//endFrame();

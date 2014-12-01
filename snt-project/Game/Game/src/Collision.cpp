@@ -50,13 +50,10 @@ std::vector<Ogre::SceneNode*> inCameraFrustumObjects(Ogre::Camera* mCamera, Ogre
 }
 
 //----------------------------------------------------------------------
-//Comprueba las colisiones entre los nodos del frustum y actua en consecuencia
+//Comprueba las colisiones entre todos los nodos del frustum y actua en consecuencia
 //----------------------------------------------------------------------
-void collisionManager(std::vector<Ogre::SceneNode*> sceneNodes)
+void allCollisionManager(std::vector<Ogre::SceneNode*> sceneNodes)
 {
-	//Obtenemos un iterador sobre el vector principal de sceneNodes
-	//std::vector<Ogre::SceneNode*>::iterator iter1 = sceneNodes.begin();
-
 	//Tamaño del vector
 	std::vector<int>::size_type sz = sceneNodes.size();
 
@@ -86,6 +83,38 @@ void collisionManager(std::vector<Ogre::SceneNode*> sceneNodes)
 	}
 }
 
+//----------------------------------------------------------------------
+//Deteccion de colisiones AABB entre un nodo dado y aquellos que lo rodean dentro del frustum
+//----------------------------------------------------------------------
+void individualCollisionManager(std::vector<Ogre::SceneNode*> sceneNodes, Ogre::SceneNode* node1)
+{
+	//Variables
+	Ogre::String node1Name = node1->getName();
+	Ogre::SceneNode* node2;
+	bool collision;
+
+	//Tamaño del vector
+	std::vector<int>::size_type sz = sceneNodes.size();
+
+	for (unsigned x=0; x<sz; x++)
+	{
+		node2 = sceneNodes[x];
+		Ogre::String node2Name = node2->getName();
+		//Evitamos que detecte la colision consigo mismo
+		if (node1Name != node2Name)
+		{
+			collision = AABBcollisionDetection(node1, node2);
+			//En el caso de detectar colision entre ambos nodos
+			if (collision)
+			{
+				//Muestra en el log de debug los nodos detectados
+				Ogre::String colisiones = node1->getName() + " - COLISIONA - " + node2->getName();
+				OutputDebugString(colisiones.c_str());
+				OutputDebugString("\n");
+			}
+		}
+	}
+}
 
 //----------------------------------------------------------------------
 //Deteccion de colisiones AABB entre dos nodos
