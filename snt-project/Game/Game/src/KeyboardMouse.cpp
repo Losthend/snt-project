@@ -6,7 +6,7 @@ bool saltar = false;
 Ogre::Vector3 v, v2;
 Ogre::Real mActualY = 0, mActualX = 0, mActualZ = 0;
 
-bool metodoDePrueba(OIS::Keyboard* mKeyboard, Ogre::SceneManager* mSceneMgr, const Ogre::FrameEvent& evt)
+bool metodoDePrueba(OIS::Keyboard* mKeyboard, Ogre::SceneNode* mNodePJ, const Ogre::FrameEvent& evt)
 {
 
 	if(mKeyboard->isKeyDown(OIS::KC_ESCAPE)) return false;
@@ -24,25 +24,25 @@ bool metodoDePrueba(OIS::Keyboard* mKeyboard, Ogre::SceneManager* mSceneMgr, con
 	//Arriba
 	if (mKeyboard->isKeyDown(OIS::KC_W)){
 		transVector.y += mMoveY;
-		mSceneMgr->getSceneNode("cubeNode1")->translate(transVector * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
+		mNodePJ->translate(transVector * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
 	}
 
 	// Abajo
 	if (mKeyboard->isKeyDown(OIS::KC_S)){
 		transVector.y -= mMoveY;
-		mSceneMgr->getSceneNode("cubeNode1")->translate(transVector * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
+		mNodePJ->translate(transVector * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
 	}
 
 	// izquierda
 	if (mKeyboard->isKeyDown(OIS::KC_A)){
 		transVector.x -= mMoveX;
-		mSceneMgr->getSceneNode("cubeNode1")->translate(transVector * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
+		mNodePJ->translate(transVector * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
 	}
 
 	// Derecha
 	if (mKeyboard->isKeyDown(OIS::KC_D)){
 		transVector.x += mMoveX;
-		mSceneMgr->getSceneNode("cubeNode1")->translate(transVector * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
+		mNodePJ->translate(transVector * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
 	}
 
 	//espacio
