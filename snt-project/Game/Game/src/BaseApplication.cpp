@@ -222,17 +222,15 @@ bool BaseApplication::processUnbufferedInput(const Ogre::FrameEvent& evt)
 	//startFrame();
 	
 	//Obtenemos el personaje
-	Ogre::SceneNode* mNodePj = mSceneMgr->getSceneNode("cubeNode1");
+	Ogre::SceneNode* mNodePJ = mSceneMgr->getSceneNode("cubeNode1");
+	std::vector<Ogre::SceneNode*> sceneNodes = inCameraFrustumObjects(mCamera, mSceneMgr);
 
-	bool saltar = false;
-	Ogre::SceneNode* mNodePJ= mSceneMgr->getSceneNode("cubeNode1");
-	if(!metodoDePrueba(mKeyboard, mNodePJ, evt))return false;
-	
+	if(!metodoDePrueba(mKeyboard, mNodePJ, evt, sceneNodes))return false;	
 	//Objetos dentro del frustum rotan al pulsar F2
 	if(mKeyboard->isKeyDown(OIS::KC_F2)) 
 	{		
 		std::vector<Ogre::SceneNode*> sceneNodes = inCameraFrustumObjects(mCamera, mSceneMgr);
-		individualCollisionManager(sceneNodes, mNodePj);
+		individualCollisionManager(sceneNodes, mNodePJ);
 	}
 
 	//endFrame();

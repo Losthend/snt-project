@@ -86,7 +86,7 @@ void allCollisionManager(std::vector<Ogre::SceneNode*> sceneNodes)
 //----------------------------------------------------------------------
 //Deteccion de colisiones AABB entre un nodo dado y aquellos que lo rodean dentro del frustum
 //----------------------------------------------------------------------
-void individualCollisionManager(std::vector<Ogre::SceneNode*> sceneNodes, Ogre::SceneNode* node1)
+bool individualCollisionManager(std::vector<Ogre::SceneNode*> sceneNodes, Ogre::SceneNode* node1)
 {
 	//Variables
 	Ogre::String node1Name = node1->getName();
@@ -107,6 +107,7 @@ void individualCollisionManager(std::vector<Ogre::SceneNode*> sceneNodes, Ogre::
 			//En el caso de detectar colision entre ambos nodos
 			if (collision)
 			{
+				return collision;
 				//Muestra en el log de debug los nodos detectados
 				Ogre::String colisiones = node1->getName() + " - COLISIONA - " + node2->getName();
 				OutputDebugString(colisiones.c_str());
