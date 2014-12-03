@@ -36,6 +36,13 @@ void GameApplication::createScene(void)
 {
 	Ogre::SceneManager* mSceneMgr = app.mSceneMgr;
 
+	/*Ogre::Entity* mEntidadPrubas = mSceneMgr->createEntity("escenrioPruebas","bugSPARK.mesh");
+	Ogre::SceneNode* nodoEscenario = mSceneMgr->getRootSceneNode()->createChildSceneNode("nodoEscenrioPruebas");
+	nodoEscenario->attachObject(mEntidadPrubas);
+	nodoEscenario->yaw(Ogre::Radian(150));
+	nodoEscenario->setPosition(Ogre::Vector3(0.0, -80.0, 0.0));
+	nodoEscenario->scale(Ogre::Vector3(10, 10, 10));*/
+	
 	//Generar los Manual Objects
 	//Llegado el momento, pasar a BaseApplication
 	simpleCube(mSceneMgr);
