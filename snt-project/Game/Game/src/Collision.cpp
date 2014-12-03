@@ -109,12 +109,13 @@ bool individualCollisionManager(std::vector<Ogre::SceneNode*> sceneNodes, Ogre::
 			{
 				return collision;
 				//Muestra en el log de debug los nodos detectados
-				Ogre::String colisiones = node1->getName() + " - COLISIONA - " + node2->getName();
-				OutputDebugString(colisiones.c_str());
-				OutputDebugString("\n");
+				//Ogre::String colisiones = node1->getName() + " - COLISIONA - " + node2->getName();
+				//OutputDebugString(colisiones.c_str());
+				//OutputDebugString("\n");
 			}
 		}
 	}
+	return collision;
 }
 
 //----------------------------------------------------------------------

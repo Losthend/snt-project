@@ -14,17 +14,17 @@ class CCube
 	//Velocidad de movimiento del objeto
 	Ogre::Real m_Move;
 	//Posicion
-	double m_posX;
-	double m_posY;
-	double m_posZ;
+	Ogre::Real m_posX;
+	Ogre::Real m_posY;
+	Ogre::Real m_posZ;
 	//Escalado
-	double m_scaleX;
-	double m_scaleY;
-	double m_scaleZ;
+	Ogre::Real m_scaleX;
+	Ogre::Real m_scaleY;
+	Ogre::Real m_scaleZ;
 	//Rotacion
-	double m_yaw;
-	double m_pitch;
-	double m_roll;
+	Ogre::Real m_yaw;
+	Ogre::Real m_pitch;
+	Ogre::Real m_roll;
 
 //Aqui se establecen las declaraciones de metodos y variables
 public:
@@ -34,9 +34,9 @@ public:
 
 	//METODOS publicos
 	void createCube(Ogre::SceneManager* mSceneMgr, std::string id);
-	void setPosition(double x, double y, double z);
-	void setScale(double x, double y, double z);
-	void setRotation(double x, double y, double z);
+	void setPosition(Ogre::Real x, Ogre::Real y, Ogre::Real z);
+	void setScale(Ogre::Real x, Ogre::Real y, Ogre::Real z);
+	void setRotation(Ogre::Real x, Ogre::Real y, Ogre::Real z);
 	Ogre::SceneNode* getAssociatedNode(void);
 
 private:

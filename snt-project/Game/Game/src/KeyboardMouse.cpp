@@ -6,9 +6,9 @@
 
 bool saltar = false;
 Ogre::Vector3 v;
-static Ogre::Real mMoveX = 125;
-double mMoveY = 125;
-double mGravedad = -.98;
+Ogre::Real mMoveX = 125;
+Ogre::Real mMoveY = 125;
+Ogre::Real mGravedad = -0.98;
 
 bool metodoDePrueba(OIS::Keyboard* mKeyboard, Ogre::SceneNode* mNodePJ, const Ogre::FrameEvent& evt, std::vector<Ogre::SceneNode*> sceneNodes)
 {

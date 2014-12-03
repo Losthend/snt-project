@@ -49,7 +49,7 @@ void CCube::createCube(Ogre::SceneManager* mSceneMgr, std::string id)
 //---------------------------------------------------------------------------
 //--Posicionamiento
 //---------------------------------------------------------------------------
-void CCube::setPosition(double x, double y, double z)
+void CCube::setPosition(Ogre::Real x, Ogre::Real y, Ogre::Real z)
 {
 	m_posX = x;
 	m_posY = y;
@@ -60,7 +60,7 @@ void CCube::setPosition(double x, double y, double z)
 //---------------------------------------------------------------------------
 //--Escalado
 //---------------------------------------------------------------------------
-void CCube::setScale(double x, double y, double z)
+void CCube::setScale(Ogre::Real x, Ogre::Real y, Ogre::Real z)
 {
 	m_scaleX = x;
 	m_scaleY = y;
@@ -71,7 +71,7 @@ void CCube::setScale(double x, double y, double z)
 //---------------------------------------------------------------------------
 //--Rotacion
 //---------------------------------------------------------------------------
-void CCube::setRotation(double x, double y, double z)
+void CCube::setRotation(Ogre::Real x, Ogre::Real y, Ogre::Real z)
 {
 	m_pitch = x;
 	m_yaw = y;

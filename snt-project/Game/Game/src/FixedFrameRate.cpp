@@ -23,7 +23,7 @@ LARGE_INTEGER freq;
 LARGE_INTEGER start;
 LARGE_INTEGER end;
 LARGE_INTEGER delta;
-float m_frameDuration;
+double m_frameDuration;
 float deltaSeconds;
 
 //Obtiene la frecuencia e inicia el contador
@@ -54,7 +54,7 @@ void duration()
 	//Solo aplicamos el cambio cuando la duracion del frame ha sido menor a los fps estipulados
 	if (m_frameDuration-deltaSeconds > 0)
 	{
-		Sleep((m_frameDuration-deltaSeconds)*1000);
+		Sleep((DWORD)(m_frameDuration-deltaSeconds)*1000);
 	}
 }
 
