@@ -1,11 +1,10 @@
 #include "stdafx.h"
 #include "Collision.h"
-#include <OgreSceneQuery.h>
 
 //----------------------------------------------------------------------
 //Comprobacion de los objetos que actualmente estan en el frustum
 //----------------------------------------------------------------------
-std::vector<Ogre::SceneNode*> inCameraFrustumObjects(Ogre::Camera* mCamera, Ogre::SceneManager* mSceneMgr)
+std::vector<Ogre::SceneNode*> inCameraFrustumObjects(void)
 {
 	//Objetos necesarios
 	Ogre::PlaneBoundedVolumeList volList;
@@ -15,13 +14,13 @@ std::vector<Ogre::SceneNode*> inCameraFrustumObjects(Ogre::Camera* mCamera, Ogre
 	Ogre::SceneQueryResultMovableList::iterator iter;
 
 	//Obtenemos un objeto que engloba aquello que este contenido en el frustum actual
-	vol = mCamera->getCameraToViewportBoxVolume(1, 1, 0, 0, true);
+	vol = gCamera->getCameraToViewportBoxVolume(1, 1, 0, 0, true);
 
 	//Obtenemos la lista de objetos
 	volList.push_back(vol);
 	 
 	//Creamos la query para consultas dentro de un volumen plano acotado
-	mVolQuery = mSceneMgr->createPlaneBoundedVolumeQuery(Ogre::PlaneBoundedVolumeList());
+	mVolQuery = gSceneMgr->createPlaneBoundedVolumeQuery(Ogre::PlaneBoundedVolumeList());
 
 	//Adaptamos la query al volumen de objetos
 	mVolQuery->setVolumes(volList);

@@ -1,16 +1,14 @@
 #include "stdafx.h"
 #include "ManualObjects.h"
 
-
-
 //---------------------------------------------------------------------
 //--Genera un ManualObject denominado "ManualObjectCube" que puede
 //--ser utilizado como "mesh" al crear una nueva entidad.
 //---------------------------------------------------------------------
-void simpleCube(Ogre::SceneManager* mSceneMgr)
+void simpleCube()
 {
 	//Se declara el objeto
-	Ogre::ManualObject* lManualObject = mSceneMgr->createManualObject("ManualObjectCube");	
+	Ogre::ManualObject* lManualObject = gSceneMgr->createManualObject("ManualObjectCube");	
 	//Se le asigna el material/textura que se desea utilizar, declarado en:
 	//C:\Ogre\OgreSDK_vc9_v1-9-0\media\materials\scripts\MaterialDePrueba.material
 	lManualObject->begin("MyMaterial1", Ogre::RenderOperation::OT_TRIANGLE_LIST);

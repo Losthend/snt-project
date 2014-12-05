@@ -27,18 +27,18 @@ CCube::~CCube(void)
 }
 
 //---------------------------------------------------------------------------
-void CCube::createCube(Ogre::SceneManager* mSceneMgr, std::string id)
+void CCube::createCube(std::string id)
 {
 	//Identificadores
 	std::string cubeName = "cube" + id;
 	std::string cubeNodeName = "cubeNode" + id;
-
+	
 	//Creacion (entidad y nodo)
 	//-----------Cubo creado de forma automatica---------------
 	//Ogre::Entity* cube = mSceneMgr->createEntity(cubeName, "cube.mesh");
 	//-----------Cubo creado de forma manual-------------------
-	Ogre::Entity* cube = mSceneMgr->createEntity(cubeName, "ManualObjectCube");
-	cubeNode = mSceneMgr->getRootSceneNode()->createChildSceneNode(cubeNodeName);
+	Ogre::Entity* cube = gSceneMgr->createEntity(cubeName, "ManualObjectCube");
+	cubeNode = gSceneMgr->getRootSceneNode()->createChildSceneNode(cubeNodeName);
 	cubeNode->attachObject(cube);
 
 	//Posicionamiento y escalado (por defecto)

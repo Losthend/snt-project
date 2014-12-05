@@ -1,4 +1,7 @@
 #include "stdafx.h"
+#include "Global.h"
 
+#include "FuncionesGenerales.h"
+#include "Collision.h"
 
-bool metodoDePrueba(OIS::Keyboard* mKeyboard, Ogre::SceneNode* mNodePJ, const Ogre::FrameEvent& evt,std::vector<Ogre::SceneNode*> sceneNodes);
+bool keyboardControl(Ogre::SceneNode* mNodePJ, std::vector<Ogre::SceneNode*> sceneNodes, const Ogre::FrameEvent& evt);

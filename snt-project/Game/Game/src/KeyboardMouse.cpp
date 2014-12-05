@@ -1,25 +1,22 @@
 #include "stdafx.h"
 #include "KeyboardMouse.h"
-#include "FuncionesGenerales.h"
-#include "Collision.h"
-
 
 bool saltar = false;
 Ogre::Vector3 v;
 Ogre::Real mMoveX = 125;
 Ogre::Real mMoveY = 125;
-Ogre::Real mGravedad = -0.98;
+double mGravedad = -0.98;
 
-bool metodoDePrueba(OIS::Keyboard* mKeyboard, Ogre::SceneNode* mNodePJ, const Ogre::FrameEvent& evt, std::vector<Ogre::SceneNode*> sceneNodes)
+bool keyboardControl(Ogre::SceneNode* mNodePJ, std::vector<Ogre::SceneNode*> sceneNodes, const Ogre::FrameEvent& evt)
 {
 
-	if(mKeyboard->isKeyDown(OIS::KC_ESCAPE)) return false;
+	if(gKeyboard->isKeyDown(OIS::KC_ESCAPE)) return false;
 	//Creamos un vector tridimensional de ceros
 	Ogre::Vector3 transVector = Ogre::Vector3::ZERO;
 	
 	//Movimiento del personaje	
 	//Arriba
-	if (mKeyboard->isKeyDown(OIS::KC_W)){
+	if (gKeyboard->isKeyDown(OIS::KC_W)){
 		if(!individualCollisionManager(sceneNodes, mNodePJ)){
 			transVector.y += mMoveY;
 			mNodePJ->translate(transVector * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
@@ -31,7 +28,7 @@ bool metodoDePrueba(OIS::Keyboard* mKeyboard, Ogre::SceneNode* mNodePJ, const Og
 	}
 
 	// Abajo
-	if (mKeyboard->isKeyDown(OIS::KC_S)){
+	if (gKeyboard->isKeyDown(OIS::KC_S)){
 		if(!individualCollisionManager(sceneNodes, mNodePJ)){
 			transVector.y -= mMoveY;
 			mNodePJ->translate(transVector * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
@@ -43,7 +40,7 @@ bool metodoDePrueba(OIS::Keyboard* mKeyboard, Ogre::SceneNode* mNodePJ, const Og
 	}
 
 	// izquierda
-	if (mKeyboard->isKeyDown(OIS::KC_A)){
+	if (gKeyboard->isKeyDown(OIS::KC_A)){
 		if(!individualCollisionManager(sceneNodes, mNodePJ)){
 			transVector.x -= mMoveX;
 			mNodePJ->translate(transVector * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
@@ -55,7 +52,7 @@ bool metodoDePrueba(OIS::Keyboard* mKeyboard, Ogre::SceneNode* mNodePJ, const Og
 	}
 
 	// Derecha
-	if (mKeyboard->isKeyDown(OIS::KC_D)){
+	if (gKeyboard->isKeyDown(OIS::KC_D)){
 		if(!individualCollisionManager(sceneNodes, mNodePJ)){
 			transVector.x += mMoveX;
 			mNodePJ->translate(transVector * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
@@ -67,7 +64,7 @@ bool metodoDePrueba(OIS::Keyboard* mKeyboard, Ogre::SceneNode* mNodePJ, const Og
 	}
 
 	//espacio	
-	if (mKeyboard->isKeyDown(OIS::KC_SPACE)){
+	if (gKeyboard->isKeyDown(OIS::KC_SPACE)){
 		saltar = true;
 	}
 

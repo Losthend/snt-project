@@ -202,6 +202,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\Global.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\KeyboardMouse.cpp"
 				>
 			</File>
@@ -261,6 +265,10 @@
 			</File>
 			<File
 				RelativePath=".\include\GameApplication.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\Global.h"
 				>
 			</File>
 			<File

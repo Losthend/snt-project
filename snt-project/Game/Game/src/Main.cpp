@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "GameApplication.h"
+#include "BaseApplication.h"
 
 //------------------------------------------------------------------
 //---------------------------MAIN-----------------------------------
@@ -15,10 +16,15 @@ extern "C" {
     int main(int argc, char *argv[])
 #endif
     {
-		//Creamos el juego (configuraciones iniciales)
+		//Configuramos el entorno
+		BaseApplication* baseApp = new BaseApplication();
+		baseApp->go();
+		//Creamos el juego
 		GameApplication* gameApp = new GameApplication();
 		//Creamos el escenario
 		gameApp->createScene();
+		//Iniciamos el bucle de renderizado infinito
+		baseApp->mRoot->startRendering();
 
 		return 0;
     }

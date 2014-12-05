@@ -2,6 +2,13 @@
 #define __BaseApplication_h_
 
 #include "stdafx.h"
+#include "Global.h"
+
+#include "FixedFrameRate.h"
+#include "KeyboardMouse.h"
+#include "FuncionesGenerales.h"
+#include "Collision.h"
+
 
 //Se añade herencia para que puedan utilizarse posteriormente ciertos metodos
 class BaseApplication : public Ogre::WindowEventListener, public Ogre::FrameListener

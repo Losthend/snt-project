@@ -2,6 +2,7 @@
 #define __CCube_h_
 
 #include "stdafx.h"
+#include "Global.h"
 
 //Clase para creacion de cubos
 class CCube 
@@ -33,7 +34,7 @@ public:
     virtual ~CCube(void);
 
 	//METODOS publicos
-	void createCube(Ogre::SceneManager* mSceneMgr, std::string id);
+	void createCube(std::string id);
 	void setPosition(Ogre::Real x, Ogre::Real y, Ogre::Real z);
 	void setScale(Ogre::Real x, Ogre::Real y, Ogre::Real z);
 	void setRotation(Ogre::Real x, Ogre::Real y, Ogre::Real z);

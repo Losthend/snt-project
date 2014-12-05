@@ -2,20 +2,20 @@
 #define __GameApplication_h_
 
 #include "stdafx.h"
-#include "BaseApplication.h"
+
+#include "CCube.h"
+#include "ManualObjects.h"
 
 //---------------------------------------------------------------------------
 
-class GameApplication : public BaseApplication
+class GameApplication
 {
-	BaseApplication app;
 public:
 	//Constructor/destructor
     GameApplication(void);
     virtual ~GameApplication(void);
 	//Metodos publicos
     void createScene(void);
-	BaseApplication getBaseApplication(void);
 };
 
 //---------------------------------------------------------------------------

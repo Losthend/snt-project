@@ -1,9 +1,5 @@
 #include "stdafx.h"
 #include "BaseApplication.h"
-#include "FixedFrameRate.h"
-#include "KeyboardMouse.h"
-#include "FuncionesGenerales.h"
-#include "Collision.h"
 
 //------------------------------------------------------------------
 //Constructor
@@ -55,6 +51,16 @@ bool BaseApplication::go(void)
 
 	//Configuracion del proyecto de Ogre
 	setUp();
+
+	//Hacer que las variables (configuradas) del entorno sean de acceso global
+	makeGlobalRoot(mRoot);
+	makeGlobalSceneMgr(mSceneMgr);
+	makeGlobalRenderWindow(mWindow);
+	makeGlobalCamera(mCamera);
+	makeGlobalViewport(mViewport);
+	makeGlobalInputManager(mInputManager);
+	makeGlobalMouse(mMouse);
+	makeGlobalKeyboard(mKeyboard);
 
 	return true;
 	}
@@ -223,15 +229,17 @@ bool BaseApplication::processUnbufferedInput(const Ogre::FrameEvent& evt)
 	
 	//Obtenemos el personaje
 	Ogre::SceneNode* mNodePJ = mSceneMgr->getSceneNode("cubeNode1");
-	std::vector<Ogre::SceneNode*> sceneNodes = inCameraFrustumObjects(mCamera, mSceneMgr);
+	//Obtenemos los objetos visibles del frustum
+	std::vector<Ogre::SceneNode*> sceneNodes = inCameraFrustumObjects();
+	//Llamamos al metodo de control del teclado
+	if(!keyboardControl(mNodePJ, sceneNodes, evt))return false;	
 
-	if(!metodoDePrueba(mKeyboard, mNodePJ, evt, sceneNodes))return false;	
 	//Objetos dentro del frustum rotan al pulsar F2
-	if(mKeyboard->isKeyDown(OIS::KC_F2)) 
-	{		
-		std::vector<Ogre::SceneNode*> sceneNodes = inCameraFrustumObjects(mCamera, mSceneMgr);
-		individualCollisionManager(sceneNodes, mNodePJ);
-	}
+	//if(mKeyboard->isKeyDown(OIS::KC_F2)) 
+	//{		
+	//	std::vector<Ogre::SceneNode*> sceneNodes = inCameraFrustumObjects();
+	//	individualCollisionManager(sceneNodes, mNodePJ);
+	//}
 
 	//endFrame();
 	//duration();
