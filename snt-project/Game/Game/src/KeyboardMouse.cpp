@@ -1,13 +1,22 @@
 #include "stdafx.h"
 #include "KeyboardMouse.h"
 
-bool saltar = false;
-Ogre::Vector3 v;
-Ogre::Real mMoveX = 125;
-Ogre::Real mMoveY = 125;
-double mGravedad = -0.98;
 
-bool keyboardControl(Ogre::SceneNode* mNodePJ, std::vector<Ogre::SceneNode*> sceneNodes, const Ogre::FrameEvent& evt)
+KeyboardMouse::KeyboardMouse(void)
+{
+	saltar = false;
+	mMoveX = 125;
+	mMoveY = 125;
+	mGravedad = -0.98;
+}
+    
+
+KeyboardMouse::~KeyboardMouse(void)
+{
+}
+
+
+bool KeyboardMouse::keyboardControl(Ogre::SceneNode* mNodePJ, std::vector<Ogre::SceneNode*> sceneNodes, const Ogre::FrameEvent& evt)
 {
 
 	if(gKeyboard->isKeyDown(OIS::KC_ESCAPE)) return false;

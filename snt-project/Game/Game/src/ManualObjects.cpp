@@ -5,10 +5,10 @@
 //--Genera un ManualObject denominado "ManualObjectCube" que puede
 //--ser utilizado como "mesh" al crear una nueva entidad.
 //---------------------------------------------------------------------
-void simpleCube()
+void simpleCube(Ogre::SceneManager* mSceneMgr)
 {
 	//Se declara el objeto
-	Ogre::ManualObject* lManualObject = gSceneMgr->createManualObject("ManualObjectCube");	
+	Ogre::ManualObject* lManualObject = mSceneMgr->createManualObject("ManualObjectCube");	
 	//Se le asigna el material/textura que se desea utilizar, declarado en:
 	//C:\Ogre\OgreSDK_vc9_v1-9-0\media\materials\scripts\MaterialDePrueba.material
 	lManualObject->begin("MyMaterial1", Ogre::RenderOperation::OT_TRIANGLE_LIST);

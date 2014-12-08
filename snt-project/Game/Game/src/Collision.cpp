@@ -41,7 +41,7 @@ std::vector<Ogre::SceneNode*> inCameraFrustumObjects(void)
 
 		//Funcionalidad para pruebas: gira aquellos elementos que esten en el frustum, excepto el personaje
 		//Ogre::String nombre = (*iter)->getParentSceneNode()->getName();
-		//if (nombre != "cubeNode1")
+		//if (nombre != "nodePlayer")
 		//(*iter)->getParentSceneNode()->roll(Ogre::Degree(0.1));
 	}
 
@@ -114,7 +114,7 @@ bool individualCollisionManager(std::vector<Ogre::SceneNode*> sceneNodes, Ogre::
 			}
 		}
 	}
-	return collision;
+	return false;
 }
 
 //----------------------------------------------------------------------

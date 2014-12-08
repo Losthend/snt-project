@@ -3,8 +3,7 @@
 
 #include "stdafx.h"
 
-#include "CCube.h"
-#include "ManualObjects.h"
+#include "Objects.h"
 
 //---------------------------------------------------------------------------
 

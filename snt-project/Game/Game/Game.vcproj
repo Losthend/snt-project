@@ -190,6 +190,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\CPlayer.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\FixedFrameRate.cpp"
 				>
 			</File>
@@ -215,6 +219,14 @@
 			</File>
 			<File
 				RelativePath=".\src\ManualObjects.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\Objects.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\RenderActions.cpp"
 				>
 			</File>
 			<File
@@ -256,6 +268,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\CPlayer.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\FixedFrameRate.h"
 				>
 			</File>
@@ -277,6 +293,14 @@
 			</File>
 			<File
 				RelativePath=".\include\ManualObjects.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\Objects.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\RenderActions.h"
 				>
 			</File>
 			<File

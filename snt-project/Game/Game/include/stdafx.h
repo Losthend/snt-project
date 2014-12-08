@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <tchar.h>
 #include <math.h>
+#include <time.h>
 #include "windows.h"
 
 //LIBRERIAS DE OPENGL
@@ -35,6 +36,8 @@
 #include <OgreRenderWindow.h>
 //Libreria para entidades
 #include <OgreEntity.h>
+//Querys de frustum
+#include <OgreSceneQuery.h>
  
 //Otros headers que pueden incluirse
 //#if OGRE_PLATFORM == OGRE_PLATFORM_WIN32

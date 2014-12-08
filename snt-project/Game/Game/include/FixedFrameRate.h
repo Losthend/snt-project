@@ -1,5 +1,4 @@
 #include "stdafx.h"
-#include <time.h>
 
 //Inicia el contador
 void startFrame();

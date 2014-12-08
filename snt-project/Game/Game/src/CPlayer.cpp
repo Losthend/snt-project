@@ -1,8 +1,8 @@
 #include "stdafx.h"
-#include "CCube.h"
+#include "CPlayer.h"
 
 //---------------------------------------------------------------------------
-CCube::CCube(std::string id)
+CPlayer::CPlayer(void)
 {
 	//Inicializamos variables
 
@@ -22,12 +22,14 @@ CCube::CCube(std::string id)
 		m_collision = true;
 		//Velocidad por defecto
 		m_Move = 125;
+		//Control de teclado y raton para el personaje
+		mKeyboardMouse = new KeyboardMouse();
 
 	//Creamos el cubo con su entidad y nodo correspondiente
 
 		//Identificadores
-		std::string entName = "cube" + id;
-		std::string nodeName = "cubeNode" + id;
+		std::string entName = "entityPlayer";
+		std::string nodeName = "nodePlayer";
 		
 		//Creacion (entidad y nodo)
 		//-----------Cubo creado de forma automatica---------------
@@ -42,14 +44,15 @@ CCube::CCube(std::string id)
 		node->scale(Ogre::Vector3(m_scaleX, m_scaleY, m_scaleZ));
 }
 //---------------------------------------------------------------------------
-CCube::~CCube(void)
+CPlayer::~CPlayer(void)
 {
+	delete this;
 }
 
 //---------------------------------------------------------------------------
 //--Posicionamiento
 //---------------------------------------------------------------------------
-void CCube::setPosition(Ogre::Real x, Ogre::Real y, Ogre::Real z)
+void CPlayer::setPosition(Ogre::Real x, Ogre::Real y, Ogre::Real z)
 {
 	m_posX = x;
 	m_posY = y;
@@ -60,7 +63,7 @@ void CCube::setPosition(Ogre::Real x, Ogre::Real y, Ogre::Real z)
 //---------------------------------------------------------------------------
 //--Escalado
 //---------------------------------------------------------------------------
-void CCube::setScale(Ogre::Real x, Ogre::Real y, Ogre::Real z)
+void CPlayer::setScale(Ogre::Real x, Ogre::Real y, Ogre::Real z)
 {
 	m_scaleX = x;
 	m_scaleY = y;
@@ -71,7 +74,7 @@ void CCube::setScale(Ogre::Real x, Ogre::Real y, Ogre::Real z)
 //---------------------------------------------------------------------------
 //--Rotacion
 //---------------------------------------------------------------------------
-void CCube::setRotation(Ogre::Real x, Ogre::Real y, Ogre::Real z)
+void CPlayer::setRotation(Ogre::Real x, Ogre::Real y, Ogre::Real z)
 {
 	m_pitch = x;
 	m_yaw = y;
@@ -91,7 +94,16 @@ void CCube::setRotation(Ogre::Real x, Ogre::Real y, Ogre::Real z)
 	}
 }
 
-Ogre::SceneNode* CCube::getAssociatedNode(void)
+//---------------------------------------------------------------------------
+//--Control, mediante teclado, del jugador
+//---------------------------------------------------------------------------
+bool CPlayer::keyboardControl(const Ogre::FrameEvent& evt)
 {
-	return node;
+	//Obtenemos los objetos visibles del frustum
+	std::vector<Ogre::SceneNode*> sceneNodes = inCameraFrustumObjects();
+
+	//Ejecutamos la funcion de control de teclado 
+	//Siendo "node" el propio nodo del jugador almacenado en esta clase
+	//Se hace un "return" del resultado (bool)
+	return mKeyboardMouse->keyboardControl(node, sceneNodes, evt); 
 }

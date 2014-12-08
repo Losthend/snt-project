@@ -10,6 +10,8 @@ BaseApplication::BaseApplication(void)
 	mResourcesCfg(Ogre::StringUtil::BLANK),
 	mPluginsCfg(Ogre::StringUtil::BLANK)
 {
+	//Configuramos el entorno
+	go();
 }
 
 //------------------------------------------------------------------
@@ -18,9 +20,6 @@ BaseApplication::BaseApplication(void)
 
 BaseApplication::~BaseApplication(void)
 {
-	Ogre::WindowEventUtilities::removeWindowEventListener(mWindow, this);
-	windowClosed(mWindow);
-	delete mRoot;
 }
 
 //------------------------------------------------------------------
@@ -52,15 +51,20 @@ bool BaseApplication::go(void)
 	//Configuracion del proyecto de Ogre
 	setUp();
 
+	//-----------------------------------------------------------------------------------
+	//Generar los Manual Objects
+	simpleCube(mSceneMgr);
+
 	//Hacer que las variables (configuradas) del entorno sean de acceso global
-	makeGlobalRoot(mRoot);
-	makeGlobalSceneMgr(mSceneMgr);
-	makeGlobalRenderWindow(mWindow);
-	makeGlobalCamera(mCamera);
-	makeGlobalViewport(mViewport);
-	makeGlobalInputManager(mInputManager);
-	makeGlobalMouse(mMouse);
-	makeGlobalKeyboard(mKeyboard);
+	gRoot = mRoot;
+	gSceneMgr = mSceneMgr;
+	gWindow = mWindow;
+	gCamera = mCamera;
+	gViewport = mViewport;
+	gInputManager = mInputManager;
+	gMouse = mMouse;
+	gKeyboard = mKeyboard;
+	//-----------------------------------------------------------------------------------
 
 	return true;
 	}
@@ -101,14 +105,10 @@ void BaseApplication::setUp(void)
 	
 	//Activando los OIS
 	activateOIS();
-
-	//Registramos la aplicacion como un WindowEventListener
+	
+	//Redimensionamos la ventana
 	windowResized(mWindow);
-	Ogre::WindowEventUtilities::addWindowEventListener(mWindow, this);
 
-	//Instanciamos mRoot como un FrameListener, pudiendo recibir fragmentos de eventos
-	//Esto es necesario para que la funcion frameRenderingQueued sea llamada 
-	mRoot->addFrameListener(this);
 }
 
 //------------------------------------------------------------------
@@ -181,7 +181,6 @@ void BaseApplication::windowResized(Ogre::RenderWindow* rw)
 }
  
 //------------------------------------------------------------------
-//---Las lineas comentadas de ESTE METODO DAN FALLO, ni idea porqué-
 //Libera los OIS en el momento que el objeto (ventana) es destruido-
 //------------------------------------------------------------------
 
@@ -199,50 +198,3 @@ void BaseApplication::windowClosed(Ogre::RenderWindow* rw)
     }
 }
 
-//------------------------------------------------------------------
-//---En esta funcion se controla el bucle de renderizado y 
-//---las acciones a realizar durante el mismo.
-//------------------------------------------------------------------
-
-bool BaseApplication::frameRenderingQueued(const Ogre::FrameEvent& evt)
-{
-	if(mWindow->isClosed())
-        return false;
-
-    //Realiza la captura de eventos del teclado y del raton
-    mKeyboard->capture();
-    mMouse->capture();
- 
-	//Llamamos a la funcion que se encarga de controlar las entradas 
-    if(!processUnbufferedInput(evt)) return false;
-
-    return true;
-}
-
-//------------------------------------------------------------------
-//---Define que hacer cuando se produce algun evento entre frames---
-//------------------------------------------------------------------
-
-bool BaseApplication::processUnbufferedInput(const Ogre::FrameEvent& evt)
-{
-	//startFrame();
-	
-	//Obtenemos el personaje
-	Ogre::SceneNode* mNodePJ = mSceneMgr->getSceneNode("cubeNode1");
-	//Obtenemos los objetos visibles del frustum
-	std::vector<Ogre::SceneNode*> sceneNodes = inCameraFrustumObjects();
-	//Llamamos al metodo de control del teclado
-	if(!keyboardControl(mNodePJ, sceneNodes, evt))return false;	
-
-	//Objetos dentro del frustum rotan al pulsar F2
-	//if(mKeyboard->isKeyDown(OIS::KC_F2)) 
-	//{		
-	//	std::vector<Ogre::SceneNode*> sceneNodes = inCameraFrustumObjects();
-	//	individualCollisionManager(sceneNodes, mNodePJ);
-	//}
-
-	//endFrame();
-	//duration();
-
-	return true;
-}

@@ -2,16 +2,11 @@
 #define __BaseApplication_h_
 
 #include "stdafx.h"
+
 #include "Global.h"
+#include "ManualObjects.h"
 
-#include "FixedFrameRate.h"
-#include "KeyboardMouse.h"
-#include "FuncionesGenerales.h"
-#include "Collision.h"
-
-
-//Se añade herencia para que puedan utilizarse posteriormente ciertos metodos
-class BaseApplication : public Ogre::WindowEventListener, public Ogre::FrameListener
+class BaseApplication
 {
 //Aqui se establecen las declaraciones de metodos y variables
 public:
@@ -43,11 +38,8 @@ private:
 	//Para los WindowEventListener
 	virtual void windowResized(Ogre::RenderWindow* rw);
 	virtual void windowClosed(Ogre::RenderWindow* rw);
-	//Metodo que se encarga del control de eventos
-	virtual bool frameRenderingQueued(const Ogre::FrameEvent& evt);
 	//Configuracion inicial del proyecto
 	virtual void setUp(void);
-	bool processUnbufferedInput(const Ogre::FrameEvent& evt);
 
 	//VARIABLES
 	

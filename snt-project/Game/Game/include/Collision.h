@@ -1,8 +1,6 @@
 #include "stdafx.h"
 #include "Global.h"
 
-#include <OgreSceneQuery.h>
-
 //Definicion de metodos de deteccion de colisiones
 
 std::vector<Ogre::SceneNode*> inCameraFrustumObjects(void);

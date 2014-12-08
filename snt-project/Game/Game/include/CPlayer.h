@@ -1,26 +1,26 @@
-#ifndef __CCube_h_
-#define __CCube_h_
+#ifndef __CPlayer_h_
+#define __CPlayer_h_
 
 #include "stdafx.h"
-#include "Global.h"
+#include "KeyboardMouse.h"
 
 //Clase para creacion de cubos
-class CCube 
+class CPlayer 
 {
 //Aqui se establecen las declaraciones de metodos y variables
 public:
+
 	//Constructor, destructor
-    CCube(std::string id);
-    virtual ~CCube(void);
+    CPlayer(void);
+    virtual ~CPlayer(void);
 
 	//METODOS publicos
 	void setPosition(Ogre::Real x, Ogre::Real y, Ogre::Real z);
 	void setScale(Ogre::Real x, Ogre::Real y, Ogre::Real z);
 	void setRotation(Ogre::Real x, Ogre::Real y, Ogre::Real z);
-	Ogre::SceneNode* getAssociatedNode(void);
+	bool keyboardControl(const Ogre::FrameEvent& evt);
 
-private:
-	//VARIABLES
+	//VARIABLES PUBLICAS
 
 	//Declaracion de la entidad y del nodo correspondiente al cubo
 	Ogre::Entity* entity;
@@ -28,6 +28,13 @@ private:
 
 	//Booleano de colision: (true) colisionable, (false) no colisionable
 	bool m_collision;
+
+private:
+
+	//VARIABLES privadas
+
+	//Control del teclado para el jugador
+	KeyboardMouse* mKeyboardMouse;
 
 	//Velocidad de movimiento
 	Ogre::Real m_Move;
@@ -51,6 +58,6 @@ private:
 
 //---------------------------------------------------------------------------
 
-#endif // #ifndef __CCube_h_
+#endif // #ifndef __CPlayer_h_
 
 //---------------------------------------------------------------------------

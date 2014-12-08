@@ -1,9 +1,11 @@
 #include "stdafx.h"
-#include "GameApplication.h"
+
+#include "RenderActions.h"
 #include "BaseApplication.h"
+#include "GameApplication.h"
 
 //------------------------------------------------------------------
-//---------------------------MAIN-----------------------------------
+//--------------------------MAIN------------------------------------
 //------------------------------------------------------------------
 
 #ifdef __cplusplus
@@ -18,13 +20,12 @@ extern "C" {
     {
 		//Configuramos el entorno
 		BaseApplication* baseApp = new BaseApplication();
-		baseApp->go();
-		//Creamos el juego
+		//Listeners y acciones de renderizado para los frame
+		RenderActions* renderAct = new RenderActions();
+		//Creamos el juego (personaje y escenario)
 		GameApplication* gameApp = new GameApplication();
-		//Creamos el escenario
-		gameApp->createScene();
-		//Iniciamos el bucle de renderizado infinito
-		baseApp->mRoot->startRendering();
+		//Iniciamos el bucle de renderizado infinito (ver "frameRenderingQueued")
+		gRoot->startRendering();
 
 		return 0;
     }
