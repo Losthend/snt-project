@@ -1,6 +1,9 @@
 #include "stdafx.h"
 #include "KeyboardMouse.h"
 
+#include "Global.h"
+#include "Collision.h"
+#include "FuncionesGenerales.h"
 
 KeyboardMouse::KeyboardMouse(void)
 {

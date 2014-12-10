@@ -1,5 +1,4 @@
 #include "stdafx.h"
-#include "Global.h"
 
 //Definicion de metodos de deteccion de colisiones
 

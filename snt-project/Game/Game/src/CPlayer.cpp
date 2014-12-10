@@ -1,5 +1,12 @@
 #include "stdafx.h"
+
+//Las declaraciones de sus variables y metodos
 #include "CPlayer.h"
+//Acceso a las variables globales
+#include "Global.h"
+//Acceso a Collision y a KeyboardMouse
+#include "Collision.h"
+#include "KeyboardMouse.h"
 
 //---------------------------------------------------------------------------
 CPlayer::CPlayer(void)

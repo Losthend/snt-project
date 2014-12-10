@@ -3,9 +3,6 @@
 
 #include "stdafx.h"
 
-#include "Global.h"
-#include "ManualObjects.h"
-
 class BaseApplication
 {
 //Aqui se establecen las declaraciones de metodos y variables
@@ -40,6 +37,9 @@ private:
 	virtual void windowClosed(Ogre::RenderWindow* rw);
 	//Configuracion inicial del proyecto
 	virtual void setUp(void);
+
+	//ELIMINAR el siguiente metodo cuando ya no sean necesario nuestros "cubos manuales"
+	void simpleCube(void);
 
 	//VARIABLES
 	

@@ -3,8 +3,6 @@
 
 #include "stdafx.h"
 
-#include "Objects.h"
-
 //---------------------------------------------------------------------------
 
 class GameApplication

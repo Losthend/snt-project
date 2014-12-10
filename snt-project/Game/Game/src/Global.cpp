@@ -1,8 +1,12 @@
 #include "stdafx.h"
 #include "Global.h"
 
-//Variables globales
+//Instancia del jugador
+CPlayer* gPlayer;
+//Vector con instancias de los CCubes declarados
+std::vector<CCube*> cCubes;
 
+//Variables globales
 Ogre::Root*				gRoot;
 Ogre::SceneManager*		gSceneMgr;
 Ogre::RenderWindow*		gWindow;

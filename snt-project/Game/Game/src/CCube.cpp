@@ -1,5 +1,8 @@
 #include "stdafx.h"
+
+//Las declaraciones de sus variables y metodos
 #include "CCube.h"
+#include "Global.h"
 
 //---------------------------------------------------------------------------
 CCube::CCube(std::string id)

@@ -1,8 +1,13 @@
 #include "stdafx.h"
 
-#include "RenderActions.h"
+//Instancia las clases principales, a saber: 
+//Configuración de variables globales
 #include "BaseApplication.h"
+//Listener para el renderizado de cada frame
+#include "RenderActions.h"
+//Creación de escenario
 #include "GameApplication.h"
+
 
 //------------------------------------------------------------------
 //--------------------------MAIN------------------------------------
@@ -24,8 +29,8 @@ extern "C" {
 		RenderActions* renderAct = new RenderActions();
 		//Creamos el juego (personaje y escenario)
 		GameApplication* gameApp = new GameApplication();
-		//Iniciamos el bucle de renderizado infinito (ver "frameRenderingQueued")
-		gRoot->startRendering();
+		//Iniciamos el bucle de renderizado infinito (ver "frameRenderingQueued" en "RenderActions")
+		baseApp->mRoot->startRendering();
 
 		return 0;
     }

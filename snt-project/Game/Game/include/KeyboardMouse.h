@@ -3,9 +3,6 @@
 
 #include "stdafx.h"
 
-#include "Collision.h"
-#include "FuncionesGenerales.h"
-
 class KeyboardMouse
 {
 	//Variables

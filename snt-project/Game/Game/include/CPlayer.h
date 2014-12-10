@@ -2,7 +2,8 @@
 #define __CPlayer_h_
 
 #include "stdafx.h"
-#include "KeyboardMouse.h"
+
+class KeyboardMouse;
 
 //Clase para creacion de cubos
 class CPlayer 

@@ -2,7 +2,6 @@
 #define __CCube_h_
 
 #include "stdafx.h"
-#include "Global.h"
 
 //Clase para creacion de cubos
 class CCube 

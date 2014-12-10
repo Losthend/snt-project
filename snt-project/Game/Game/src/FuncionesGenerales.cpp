@@ -1,4 +1,6 @@
 #include "stdafx.h"
+
+//Las declaraciones de sus metodos
 #include "FuncionesGenerales.h"
 
 //Implementacion de metodos de deteccion de colisiones

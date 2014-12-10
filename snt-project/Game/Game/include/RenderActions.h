@@ -3,8 +3,6 @@
 
 #include "stdafx.h"
 
-#include "Objects.h"
-
 //Se añade herencia para que puedan utilizarse posteriormente ciertos metodos
 class RenderActions : public Ogre::WindowEventListener, public Ogre::FrameListener
 {

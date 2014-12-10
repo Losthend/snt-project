@@ -1,6 +1,12 @@
 #include "stdafx.h"
 #include "GameApplication.h"
 
+//Acceso a las variables globales
+#include "Global.h"
+//Acceso a CCube y CPlayer
+#include "CCube.h"
+#include "CPlayer.h"
+
 //---------------------------------------------------------------------------
 //Constructor del juego (Game)
 //---------------------------------------------------------------------------

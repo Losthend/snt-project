@@ -1,5 +1,12 @@
 #include "stdafx.h"
+
+//Las declaraciones de sus variables y metodos
 #include "RenderActions.h"
+//Acceso a variables globales
+#include "Global.h"
+//Acceso a CCube y CPlayer
+#include "CCube.h"
+#include "CPlayer.h"
 
 //------------------------------------------------------------------
 //Esta clase esta orientada a establecer los listeners, permitiendo 

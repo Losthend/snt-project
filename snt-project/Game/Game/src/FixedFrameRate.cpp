@@ -1,4 +1,6 @@
 #include "stdafx.h"
+
+//Las declaraciones de sus variables y metodos
 #include "FixedFrameRate.h"
 
 //MAIN: añadir un startFrame() y endFrame() 

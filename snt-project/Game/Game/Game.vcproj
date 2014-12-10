@@ -218,14 +218,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\ManualObjects.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\Objects.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\src\RenderActions.cpp"
 				>
 			</File>
@@ -289,14 +281,6 @@
 			</File>
 			<File
 				RelativePath=".\include\KeyboardMouse.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\ManualObjects.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\Objects.h"
 				>
 			</File>
 			<File

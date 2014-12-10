@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "Collision.h"
 
+#include "Global.h"
+
 //----------------------------------------------------------------------
 //Comprobacion de los objetos que actualmente estan en el frustum
 //----------------------------------------------------------------------
