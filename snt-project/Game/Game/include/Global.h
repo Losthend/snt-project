@@ -7,7 +7,7 @@ class CCube;
 
 //Jugador y Objetos del entorno de acceso global
 extern CPlayer* gPlayer;
-extern std::vector<CCube*> cCubes;
+extern std::vector<CCube*> vCubes;
 
 //Declaramos las variables de configuracion para que puedan ser usadas como globales
 extern Ogre::Root*				gRoot;

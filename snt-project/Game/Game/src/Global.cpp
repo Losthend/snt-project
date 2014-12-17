@@ -4,7 +4,7 @@
 //Instancia del jugador
 CPlayer* gPlayer;
 //Vector con instancias de los CCubes declarados
-std::vector<CCube*> cCubes;
+std::vector<CCube*> vCubes;
 
 //Variables globales
 Ogre::Root*				gRoot;

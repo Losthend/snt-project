@@ -13,9 +13,6 @@ public:
     virtual ~CCube(void);
 
 	//METODOS publicos
-	void setPosition(Ogre::Real x, Ogre::Real y, Ogre::Real z);
-	void setScale(Ogre::Real x, Ogre::Real y, Ogre::Real z);
-	void setRotation(Ogre::Real x, Ogre::Real y, Ogre::Real z);
 	Ogre::SceneNode* getAssociatedNode(void);
 
 private:
@@ -29,23 +26,8 @@ private:
 	bool m_collision;
 
 	//Velocidad de movimiento
-	Ogre::Real m_Move;
-
-	//Posicion
-	Ogre::Real m_posX;
-	Ogre::Real m_posY;
-	Ogre::Real m_posZ;
-
-	//Escalado
-	Ogre::Real m_scaleX;
-	Ogre::Real m_scaleY;
-	Ogre::Real m_scaleZ;
-
-	//Rotacion
-	Ogre::Real m_yaw;
-	Ogre::Real m_pitch;
-	Ogre::Real m_roll;
-
+	Ogre::Real m_moveX;
+	Ogre::Real m_moveY;
 };
 
 //---------------------------------------------------------------------------

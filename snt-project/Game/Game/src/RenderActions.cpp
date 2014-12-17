@@ -47,7 +47,7 @@ bool RenderActions::frameRenderingQueued(const Ogre::FrameEvent& evt)
     //Realiza la captura de eventos del teclado y del raton
     gKeyboard->capture();
     gMouse->capture();
-	gPlayer->updateAnimation();
+	//gPlayer->updateAnimation();
 	
 	//Llamamos al metodo de control del teclado para el jugador
 	if(!gPlayer->keyboardControl(evt))return false;	
