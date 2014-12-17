@@ -20,6 +20,7 @@ public:
 	void setScale(Ogre::Real x, Ogre::Real y, Ogre::Real z);
 	void setRotation(Ogre::Real x, Ogre::Real y, Ogre::Real z);
 	bool keyboardControl(const Ogre::FrameEvent& evt);
+	void updateAnimation();
 
 	//VARIABLES PUBLICAS
 
@@ -54,6 +55,13 @@ private:
 	Ogre::Real m_yaw;
 	Ogre::Real m_pitch;
 	Ogre::Real m_roll;
+
+	//Animaciones
+	Ogre::AnimationState *pWalk;
+
+	//Estado
+	char state;
+	static const char WALK = 0x1;
 
 };
 

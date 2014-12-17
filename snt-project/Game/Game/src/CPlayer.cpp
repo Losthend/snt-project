@@ -45,6 +45,11 @@ CPlayer::CPlayer(void)
 		entity = gSceneMgr->createEntity(entName, "ninja.mesh");
 		node = gSceneMgr->getRootSceneNode()->createChildSceneNode(nodeName);
 		node->attachObject(entity);
+		
+		//Asociamos las animaciones. Requier el skeleton en la carpeta de media.
+		pWalk = entity->getAnimationState("Walk");
+		pWalk->setLoop(true);		
+		pWalk->setLength(Ogre::Real(1.0));
 
 		//Posicionamiento y escalado (por defecto)
 		node->setPosition(Ogre::Vector3(m_posX, m_posY, m_posZ));
@@ -113,4 +118,13 @@ bool CPlayer::keyboardControl(const Ogre::FrameEvent& evt)
 	//Siendo "node" el propio nodo del jugador almacenado en esta clase
 	//Se hace un "return" del resultado (bool)
 	return mKeyboardMouse->keyboardControl(node, sceneNodes, evt); 
+}
+
+void CPlayer::updateAnimation(){
+
+	if(state == WALK){
+		pWalk->setEnabled(true);
+		pWalk->addTime(0.0017);
+	}
+
 }

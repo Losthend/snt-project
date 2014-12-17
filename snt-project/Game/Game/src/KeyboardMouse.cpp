@@ -32,6 +32,7 @@ bool KeyboardMouse::keyboardControl(Ogre::SceneNode* mNodePJ, std::vector<Ogre::
 		if(!individualCollisionManager(sceneNodes, mNodePJ)){
 			transVector.y += mMoveY;
 			mNodePJ->translate(transVector * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
+			
 		}
 		else{
 			transVector.y -= 2 * mMoveY;
@@ -56,6 +57,7 @@ bool KeyboardMouse::keyboardControl(Ogre::SceneNode* mNodePJ, std::vector<Ogre::
 		if(!individualCollisionManager(sceneNodes, mNodePJ)){
 			transVector.x -= mMoveX;
 			mNodePJ->translate(transVector * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
+			
 		}
 		else{
 			transVector.x += 2 * mMoveX;
