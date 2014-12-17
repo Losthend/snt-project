@@ -14,6 +14,13 @@ public:
 
 	//METODOS publicos
 	Ogre::SceneNode* getAssociatedNode(void);
+	
+	//Velocidad de movimiento
+	Ogre::Real m_moveX;
+	Ogre::Real m_moveY;
+
+	//Booleano de colision: (true) colisionable, (false) no colisionable
+	bool m_collision;
 
 private:
 	//VARIABLES
@@ -21,13 +28,6 @@ private:
 	//Declaracion de la entidad y del nodo correspondiente al cubo
 	Ogre::Entity* entity;
 	Ogre::SceneNode* node;
-
-	//Booleano de colision: (true) colisionable, (false) no colisionable
-	bool m_collision;
-
-	//Velocidad de movimiento
-	Ogre::Real m_moveX;
-	Ogre::Real m_moveY;
 };
 
 //---------------------------------------------------------------------------

@@ -25,14 +25,16 @@ public:
 	//Booleano de colision: (true) colisionable, (false) no colisionable
 	bool m_collision;
 	char state;
+	//Velocidad de movimiento
+	Ogre::Real m_moveX;
+	Ogre::Real m_moveY;
 
 private:
 
 	//VARIABLES privadas
 	//Control del teclado para el jugador
 	KeyboardMouse* mKeyboardMouse;
-	//Velocidad de movimiento
-	Ogre::Real m_Move;
+
 	//Animaciones
 	Ogre::AnimationState *pWalk;
 	Ogre::AnimationState *pJump;

@@ -14,7 +14,8 @@ CPlayer::CPlayer(void)
 	//Colisionable por defecto
 	m_collision = true;
 	//Velocidad por defecto
-	m_Move = 125;
+	m_moveX = 125;
+	m_moveY = 125;
 	//Control de teclado y raton para el personaje
 	mKeyboardMouse = new KeyboardMouse();
 	//estado pordefecto del personaje (0=quieto)
