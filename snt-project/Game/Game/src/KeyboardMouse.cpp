@@ -5,6 +5,9 @@
 #include "Collision.h"
 #include "FuncionesGenerales.h"
 
+#include "CCube.h"
+#include "CPlayer.h"
+
 KeyboardMouse::KeyboardMouse(void)
 {
 	saltar = false;
@@ -57,21 +60,34 @@ bool KeyboardMouse::keyboardControl(Ogre::SceneNode* mNodePJ, std::vector<Ogre::
 		if(!individualCollisionManager(sceneNodes, mNodePJ)){
 			transVector.x -= mMoveX;
 			mNodePJ->translate(transVector * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
-			
+			//animación de andar
+			gPlayer->state=0x1;
 		}
 		else{
+			//animación de quieto
+			gPlayer->state=0x0;
 			transVector.x += 2 * mMoveX;
 			mNodePJ->translate(transVector * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
+
 		}
 	}
+	
+	//Esto parece arreglarlo siempre, pero no deberia ser siempre... o si?
+	/*if (!gKeyboard->isKeyDown(OIS::KC_A)){
+		gPlayer->state=0x0;
+	}*/
 
 	// Derecha
 	if (gKeyboard->isKeyDown(OIS::KC_D)){
 		if(!individualCollisionManager(sceneNodes, mNodePJ)){
 			transVector.x += mMoveX;
 			mNodePJ->translate(transVector * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
+			//animación de andar
+			gPlayer->state=0x1;
 		}
 		else{
+			//animación de quieto
+			gPlayer->state=0x0;
 			transVector.x -= 2 * mMoveX;
 			mNodePJ->translate(transVector * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
 		}

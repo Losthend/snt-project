@@ -30,6 +30,7 @@ public:
 
 	//Booleano de colision: (true) colisionable, (false) no colisionable
 	bool m_collision;
+	char state;
 
 private:
 
@@ -60,7 +61,7 @@ private:
 	Ogre::AnimationState *pWalk;
 
 	//Estado
-	char state;
+	
 	static const char WALK = 0x1;
 
 };

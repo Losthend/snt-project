@@ -12,7 +12,7 @@
 CPlayer::CPlayer(void)
 {
 	//Inicializamos variables
-
+	
 		//Posicion
 		m_posX = 0.0;
 		m_posY = 0.0;
@@ -31,6 +31,8 @@ CPlayer::CPlayer(void)
 		m_Move = 125;
 		//Control de teclado y raton para el personaje
 		mKeyboardMouse = new KeyboardMouse();
+		//estado pordefecto del personaje (0=quieto)
+		state = 0x0;
 
 	//Creamos el cubo con su entidad y nodo correspondiente
 
