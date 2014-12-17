@@ -42,7 +42,7 @@ CPlayer::CPlayer(void)
 		//-----------Cubo creado de forma automatica---------------
 		//Ogre::Entity* cube = mSceneMgr->createEntity(cubeName, "cube.mesh");
 		//-----------Cubo creado de forma manual-------------------
-		entity = gSceneMgr->createEntity(entName, "ManualObjectCube");
+		entity = gSceneMgr->createEntity(entName, "ninja.mesh");
 		node = gSceneMgr->getRootSceneNode()->createChildSceneNode(nodeName);
 		node->attachObject(entity);
 
