@@ -59,10 +59,11 @@ private:
 
 	//Animaciones
 	Ogre::AnimationState *pWalk;
+	Ogre::AnimationState *pJump;
 
-	//Estado
-	
+	//Estados	
 	static const char WALK = 0x1;
+	static const char JUMP = 0x2;
 
 };
 

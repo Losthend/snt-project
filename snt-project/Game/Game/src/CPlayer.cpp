@@ -44,14 +44,19 @@ CPlayer::CPlayer(void)
 		//-----------Cubo creado de forma automatica---------------
 		//Ogre::Entity* cube = mSceneMgr->createEntity(cubeName, "cube.mesh");
 		//-----------Cubo creado de forma manual-------------------
-		entity = gSceneMgr->createEntity(entName, "ninja.mesh");
+		entity = gSceneMgr->createEntity(entName, "robot.mesh");
 		node = gSceneMgr->getRootSceneNode()->createChildSceneNode(nodeName);
 		node->attachObject(entity);
 		
 		//Asociamos las animaciones. Requier el skeleton en la carpeta de media.
-		pWalk = entity->getAnimationState("Walk");
+		/*pWalk = entity->getAnimationState("Walk");
 		pWalk->setLoop(true);		
-		pWalk->setLength(Ogre::Real(1.0));
+		pWalk->setLength(Ogre::Real(1.0));*/
+
+		//El robot no sabe saltar, asi que esto tiene que estar comentado o usar el ninja
+		/*pJump = entity->getAnimationState("Jump");
+		pJump->setLoop(true);		
+		pJump->setLength(Ogre::Real(1.0));*/
 
 		//Posicionamiento y escalado (por defecto)
 		node->setPosition(Ogre::Vector3(m_posX, m_posY, m_posZ));
@@ -124,9 +129,13 @@ bool CPlayer::keyboardControl(const Ogre::FrameEvent& evt)
 
 void CPlayer::updateAnimation(){
 
-	if(state == WALK){
+	/*if(state == WALK){
 		pWalk->setEnabled(true);
 		pWalk->addTime(0.0017);
-	}
+	}*/
+	/*if(state == JUMP){
+		pJump->setEnabled(true);
+		pJump->addTime(0.0017);
+	}*/
 
 }

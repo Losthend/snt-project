@@ -73,9 +73,9 @@ bool KeyboardMouse::keyboardControl(Ogre::SceneNode* mNodePJ, std::vector<Ogre::
 	}
 	
 	//Esto parece arreglarlo siempre, pero no deberia ser siempre... o si?
-	/*if (!gKeyboard->isKeyDown(OIS::KC_A)){
+	if (!gKeyboard->isKeyDown(OIS::KC_A)){
 		gPlayer->state=0x0;
-	}*/
+	}
 
 	// Derecha
 	if (gKeyboard->isKeyDown(OIS::KC_D)){
@@ -87,7 +87,7 @@ bool KeyboardMouse::keyboardControl(Ogre::SceneNode* mNodePJ, std::vector<Ogre::
 		}
 		else{
 			//animación de quieto
-			gPlayer->state=0x0;
+			gPlayer->state = 0x0;
 			transVector.x -= 2 * mMoveX;
 			mNodePJ->translate(transVector * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
 		}
@@ -99,6 +99,7 @@ bool KeyboardMouse::keyboardControl(Ogre::SceneNode* mNodePJ, std::vector<Ogre::
 	}
 
 	if(saltar){
+		gPlayer->state = 0x2;
 		v = mNodePJ->getPosition();
 		//Tener en cuenta que al multiplicar por el evt siempre tambien modificamos los valores de 'x' y de 'z' si no valen exactamente 0
 		//Segun mis cuentas el valor del evt es aproximadamente (1/100)
