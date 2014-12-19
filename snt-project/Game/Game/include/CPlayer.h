@@ -40,8 +40,10 @@ private:
 	Ogre::AnimationState *pJump;
 
 	//Estados	
+	static const char STOP = 0x0;
 	static const char WALK = 0x1;
 	static const char JUMP = 0x2;
+	static const char PUSH = 0x3;
 
 };
 
