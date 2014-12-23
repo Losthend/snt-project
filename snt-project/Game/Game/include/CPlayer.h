@@ -3,8 +3,6 @@
 
 #include "stdafx.h"
 
-class KeyboardMouse;
-
 //Clase para creacion de cubos
 class CPlayer 
 {
@@ -29,11 +27,16 @@ public:
 	Ogre::Real m_moveX;
 	Ogre::Real m_moveY;
 
+	//Keyboard - Variables
+	bool saltar;
+	Ogre::Vector3 v;
+	Ogre::Real mMoveX;
+	Ogre::Real mMoveY;
+	double mGravedad;
+
 private:
 
 	//VARIABLES privadas
-	//Control del teclado para el jugador
-	KeyboardMouse* mKeyboardMouse;
 
 	//Animaciones
 	Ogre::AnimationState *pWalk;

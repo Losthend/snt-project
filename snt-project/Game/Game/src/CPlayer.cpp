@@ -6,18 +6,24 @@
 #include "Global.h"
 //Acceso a Collision y a KeyboardMouse
 #include "Collision.h"
-#include "KeyboardMouse.h"
+//Para escribir en el log
+#include "FuncionesGenerales.h"
 
 //---------------------------------------------------------------------------
 CPlayer::CPlayer(void)
 {
+	//Keyboard - Variables
+	saltar = false;
+	mMoveX = 125;
+	mMoveY = 125;
+	mGravedad = -0.98;
+
 	//Colisionable por defecto
 	m_collision = true;
 	//Velocidad por defecto
 	m_moveX = 125;
 	m_moveY = 125;
-	//Control de teclado y raton para el personaje
-	mKeyboardMouse = new KeyboardMouse();
+
 	//estado pordefecto del personaje (0=quieto)
 	state = 0x0;
 
@@ -58,19 +64,8 @@ CPlayer::~CPlayer(void)
 }
 
 //---------------------------------------------------------------------------
-//--Control, mediante teclado, del jugador
+//--Animacion de movimiento del personaje
 //---------------------------------------------------------------------------
-bool CPlayer::keyboardControl(const Ogre::FrameEvent& evt)
-{
-	//Obtenemos los objetos visibles del frustum
-	std::vector<Ogre::SceneNode*> sceneNodes = inCameraFrustumObjects();
-
-	//Ejecutamos la funcion de control de teclado 
-	//Siendo "node" el propio nodo del jugador almacenado en esta clase
-	//Se hace un "return" del resultado (bool)
-	return mKeyboardMouse->keyboardControl(node, sceneNodes, evt); 
-}
-
 /*
 void CPlayer::updateAnimation(){
 
@@ -84,3 +79,104 @@ void CPlayer::updateAnimation(){
 	//}
 }
 */
+
+//---------------------------------------------------------------------------
+//--Control, mediante teclado, del jugador
+//---------------------------------------------------------------------------
+bool CPlayer::keyboardControl(const Ogre::FrameEvent& evt)
+{
+	//Obtenemos los objetos visibles del frustum
+	std::vector<Ogre::SceneNode*> sceneNodes = inCameraFrustumObjects();
+
+	if(gKeyboard->isKeyDown(OIS::KC_ESCAPE)) return false;
+	//Creamos un vector tridimensional de ceros
+	Ogre::Vector3 transVector = Ogre::Vector3::ZERO;
+	
+	//Movimiento del personaje	
+	//Arriba
+	if (gKeyboard->isKeyDown(OIS::KC_W)){
+		if(!individualCollisionManager(sceneNodes, node)){
+			transVector.y += mMoveY;
+			node->translate(transVector * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
+			
+		}
+		else{
+			transVector.y -= 2 * mMoveY;
+			node->translate(transVector * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
+		}
+	}
+
+	// Abajo
+	if (gKeyboard->isKeyDown(OIS::KC_S)){
+		if(!individualCollisionManager(sceneNodes, node)){
+			transVector.y -= mMoveY;
+			node->translate(transVector * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
+		}
+		else{
+			transVector.y += 2 * mMoveY;
+			node->translate(transVector * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
+		}
+	}
+
+	// izquierda
+	if (gKeyboard->isKeyDown(OIS::KC_A)){
+		if(!individualCollisionManager(sceneNodes, node)){
+			transVector.x -= mMoveX;
+			node->translate(transVector * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
+			//animación de andar
+			gPlayer->state=0x1;
+		}
+		else{
+			//animación de quieto
+			gPlayer->state=0x0;
+			transVector.x += 2 * mMoveX;
+			node->translate(transVector * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
+
+		}
+	}
+	
+	//Esto parece arreglarlo siempre, pero no deberia ser siempre... o si?
+	if (!gKeyboard->isKeyDown(OIS::KC_A)){
+		gPlayer->state=0x0;
+	}
+
+	// Derecha
+	if (gKeyboard->isKeyDown(OIS::KC_D)){
+		if(!individualCollisionManager(sceneNodes, node)){
+			transVector.x += mMoveX;
+			node->translate(transVector * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
+			//animación de andar
+			gPlayer->state=0x1;
+		}
+		else{
+			//animación de quieto
+			gPlayer->state = 0x0;
+			transVector.x -= 2 * mMoveX;
+			node->translate(transVector * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
+		}
+	}
+
+	//espacio	
+	if (gKeyboard->isKeyDown(OIS::KC_SPACE)){
+		saltar = true;
+	}
+
+	if(saltar){
+		gPlayer->state = 0x2;
+		v = node->getPosition();
+		//Tener en cuenta que al multiplicar por el evt siempre tambien modificamos los valores de 'x' y de 'z' si no valen exactamente 0
+		//Segun mis cuentas el valor del evt es aproximadamente (1/100)
+		if(!individualCollisionManager(sceneNodes, node)){
+			mMoveY = mMoveY + (mGravedad /* * evt.timeSinceLastFrame*/);
+			node->translate(Ogre::Vector3(v[0], mMoveY, v[2]) * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
+		}
+		else{
+			imprimir("aqui se invierte arriba y abajo?");
+			transVector.y += 2 * mMoveY;
+			node->translate(transVector * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
+			saltar = false;
+		}
+	}
+
+	return true;
+}
