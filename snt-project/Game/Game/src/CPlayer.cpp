@@ -35,9 +35,9 @@ CPlayer::CPlayer(void)
 	
 	//Creacion (entidad y nodo)
 	//-----------Carga de la textura del robot---------------
-	//entity = gSceneMgr->createEntity(entName, "robot.mesh");
+	entity = gSceneMgr->createEntity(entName, "robot.mesh");
 	//-----------Cubo creado de forma manual-------------------
-	entity = gSceneMgr->createEntity(entName, "ManualObjectCube");
+	//entity = gSceneMgr->createEntity(entName, "ManualObjectCube");
 	node = gSceneMgr->getRootSceneNode()->createChildSceneNode(nodeName);
 	node->attachObject(entity);
 	
