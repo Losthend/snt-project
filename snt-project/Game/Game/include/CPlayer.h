@@ -24,11 +24,13 @@ public:
 	bool m_collision;
 	char state;
 	//Velocidad de movimiento
+	Ogre::Real m_jump;
 	Ogre::Real m_moveX;
 	Ogre::Real m_moveY;
 
 	//Keyboard - Variables
 	bool saltar;
+	bool correr;
 	Ogre::Vector3 v;
 	Ogre::Real mMoveX;
 	Ogre::Real mMoveY;
