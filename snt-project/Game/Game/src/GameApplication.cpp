@@ -16,12 +16,6 @@ GameApplication::GameApplication(void)
 	gPlayer = new CPlayer();
 	//Tambien el "mundo"
 	createScene();
-
-	//Se asocia el nodo del jugador a la camara
-	//NOTA:Las colisiones no funcionan al hacer esto...
-	//gPlayer->node->attachObject(gCamera);
-	//NOTA: necesario para que no se invierta el teclado tras asociarlo
-	//gCamera->roll(Ogre::Degree(180));
 }
 //---------------------------------------------------------------------------
 GameApplication::~GameApplication(void)
@@ -59,9 +53,9 @@ void GameApplication::createScene(void)
 	cube3->getAssociatedNode()->setPosition(-150.0, 0.0, 0.0);
 
 	//Pared derecha
-	/*CCube* cube4 = new CCube("4");
+	CCube* cube4 = new CCube("4");
 	cube4->getAssociatedNode()->scale(1.0, 11.0, 1.0);
-	cube4->getAssociatedNode()->setPosition(150.0, 0.0, 0.0);*/
+	cube4->getAssociatedNode()->setPosition(150.0, 0.0, 0.0);
 
 	//Techo
 	CCube* cube5 = new CCube("5");
@@ -72,7 +66,7 @@ void GameApplication::createScene(void)
 	//Almacenamos los objetos de la clase CCube en el array global de Objects
 	vCubes.push_back(cube2);
 	vCubes.push_back(cube3);
-	//vCubes.push_back(cube4);
+	vCubes.push_back(cube4);
 	vCubes.push_back(cube5);
 	//--------------------------------------------------------------------------------
 

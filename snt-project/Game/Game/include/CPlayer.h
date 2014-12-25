@@ -4,7 +4,7 @@
 #include "stdafx.h"
 
 //Clase para creacion de cubos
-class CPlayer 
+class CPlayer
 {
 //Aqui se establecen las declaraciones de metodos y variables
 public:
@@ -20,23 +20,30 @@ public:
 	//Declaracion de la entidad y del nodo correspondiente al cubo
 	Ogre::Entity* entity;
 	Ogre::SceneNode* node;
+
 	//Booleano de colision: (true) colisionable, (false) no colisionable
 	bool m_collision;
 	char state;
+
 	//Velocidad de movimiento
-	Ogre::Real m_jump;
 	Ogre::Real m_moveX;
 	Ogre::Real m_moveY;
 
-	//Keyboard - Variables
-	bool saltar;
-	bool correr;
-	Ogre::Vector3 v;
-	Ogre::Real mMoveX;
-	Ogre::Real mMoveY;
-	double mGravedad;
+	//Aceleracion
+	Ogre::Real accX;
+	Ogre::Real accY;
+
+	//Otras variables
+	bool m_jumpUp;
+	double m_gravity;
+	Ogre::Vector3 m_direction;
+
 
 private:
+
+	//METODOS
+	void keyPressed(void);
+	void jumpSolution(void);
 
 	//VARIABLES privadas
 

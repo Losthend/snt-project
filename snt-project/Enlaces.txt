@@ -30,3 +30,9 @@ http://www.ogre3d.org/docs/api/1.9/class_ogre_1_1_plane_bounded_volume_list_scen
 http://ogre.sourcearchive.com/documentation/1.6.4.dfsg1-1/classOgre_1_1Camera_18a5f06c6bf48445d3602f2d336d80c4.html
 http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Intermediate+Tutorial+4
 http://www.ogre3d.org/forums/viewtopic.php?f=2&t=80323
+
+---------------------------------------------------
+Importantes/interesantes para colisiones:
+http://www.jbox2d.org/
+https://helmetwarsgame.wordpress.com/2011/12/01/funcion-de-deteccion-de-colision-entre-dos-rectangulos-de-un-plano/
+http://siondream.com/blog/games/colisiones-iv-tests-de-colision/
