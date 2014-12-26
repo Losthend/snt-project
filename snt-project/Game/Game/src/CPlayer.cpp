@@ -14,9 +14,10 @@ CPlayer::CPlayer(void)
 {
 	//Variable para indicar si esta colisionando o no
 	m_collision = false;
+	m_collisionGravity = false;
 
 	//Velocidad por defecto
-	m_moveX = 200;
+	m_moveX = 150;
 	m_moveY = 300;
 
 	//Aceleracion
@@ -77,28 +78,33 @@ bool CPlayer::keyboardControl(const Ogre::FrameEvent& evt)
 	//Comprobamos el teclado
 	keyPressed();
 
-	//Gravedad
-	if (!m_collision && !m_jumpUp)
-	{
-		m_direction.y = m_direction.y - m_gravity;
-	}
-
 	//Primero, obtenemos cuanto nos vamos a desplazar
 	Ogre::Vector3 vDistance = m_direction * evt.timeSinceLastFrame;
+	//Desplazamiento con gravedad
+	m_direction.y = m_direction.y - m_gravity;
+	Ogre::Vector3 vDistanceGravity = m_direction * evt.timeSinceLastFrame;
 
 	//Segundo, para cada nodo en el frustum obtenemos las coordenadas que ocupa (excluyendo las del jugador)
 	std::vector<Ogre::Vector3> vAllCoords = getAllOccupiedCoords();
 
 	//Tercero, obtenemos las coordenadas que "ocupara" el jugador en el "siguiente movimiento"
 	std::vector<Ogre::Vector3> vPlayerCoords = simulateOccupiedCoords(node, vDistance);
+	//Coordenadas que ocupara con gravedad
+	std::vector<Ogre::Vector3> vPlayerCoordsGravity = simulateOccupiedCoords(node, vDistanceGravity);
 
 	//Finalmente, comprobamos si alguna de las coordenadas del jugador "colisiona" con alguna de las "ocupadas"
 	m_collision = testColision(vAllCoords, vPlayerCoords);
+	m_collisionGravity = testColision(vAllCoords, vPlayerCoordsGravity);
 
-	//Si NO hay colision, permitimos el movimiento
-	if (!m_collision)
+	//Si NO hay colision teniendo gravedad, permitimos el movimiento
+	if (!m_collisionGravity)
 	{
 		//Desplazas el nodo
+		node->translate(vDistanceGravity, Ogre::Node::TS_LOCAL);
+	}
+	else if (!m_collision)
+	{
+		//Si no hay colision sin gravedad, permitimos el movimiento (ya esta sobre el suelo)
 		node->translate(vDistance, Ogre::Node::TS_LOCAL);
 	}
 	
@@ -144,21 +150,16 @@ void CPlayer::keyPressed(void)
 //------------------------------------------------------------
 void CPlayer::jumpSolution(void)
 {
-	//SUBIENDO
-	if (!m_collision && m_jumpUp)
+	//Si no hay colision, estas saltando y estas subiendo a una velocidad <=125
+	if (!m_collisionGravity && m_jumpUp && m_direction.y <= 125)
 	{
-		//Cambio la velocidad de subida, debido al efecto de la gravedad, para la siguiente ronda
-		m_direction.y = m_direction.y - m_gravity;
-		if (m_direction.y <= 125)
-		{
-			//Hemos llegado al "maximo" del salto, cancelamos la subida y empezamos el descenso
-			m_jumpUp = false;	
-			m_direction.y = -0;
-		}
+		//Hemos llegado al "maximo" del salto, cancelamos la subida y empezamos el descenso
+		m_jumpUp = false;	
+		m_direction.y = 0;
 	}
-	else if (m_collision)
+	else if (m_collisionGravity || m_collision)
 	{
-		//Si se produce una colision, detenemos el salto y empezamos el descenso
+		//Si se produce una colision durante el salto, detenemos el salto
 		m_jumpUp = false;
 		m_direction.y = 0;
 	}

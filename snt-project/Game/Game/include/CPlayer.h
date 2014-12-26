@@ -23,6 +23,7 @@ public:
 
 	//Booleano de colision: (true) colisionable, (false) no colisionable
 	bool m_collision;
+	bool m_collisionGravity;
 	char state;
 
 	//Velocidad de movimiento
