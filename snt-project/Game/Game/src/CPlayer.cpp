@@ -101,7 +101,9 @@ bool CPlayer::keyboardControl(const Ogre::FrameEvent& evt)
 	if (!m_collisionGravity)
 	{
 		//Desplazas el nodo		
-		node->translate(vDistanceGravity, Ogre::Node::TS_LOCAL);
+		node->translate(vDistanceGravity, Ogre::Node::TS_LOCAL);	
+		//Desplazar la cámara
+		gCamera->move(vDistanceGravity);	
 	}
 	else if (!m_collision)
 	{
