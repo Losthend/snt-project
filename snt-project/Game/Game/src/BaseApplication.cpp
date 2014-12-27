@@ -95,8 +95,8 @@ void BaseApplication::setUp(void)
 
 	//Creacion de la camara, posicion, direccion, clipDistance
 	mCamera = mSceneMgr->createCamera("PlayerCam");
-	mCamera->setPosition(Ogre::Vector3(0,0,300));
-	mCamera->lookAt(Ogre::Vector3(0,0,0));
+	mCamera->setPosition(Ogre::Vector3(0,100,450));
+	mCamera->lookAt(Ogre::Vector3(0,100,0));
 	mCamera->setNearClipDistance(5);
 
 	//Añadimos un viewport

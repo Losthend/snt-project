@@ -44,6 +44,7 @@ CPlayer::CPlayer(void)
 	entity = gSceneMgr->createEntity(entName, "ManualObjectCube");
 	node = gSceneMgr->getRootSceneNode()->createChildSceneNode(nodeName);
 	node->attachObject(entity);
+
 	
 	//Posicionamiento y escalado (por defecto)
 	node->setPosition(0.0, 0.0, 0.0);
@@ -99,13 +100,15 @@ bool CPlayer::keyboardControl(const Ogre::FrameEvent& evt)
 	//Si NO hay colision teniendo gravedad, permitimos el movimiento
 	if (!m_collisionGravity)
 	{
-		//Desplazas el nodo
+		//Desplazas el nodo		
 		node->translate(vDistanceGravity, Ogre::Node::TS_LOCAL);
 	}
 	else if (!m_collision)
 	{
 		//Si no hay colision sin gravedad, permitimos el movimiento (ya esta sobre el suelo)
 		node->translate(vDistance, Ogre::Node::TS_LOCAL);
+		//Desplazar la camara con el personaje
+		gCamera->move(vDistance);	
 	}
 	
 	//Tratamos el salto
@@ -124,23 +127,31 @@ void CPlayer::keyPressed(void)
 {
 	//Izquierda
 	if (gKeyboard->isKeyDown(OIS::KC_A))
-	{
+	{		
+		//correr
+		if(gKeyboard->isKeyDown(OIS::KC_LSHIFT))
+			m_direction.x = 2*-m_moveX;
+		else
 			m_direction.x = -m_moveX;
 	}
 
 	// Derecha
 	if (gKeyboard->isKeyDown(OIS::KC_D))
 	{
+		//correr
+		if(gKeyboard->isKeyDown(OIS::KC_LSHIFT))
+			m_direction.x = 2*m_moveX;
+		else
 			m_direction.x = m_moveX;
 	}
 
 	// Espacio (salto)
 	if (gKeyboard->isKeyDown(OIS::KC_SPACE) && !m_jumpUp)
 	{
-			//Aplicamos el desplazamiento deseado en el eje Y
-			m_direction.y = m_moveY;
-			//Bloqueamos el salto
-			m_jumpUp = true;
+		//Aplicamos el desplazamiento deseado en el eje Y
+		m_direction.y = m_moveY;
+		//Bloqueamos el salto
+		m_jumpUp = true;
 	}
 }
 
