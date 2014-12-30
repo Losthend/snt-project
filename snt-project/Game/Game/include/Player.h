@@ -1,17 +1,19 @@
-#ifndef __CPlayer_h_
-#define __CPlayer_h_
+#ifndef __Player_h_
+#define __Player_h_
 
 #include "stdafx.h"
 
+class Object;
+
 //Clase para creacion de cubos
-class CPlayer
+class Player
 {
 //Aqui se establecen las declaraciones de metodos y variables
 public:
 
 	//Constructor, destructor
-    CPlayer(void);
-    virtual ~CPlayer(void);
+    Player(void);
+    virtual ~Player(void);
 	//METODOS publicos
 	bool keyboardControl(const Ogre::FrameEvent& evt);
 	void updateAnimation();
@@ -21,10 +23,9 @@ public:
 	Ogre::Entity* entity;
 	Ogre::SceneNode* node;
 
-	//Booleano de colision: (true) colisionable, (false) no colisionable
-	bool m_collision;
-	bool m_collisionGravity;
-	char state;
+	//Nodos de colision, si colisiona con un nodo lo almacena aqui y decide como actuar
+	Object* m_obj;
+	Object* m_objGravity;
 
 	//Velocidad de movimiento
 	Ogre::Real m_moveX;
@@ -36,14 +37,19 @@ public:
 
 	//Otras variables
 	bool m_jumpUp;
+	Ogre::Real m_jumpCount;
+	Ogre::Real m_maxNumJump;
+
 	double m_gravity;
 	Ogre::Vector3 m_direction;
 
+	char state;
 
 private:
 
 	//METODOS
 	void keyPressed(void);
+	void collisionSolution(Ogre::Vector3 vDistanceGravity, Ogre::Vector3 vDistance);
 	void jumpSolution(void);
 
 	//VARIABLES privadas
@@ -62,6 +68,6 @@ private:
 
 //---------------------------------------------------------------------------
 
-#endif // #ifndef __CPlayer_h_
+#endif // #ifndef __Player_h_
 
 //---------------------------------------------------------------------------

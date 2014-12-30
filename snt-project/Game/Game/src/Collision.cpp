@@ -2,7 +2,8 @@
 #include "Collision.h"
 
 #include "Global.h"
-#include "CPlayer.h"
+#include "Player.h"
+#include "Object.h"
 
 #include "FuncionesGenerales.h"
 
@@ -48,42 +49,14 @@ std::vector<Ogre::SceneNode*> inCameraFrustumObjects(void)
 	return sceneNodes;
 }
 
-//---------------------------------------------------------------------
-//Devuelve un vector que contiene todas las coordenadas de contorno ocupadas en el frustum actual
-//Nota: si el nodo es el del jugador, automaticamente lo descarta
-//---------------------------------------------------------------------
-
-std::vector<Ogre::Vector3> getAllOccupiedCoords()
-{
-	//Obtenemos los objetos que hay en el frustum
-	std::vector<Ogre::SceneNode*> vNodes = inCameraFrustumObjects();
-	//Declaramos el vector final a devolver
-	std::vector<Ogre::Vector3> vCoords;
-	//Para cada uno de estos objetos, obtenemos las coordenadas que ocupan
-	for (std::vector<Ogre::SceneNode*>::iterator it = vNodes.begin(); it != vNodes.end(); it++)
-	{
-		if ((*it)->getName() != gPlayer->node->getName())
-		{
-			std::vector<Ogre::Vector3> vNodeCoords = getOccupiedCoords((*it));
-			vCoords.push_back(vNodeCoords[0]);
-			vCoords.push_back(vNodeCoords[1]);
-			vCoords.push_back(vNodeCoords[2]);
-			vCoords.push_back(vNodeCoords[3]);
-			//Añadimos un vertice del plano trasero para disponer de la profundidad maxima
-			vCoords.push_back(vNodeCoords[4]);
-		}
-	}
-
-	return vCoords;
-}
 
 //---------------------------------------------------------------------
 //Devuelve un vector con las coordenadas AABB de los extremos de un nodo
-//Parametros: el nodo que queremos saber cuanto ocupa y el vector donde guardarlo
+//Parametros: el nodo que queremos saber cuanto ocupa
 //---------------------------------------------------------------------
 std::vector<Ogre::Vector3> getOccupiedCoords(Ogre::SceneNode* node)
 {
-
+	//Declaramos el vector a devolver
 	std::vector<Ogre::Vector3> vNodeCoords;
 
 	//Obtenemos las coordenadas de los extremos de la cara frontal del cubo, la unica con la que trabajaremos
@@ -139,6 +112,102 @@ std::vector<Ogre::Vector3> simulateOccupiedCoords(Ogre::SceneNode* node, Ogre::V
 
 }
 
+
+//---------------------------------------------------------------------
+//Dadas las coordenadas simuladas de un nodo, comprueba si en ese movimiento se produce o no una colision.
+//Parametro: las coordenadas simuladas del futuro emplazamiento del nodo
+//---------------------------------------------------------------------
+Object* testCollisionAABB(std::vector<Ogre::Vector3> vSimulatedCoords)
+{
+	//Extraer las coordenadas de movimiento simulado para el nodo
+	Ogre::Vector3 sim_RIGHT_BOTTOM = vSimulatedCoords[0];
+	Ogre::Vector3 sim_LEFT_BOTTOM = vSimulatedCoords[1];
+	Ogre::Vector3 sim_LEFT_TOP = vSimulatedCoords[2];
+	Ogre::Vector3 sim_RIGHT_TOP = vSimulatedCoords[3];
+	Ogre::Vector3 sim_FAR_Z = vSimulatedCoords[4];
+
+	//Declaramos bool de colision
+	bool collision = false;
+
+	//Objeto "Object" a devolver
+	Object* obj = 0;
+
+	//Obtenemos el tamaño del vector global "vObjects"
+	std::vector<int>::size_type sz = vObjects.size();
+
+	//OPTIMIZABLE CON: inCameraFrustumObjects
+	//Comparamos colisiones con TODOS los objetos, minimo hasta encontrar alguna colision
+	for (unsigned x=0; x < sz && !collision; x++)
+	{
+		//Obtenemos los extremos del objeto
+		std::vector<Ogre::Vector3> vNodeCoords = getOccupiedCoords(vObjects[x]->m_node);
+
+		Ogre::Vector3 obj_RIGHT_BOTTOM = vNodeCoords[0];
+		Ogre::Vector3 obj_LEFT_BOTTOM = vNodeCoords[1];
+		Ogre::Vector3 obj_LEFT_TOP = vNodeCoords[2];
+		Ogre::Vector3 obj_RIGHT_TOP = vNodeCoords[3];
+		Ogre::Vector3 obj_FAR_Z = vNodeCoords[4];
+
+		//Teorema del plano de separacion
+		//Proyectamos las cajas sobre cada uno de los ejes y si alguna de las proyecciones
+		//No se solapan, podremos asegurar que no existe colision entre las AABB.
+		if (sim_RIGHT_BOTTOM.x > obj_LEFT_BOTTOM.x &&
+			sim_LEFT_BOTTOM.x < obj_RIGHT_BOTTOM.x &&
+			sim_LEFT_TOP.y > obj_LEFT_BOTTOM.y &&
+			sim_LEFT_BOTTOM.y < obj_LEFT_TOP.y &&
+			sim_FAR_Z.z <= obj_LEFT_TOP.z &&
+			sim_LEFT_TOP.z >= obj_FAR_Z.z)
+		{
+			collision = true;
+			obj = vObjects[x];
+		}
+	}
+
+	return obj;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+//---------------------------------------------------------------------
+//Devuelve un vector que contiene todas las coordenadas de contorno ocupadas en el frustum actual
+//Nota: si el nodo es el del jugador, automaticamente lo descarta
+//---------------------------------------------------------------------
+std::vector<Ogre::Vector3> getAllOccupiedCoords()
+{
+	//Obtenemos los objetos que hay en el frustum
+	std::vector<Ogre::SceneNode*> vNodes = inCameraFrustumObjects();
+	//Declaramos el vector final a devolver
+	std::vector<Ogre::Vector3> vCoords;
+	//Para cada uno de estos objetos, obtenemos las coordenadas que ocupan
+	for (std::vector<Ogre::SceneNode*>::iterator it = vNodes.begin(); it != vNodes.end(); it++)
+	{
+		if ((*it)->getName() != gPlayer->node->getName())
+		{
+			std::vector<Ogre::Vector3> vNodeCoords = getOccupiedCoords((*it));
+			vCoords.push_back(vNodeCoords[0]);
+			vCoords.push_back(vNodeCoords[1]);
+			vCoords.push_back(vNodeCoords[2]);
+			vCoords.push_back(vNodeCoords[3]);
+			//Añadimos un vertice del plano trasero para disponer de la profundidad maxima
+			vCoords.push_back(vNodeCoords[4]);
+		}
+	}
+
+	return vCoords;
+}
+
 //---------------------------------------------------------------------
 //Devuelve TRUE si hay colision o FALSE en caso contrario
 //---------------------------------------------------------------------
@@ -188,56 +257,5 @@ bool testColision(std::vector<Ogre::Vector3> vAllCoords, std::vector<Ogre::Vecto
 		}
 	}
 	return collision;
-}
-
-
-
-/*
-//----------------------------------------------------------------------
-//Deteccion de colisiones AABB entre dos nodos
-//----------------------------------------------------------------------
-bool AABBcollisionDetection(Ogre::SceneNode* node1, Ogre::SceneNode* node2)
-{
-	//Colision entre dos nodos 
-	Ogre::AxisAlignedBox aabb = node1->_getWorldAABB().intersection(node2->_getWorldAABB());
-
-	if(!aabb.isNull())
-		return true;
-
-	return false;
-}
-
-
-//----------------------------------------------------------------------
-//Deteccion de colisiones AABB entre un nodo dado y aquellos que lo rodean dentro del frustum
-//----------------------------------------------------------------------
-bool collisionManager(void)
-{
-	//Obtenemos los objetos visibles del frustum
-	std::vector<Ogre::SceneNode*> sceneNodes = inCameraFrustumObjects();
-
-	Ogre::SceneNode* node1 = gPlayer->node;
-	Ogre::SceneNode* node2;
-	Ogre::String node1Name = node1->getName();
-	
-	bool collision;
-
-	//Tamaño del vector
-	std::vector<int>::size_type sz = sceneNodes.size();
-
-	for (unsigned x=0; x<sz; x++)
-	{
-		node2 = sceneNodes[x];
-		Ogre::String node2Name = node2->getName();
-		//Evitamos que detecte la colision consigo mismo
-		if (node1Name != node2Name)
-		{
-			collision = AABBcollisionDetection(node1, node2);
-			//En el caso de detectar colision entre ambos nodos
-			if (collision)
-				return collision;
-		}
-	}
-	return false;
 }
 */

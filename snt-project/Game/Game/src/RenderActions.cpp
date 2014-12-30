@@ -4,9 +4,9 @@
 #include "RenderActions.h"
 //Acceso a variables globales
 #include "Global.h"
-//Acceso a CCube y CPlayer
-#include "CCube.h"
-#include "CPlayer.h"
+//Acceso a Object y Player
+#include "Object.h"
+#include "Player.h"
 
 //------------------------------------------------------------------
 //Esta clase esta orientada a establecer los listeners, permitiendo 

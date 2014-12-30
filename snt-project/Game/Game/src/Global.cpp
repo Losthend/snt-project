@@ -1,12 +1,12 @@
 #include "stdafx.h"
 #include "Global.h"
 
-//Instancia del jugador
-CPlayer* gPlayer;
-//Vector con instancias de los CCubes declarados
-std::vector<CCube*> vCubes;
+//Jugador (ver constructor de GameApplication.cpp)
+Player* gPlayer;
+//Vector con los demas objetos (ver createScene de GameApplication.cpp) 
+std::vector<Object*> vObjects;
 
-//Variables globales
+//Variables globales (ver BaseApplication.cpp)
 Ogre::Root*				gRoot;
 Ogre::SceneManager*		gSceneMgr;
 Ogre::RenderWindow*		gWindow;

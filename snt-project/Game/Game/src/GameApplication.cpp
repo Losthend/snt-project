@@ -3,9 +3,9 @@
 
 //Acceso a las variables globales
 #include "Global.h"
-//Acceso a CCube y CPlayer
-#include "CCube.h"
-#include "CPlayer.h"
+//Acceso a CCube y Player
+#include "Object.h"
+#include "Player.h"
 
 //---------------------------------------------------------------------------
 //Constructor del juego (Game)
@@ -13,7 +13,7 @@
 GameApplication::GameApplication(void)
 {
 	//Al crear el juego se crea el personaje (solo uno)
-	gPlayer = new CPlayer();
+	gPlayer = new Player();
 	//Tambien el "mundo"
 	createScene();
 }
@@ -29,45 +29,36 @@ GameApplication::~GameApplication(void)
 void GameApplication::createScene(void)
 {
 	//--------------------------------------------------------------------------------
-	//Al crear una escena vaciamos el posible contenido de vCubes (vector con los cubos creados en la escena, nodo incluido)
-	vCubes.clear();
+	//Al crear una escena vaciamos el posible contenido de vObjects (vector con los cubos creados en la escena, nodo incluido)
+	vObjects.clear();
 	//--------------------------------------------------------------------------------
 
-	/*
-	Ogre::Entity* mEntidadPrubas = gSceneMgr->createEntity("escenrioPruebas","bugSPARK.mesh");
-	Ogre::SceneNode* nodoEscenario = gSceneMgr->getRootSceneNode()->createChildSceneNode("nodoEscenrioPruebas");
-	nodoEscenario->attachObject(mEntidadPrubas);
-	nodoEscenario->yaw(Ogre::Radian(150));
-	nodoEscenario->setPosition(Ogre::Vector3(0.0, -80.0, 0.0));
-	nodoEscenario->scale(Ogre::Vector3(10, 10, 10));
-	*/
-
 	//Suelo
-	CCube* cube2 = new CCube("2");
-	cube2->getAssociatedNode()->scale(14, 1.0, 1.0);
-	cube2->getAssociatedNode()->setPosition(0.0, -125.0, 0.0);
+	Object* obj1 = new Object("1", 1);
+	obj1->m_node->scale(14, 1.0, 1.0);
+	obj1->m_node->setPosition(0.0, -125.0, 0.0);
 
 	//Pared izquierda
-	CCube* cube3 = new CCube("3");
-	cube3->getAssociatedNode()->scale(1.0, 11.0, 1.0);
-	cube3->getAssociatedNode()->setPosition(-150.0, 0.0, 0.0);
+	Object* obj2 = new Object("2", 1);
+	obj2->m_node->scale(1.0, 11.0, 1.0);
+	obj2->m_node->setPosition(-150.0, 0.0, 0.0);
 
 	//Pared derecha
-	CCube* cube4 = new CCube("4");
-	cube4->getAssociatedNode()->scale(1.0, 11.0, 1.0);
-	cube4->getAssociatedNode()->setPosition(150.0, 0.0, 0.0);
+	Object* obj3 = new Object("3", 1);
+	obj3->m_node->scale(1.0, 11.0, 1.0);
+	obj3->m_node->setPosition(150.0, 0.0, 0.0);
 
 	//Techo
-	CCube* cube5 = new CCube("5");
-	cube5->getAssociatedNode()->scale(14.0, 1.0, 1.0);
-	cube5->getAssociatedNode()->setPosition(0.0, 125.0, 0.0);
+	Object* obj4 = new Object("4", 1);
+	obj4->m_node->scale(14.0, 1.0, 1.0);
+	obj4->m_node->setPosition(0.0, 125.0, 0.0);
 
 	//--------------------------------------------------------------------------------
 	//Almacenamos los objetos de la clase CCube en el array global de Objects
-	vCubes.push_back(cube2);
-	vCubes.push_back(cube3);
-	vCubes.push_back(cube4);
-	vCubes.push_back(cube5);
+	vObjects.push_back(obj1);
+	vObjects.push_back(obj2);
+	vObjects.push_back(obj3);
+	vObjects.push_back(obj4);
 	//--------------------------------------------------------------------------------
 
 	//Luz ambiente y fondo

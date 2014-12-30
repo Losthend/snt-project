@@ -182,19 +182,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\CCube.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\src\Collision.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\CPlayer.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\FixedFrameRate.cpp"
 				>
 			</File>
 			<File
@@ -211,6 +199,14 @@
 			</File>
 			<File
 				RelativePath=".\src\Main.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\Object.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\Player.cpp"
 				>
 			</File>
 			<File
@@ -248,19 +244,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\include\CCube.h"
-				>
-			</File>
-			<File
 				RelativePath=".\include\Collision.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\CPlayer.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\FixedFrameRate.h"
 				>
 			</File>
 			<File
@@ -273,6 +257,14 @@
 			</File>
 			<File
 				RelativePath=".\include\Global.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\Object.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\Player.h"
 				>
 			</File>
 			<File
