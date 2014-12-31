@@ -120,10 +120,12 @@ bool Player::keyboardControl(const Ogre::FrameEvent& evt)
 void Player::keyPressed(void)
 {
 	//Agachado
-	if(gKeyboard->isKeyDown(OIS::KC_S))
+	if(gKeyboard->isKeyDown(OIS::KC_S) && !m_jumpUp){
 		m_crouchDown = true;
-	else
+	}
+	else{
 		m_crouchDown = false;
+	}
 	//Izquierda
 	if (gKeyboard->isKeyDown(OIS::KC_A))
 	{	
