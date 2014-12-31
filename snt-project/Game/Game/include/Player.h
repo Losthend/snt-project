@@ -37,6 +37,7 @@ public:
 
 	//Otras variables
 	bool m_jumpUp;
+	bool m_crouchDown;
 	Ogre::Real m_jumpCount;
 	Ogre::Real m_maxNumJump;
 

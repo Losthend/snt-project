@@ -119,9 +119,18 @@ bool Player::keyboardControl(const Ogre::FrameEvent& evt)
 //------------------------------------------------------------
 void Player::keyPressed(void)
 {
+	//Agachado
+	if(gKeyboard->isKeyDown(OIS::KC_S))
+		m_crouchDown = true;
+	else
+		m_crouchDown = false;
 	//Izquierda
 	if (gKeyboard->isKeyDown(OIS::KC_A))
-	{		
+	{	
+		//Agachado y moviendose
+		if(m_crouchDown)
+			m_direction.x = -m_moveX/2;
+		else
 		//correr
 		if(gKeyboard->isKeyDown(OIS::KC_LSHIFT))
 			m_direction.x = 2*-m_moveX;
@@ -132,6 +141,10 @@ void Player::keyPressed(void)
 	// Derecha
 	if (gKeyboard->isKeyDown(OIS::KC_D))
 	{
+		//Agachado y moviendose
+		if(m_crouchDown)
+			m_direction.x = m_moveX/2;
+		else
 		//correr
 		if(gKeyboard->isKeyDown(OIS::KC_LSHIFT))
 			m_direction.x = 2*m_moveX;
