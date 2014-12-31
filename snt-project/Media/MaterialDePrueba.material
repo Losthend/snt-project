@@ -1,0 +1,14 @@
+material MyMaterial1
+{
+	technique
+	{
+		pass
+		{			
+			texture_unit
+			{
+				texture terr_rock6.jpg
+				filtering none
+			}
+		}
+	}
+}
