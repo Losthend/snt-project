@@ -7,6 +7,8 @@
 #include "RenderActions.h"
 //Creación de escenario
 #include "GameApplication.h"
+//Para el control de FPS
+#include "FrameRate.h"
 
 
 //------------------------------------------------------------------
@@ -29,6 +31,10 @@ extern "C" {
 		RenderActions* renderAct = new RenderActions();
 		//Creamos el juego (personaje y escenario)
 		GameApplication* gameApp = new GameApplication();
+
+		//Momento de ejecucion del primer frame
+		initFrameRate();
+
 		//Iniciamos el bucle de renderizado infinito (ver "frameRenderingQueued" en "RenderActions")
 		baseApp->mRoot->startRendering();
 

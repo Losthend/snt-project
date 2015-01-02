@@ -186,6 +186,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\FrameRate.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\FuncionesGenerales.cpp"
 				>
 			</File>
@@ -245,6 +249,10 @@
 			</File>
 			<File
 				RelativePath=".\include\Collision.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\FrameRate.h"
 				>
 			</File>
 			<File

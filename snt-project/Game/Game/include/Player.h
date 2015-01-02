@@ -1,8 +1,6 @@
 #ifndef __Player_h_
 #define __Player_h_
 
-#include "stdafx.h"
-
 class Object;
 
 //Clase para creacion de cubos
@@ -15,10 +13,14 @@ public:
     Player(void);
     virtual ~Player(void);
 	//METODOS publicos
-	bool keyboardControl(const Ogre::FrameEvent& evt);
+	bool keyboardControl();
 	void updateAnimation();
 
 	//VARIABLES PUBLICAS
+
+	//Velocidad del juego (duracion de cada frame)
+	double FPS;
+
 	//Declaracion de la entidad y del nodo correspondiente al cubo
 	Ogre::Entity* entity;
 	Ogre::SceneNode* node;

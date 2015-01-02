@@ -8,10 +8,16 @@
 #include "Collision.h"
 //Para escribir en el log
 #include "FuncionesGenerales.h"
+//Para obtener los FPS
+#include "FrameRate.h"
 
 //---------------------------------------------------------------------------
 Player::Player(void)
 {
+
+	//Obtenemos la duracion de cada frame
+	FPS = getframeLength();
+
 	//Variable para indicar si esta colisionando o no
 	m_obj = 0;
 	m_objGravity = 0;
@@ -25,7 +31,7 @@ Player::Player(void)
 	accY = 6;
 
 	//Gravedad
-	m_gravity = 0.98;
+	m_gravity = 9.8;
 
 	//Variables de saltos
 	m_jumpUp = false;
@@ -78,7 +84,7 @@ Player::~Player(void)
 //---------------------------------------------------------------------------
 //--Control, mediante teclado, del jugador
 //---------------------------------------------------------------------------
-bool Player::keyboardControl(const Ogre::FrameEvent& evt)
+bool Player::keyboardControl()
 {
 	if(gKeyboard->isKeyDown(OIS::KC_ESCAPE)) return false;
 	
@@ -86,10 +92,10 @@ bool Player::keyboardControl(const Ogre::FrameEvent& evt)
 	keyPressed();
 
 	//Obtenemos cuanto nos vamos a desplazar
-	Ogre::Vector3 vDistance = m_direction * evt.timeSinceLastFrame;
+	Ogre::Vector3 vDistance = m_direction * FPS;
 	//Obtenemos cuanto nos vamos a desplazar con gravedad
 	m_direction.y = m_direction.y - m_gravity;
-	Ogre::Vector3 vDistanceGravity = m_direction * evt.timeSinceLastFrame;
+	Ogre::Vector3 vDistanceGravity = m_direction * FPS;
 
 	//Obtenemos las coordenadas que "ocupara" el jugador en el "siguiente movimiento"
 	std::vector<Ogre::Vector3> vPlayerCoords = simulateOccupiedCoords(node, vDistance);
@@ -126,6 +132,7 @@ void Player::keyPressed(void)
 	else{
 		m_crouchDown = false;
 	}
+
 	//Izquierda
 	if (gKeyboard->isKeyDown(OIS::KC_A))
 	{	
@@ -204,7 +211,7 @@ void Player::collisionSolution(Ogre::Vector3 vDistanceGravity, Ogre::Vector3 vDi
 void Player::jumpSolution(void)
 {
 	//Si NO hay colision, estas saltando y has llegado al "maximo" del salto
-	if (m_objGravity == 0 && m_jumpUp && m_direction.y <= 125)
+	if (m_objGravity == 0 && m_jumpUp && m_direction.y <= 200)
 	{
 		if (m_jumpCount >= m_maxNumJump)
 		{

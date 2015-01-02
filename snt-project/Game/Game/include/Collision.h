@@ -1,5 +1,3 @@
-#include "stdafx.h"
-
 class Object;
 //Definicion de metodos de deteccion de colisiones
 

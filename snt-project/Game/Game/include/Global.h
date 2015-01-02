@@ -1,5 +1,4 @@
 #pragma once
-#include "stdafx.h"
 
 //Declaracion de clases Jugador y Cubo
 class Player;

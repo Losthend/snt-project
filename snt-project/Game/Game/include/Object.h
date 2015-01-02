@@ -1,8 +1,6 @@
 #ifndef __Object_h_
 #define __Object_h_
 
-#include "stdafx.h"
-
 //Clase para creacion de objectos estaticos (paredes, suelo, etc)
 class Object 
 {

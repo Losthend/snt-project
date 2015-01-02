@@ -1,8 +1,6 @@
 #ifndef __BaseApplication_h_
 #define __BaseApplication_h_
 
-#include "stdafx.h"
-
 class BaseApplication
 {
 //Aqui se establecen las declaraciones de metodos y variables

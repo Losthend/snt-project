@@ -1,8 +1,6 @@
 #ifndef __Main_h_
 #define __Main_h_
 
-#include "stdafx.h"
-
 //Se añade herencia para que puedan utilizarse posteriormente ciertos metodos
 class RenderActions : public Ogre::WindowEventListener, public Ogre::FrameListener
 {
