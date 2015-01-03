@@ -53,12 +53,17 @@ void GameApplication::createScene(void)
 	obj4->m_node->scale(14.0, 1.0, 1.0);
 	obj4->m_node->setPosition(0.0, 125.0, 0.0);
 
+	//Objeto dinamico
+	Object* obj5 = new Object("5", 2);
+	obj5->m_node->setPosition(50.0, 0.0, 0.0);
+
 	//--------------------------------------------------------------------------------
 	//Almacenamos los objetos de la clase CCube en el array global de Objects
 	vObjects.push_back(obj1);
 	vObjects.push_back(obj2);
 	vObjects.push_back(obj3);
 	vObjects.push_back(obj4);
+	vObjects.push_back(obj5);
 	//--------------------------------------------------------------------------------
 
 	//Luz ambiente y fondo

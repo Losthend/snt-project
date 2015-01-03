@@ -2,6 +2,8 @@
 
 //Las declaraciones de sus variables y metodos
 #include "Player.h"
+//Acceso al objeto
+#include "Object.h"
 //Acceso a las variables globales
 #include "Global.h"
 //Acceso a Collision y a KeyboardMouse
@@ -18,17 +20,9 @@ Player::Player(void)
 	//Obtenemos la duracion de cada frame
 	FPS = getframeLength();
 
-	//Variable para indicar si esta colisionando o no
-	m_obj = 0;
-	m_objGravity = 0;
-
 	//Velocidad por defecto
 	m_moveX = 150;
 	m_moveY = 300;
-
-	//Aceleracion
-	accX = 2;
-	accY = 6;
 
 	//Gravedad
 	m_gravity = 9.8;
@@ -38,6 +32,10 @@ Player::Player(void)
 	m_jumpCount = 0;
 	m_maxNumJump = 2; //Maximo numero de saltos
 
+	//Por defecto no estas agarrando ningun objeto
+	m_catch = false;
+	m_catchObj = 0;
+
 	//Vector de direccion del personaje
 	m_direction = Ogre::Vector3::ZERO;
 
@@ -46,15 +44,15 @@ Player::Player(void)
 
 	//Creamos el cubo con su entidad y nodo correspondiente
 	//Identificadores
-	std::string entName = "entityPlayer";
-	std::string nodeName = "nodePlayer";
+	m_entName = "entityPlayer";
+	m_nodeName = "nodePlayer";
 	
 	//Creacion (entidad y nodo)
 	//-----------Carga de la textura del robot---------------
 	//entity = gSceneMgr->createEntity(entName, "robot.mesh");
 	//-----------Cubo creado de forma manual-------------------
-	entity = gSceneMgr->createEntity(entName, "ManualObjectCube");
-	node = gSceneMgr->getRootSceneNode()->createChildSceneNode(nodeName);
+	entity = gSceneMgr->createEntity(m_entName, "ManualObjectCube");
+	node = gSceneMgr->getRootSceneNode()->createChildSceneNode(m_nodeName);
 	node->attachObject(entity);
 
 	
@@ -91,26 +89,28 @@ bool Player::keyboardControl()
 	//Comprobamos el teclado
 	keyPressed();
 
-	//Obtenemos cuanto nos vamos a desplazar
-	Ogre::Vector3 vDistance = m_direction * FPS;
-	//Obtenemos cuanto nos vamos a desplazar con gravedad
+	//Obtenemos el desplazamiento CON gravedad
+	Ogre::Real temp = m_direction.y;
 	m_direction.y = m_direction.y - m_gravity;
-	Ogre::Vector3 vDistanceGravity = m_direction * FPS;
+	Ogre::Vector3 vDistance = m_direction * FPS;
+	std::vector<Ogre::Vector3> vPlayerCoords = simulateOccupiedCoords(node, vDistance);	
+	Object* obj = testCollisionAABB(vPlayerCoords, m_nodeName);
 
-	//Obtenemos las coordenadas que "ocupara" el jugador en el "siguiente movimiento"
-	std::vector<Ogre::Vector3> vPlayerCoords = simulateOccupiedCoords(node, vDistance);
-	//Y lo mismo pero con gravedad
-	std::vector<Ogre::Vector3> vPlayerCoordsGravity = simulateOccupiedCoords(node, vDistanceGravity);
-
-	//Comprobamos si hay colisiones
-	m_obj = testCollisionAABB(vPlayerCoords);
-	m_objGravity = testCollisionAABB(vPlayerCoordsGravity);
+	//Si colisiona con gravedad probamos sin gravedad
+	if (obj != 0)
+	{
+		//Obtenemos el desplazamiento SIN gravedad
+		m_direction.y = temp;
+		vDistance = m_direction * FPS;
+		vPlayerCoords = simulateOccupiedCoords(node, vDistance);
+		obj = testCollisionAABB(vPlayerCoords, m_nodeName);
+	}
 
 	//Segun las colisiones realizamos una accion u otra
-	collisionSolution(vDistanceGravity, vDistance);
+	collisionSolution(vDistance, obj);
 
 	//Tratamos el salto
-	jumpSolution();
+	jumpSolution(obj);
 
 	//Reset del movimiento en X
 	m_direction.x = 0;	
@@ -171,6 +171,17 @@ void Player::keyPressed(void)
 		//Contamos los saltos que lleva
 		m_jumpCount++;
 	}
+
+	//Coger objetos
+	if(gKeyboard->isKeyDown(OIS::KC_E))
+	{
+		m_catch = true;
+	}
+	else
+	{
+		m_catch = false;
+		m_catchObj = 0;
+	}
 }
 
 //=====================================================================================
@@ -178,25 +189,33 @@ void Player::keyPressed(void)
 //------------------------------------------------------------
 //Metodo para el control del personaje en funcion de las colisiones
 //------------------------------------------------------------
-void Player::collisionSolution(Ogre::Vector3 vDistanceGravity, Ogre::Vector3 vDistance)
+void Player::collisionSolution(Ogre::Vector3 vDistance, Object* obj)
 {
-	//Si NO hay colision CON gravedad, permitimos el movimiento
-	if (m_objGravity == 0)
-	{	
-		node->translate(vDistanceGravity, Ogre::Node::TS_LOCAL);
-		gCamera->move(vDistanceGravity);	
-	}
-	//Si NO hay colision SIN gravedad, permitimos el movimiento (ya esta sobre el suelo)
-	else if (m_obj == 0)
+	//Si NO hay colision, permitimos el movimiento 
+	if (obj == 0)
 	{
 		node->translate(vDistance, Ogre::Node::TS_LOCAL);
 		gCamera->move(vDistance);	
 	}
 
+	//==================================================================
+
+	//Vincular el objeto que queremos agarrar al jugador y actuar en consecuencia
+
+	//Si has colisionado, solicitando agarrar objetos, no has agarrado ninguno y puedes agarrar el que colisionas
+	if (obj != 0 && m_catch && m_catchObj == 0 && obj->m_objType == 2)
+		m_catchObj = obj;
+
+	//Si estas agarrando un objeto, intentas mover el objeto como te mueves tu
+	if (m_catch && m_catchObj != 0)
+		m_catchObj->update(vDistance);
+
+	//==================================================================
+
 	//Con cualquier colision
-	if (m_objGravity != 0 || m_obj != 0)
+	if (obj != 0)
 	{
-		//El salto se desbloquea, el contador vuelve a cero y reset de la posicion en Y
+		//El salto se desbloquea, el contador de saltos vuelve a cero y reset de la posicion en Y
 		m_jumpUp = false;
 		m_jumpCount = 0;
 		m_direction.y = 0;
@@ -208,21 +227,14 @@ void Player::collisionSolution(Ogre::Vector3 vDistanceGravity, Ogre::Vector3 vDi
 //------------------------------------------------------------
 //Metodo para el control del salto
 //------------------------------------------------------------
-void Player::jumpSolution(void)
+void Player::jumpSolution(Object* obj)
 {
 	//Si NO hay colision, estas saltando y has llegado al "maximo" del salto
-	if (m_objGravity == 0 && m_jumpUp && m_direction.y <= 200)
+	if (obj == 0 && m_jumpUp && m_direction.y <= 200)
 	{
-		if (m_jumpCount >= m_maxNumJump)
-		{
-			//El salto queda bloqueado
-			m_jumpUp = true;
-		}	
-		else
-		{
-			//El salto queda desbloqueado
+		//Desbloquea el salto solo si no has superado el maximo permitido
+		if (m_jumpCount < m_maxNumJump)
 			m_jumpUp = false;
-		}
 	}	
 }
 

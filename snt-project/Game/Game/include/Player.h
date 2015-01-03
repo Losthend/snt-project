@@ -21,29 +21,33 @@ public:
 	//Velocidad del juego (duracion de cada frame)
 	double FPS;
 
+	//Nombre del nodo y de la entidad
+	std::string m_entName;
+	std::string m_nodeName;
+
 	//Declaracion de la entidad y del nodo correspondiente al cubo
 	Ogre::Entity* entity;
 	Ogre::SceneNode* node;
-
-	//Nodos de colision, si colisiona con un nodo lo almacena aqui y decide como actuar
-	Object* m_obj;
-	Object* m_objGravity;
 
 	//Velocidad de movimiento
 	Ogre::Real m_moveX;
 	Ogre::Real m_moveY;
 
-	//Aceleracion
-	Ogre::Real accX;
-	Ogre::Real accY;
-
-	//Otras variables
+	//Variables de salto
 	bool m_jumpUp;
-	bool m_crouchDown;
 	Ogre::Real m_jumpCount;
 	Ogre::Real m_maxNumJump;
 
+	//Variables de arrastrar objetos
+	bool m_catch;
+	Object* m_catchObj;
+
+	//Otras variables
+	bool m_crouchDown;
+
 	double m_gravity;
+
+	//Vector de movimiento/direccion
 	Ogre::Vector3 m_direction;
 
 	char state;
@@ -52,8 +56,8 @@ private:
 
 	//METODOS
 	void keyPressed(void);
-	void collisionSolution(Ogre::Vector3 vDistanceGravity, Ogre::Vector3 vDistance);
-	void jumpSolution(void);
+	void collisionSolution(Ogre::Vector3 vDistance, Object* obj);
+	void jumpSolution(Object* obj);
 
 	//VARIABLES privadas
 

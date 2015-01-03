@@ -115,16 +115,18 @@ std::vector<Ogre::Vector3> simulateOccupiedCoords(Ogre::SceneNode* node, Ogre::V
 
 //---------------------------------------------------------------------
 //Dadas las coordenadas simuladas de un nodo, comprueba si en ese movimiento se produce o no una colision.
-//Parametro: las coordenadas simuladas del futuro emplazamiento del nodo
+//Parametro: las coordenadas simuladas del futuro emplazamiento del nodo y nombre del nodo para no compararlo consigo mismo
 //---------------------------------------------------------------------
-Object* testCollisionAABB(std::vector<Ogre::Vector3> vSimulatedCoords)
+Object* testCollisionAABB(std::vector<Ogre::Vector3> vSimulatedCoords, Ogre::String nodeName)
 {
-	//Extraer las coordenadas de movimiento simulado para el nodo
-	Ogre::Vector3 sim_RIGHT_BOTTOM = vSimulatedCoords[0];
-	Ogre::Vector3 sim_LEFT_BOTTOM = vSimulatedCoords[1];
-	Ogre::Vector3 sim_LEFT_TOP = vSimulatedCoords[2];
-	Ogre::Vector3 sim_RIGHT_TOP = vSimulatedCoords[3];
-	Ogre::Vector3 sim_FAR_Z = vSimulatedCoords[4];
+	/*
+		Orden de los extremos en los vectores:
+		[0] RIGHT_BOTTOM
+		[1] LEFT_BOTTOM
+		[2] LEFT_TOP
+		[3] RIGHT_TOP
+		[4] FAR_Z
+	*/
 
 	//Declaramos bool de colision
 	bool collision = false;
@@ -139,34 +141,50 @@ Object* testCollisionAABB(std::vector<Ogre::Vector3> vSimulatedCoords)
 	//Comparamos colisiones con TODOS los objetos, minimo hasta encontrar alguna colision
 	for (unsigned x=0; x < sz && !collision; x++)
 	{
-		//Obtenemos los extremos del objeto
-		std::vector<Ogre::Vector3> vNodeCoords = getOccupiedCoords(vObjects[x]->m_node);
-
-		Ogre::Vector3 obj_RIGHT_BOTTOM = vNodeCoords[0];
-		Ogre::Vector3 obj_LEFT_BOTTOM = vNodeCoords[1];
-		Ogre::Vector3 obj_LEFT_TOP = vNodeCoords[2];
-		Ogre::Vector3 obj_RIGHT_TOP = vNodeCoords[3];
-		Ogre::Vector3 obj_FAR_Z = vNodeCoords[4];
-
-		//Teorema del plano de separacion
-		//Proyectamos las cajas sobre cada uno de los ejes y si alguna de las proyecciones
-		//No se solapan, podremos asegurar que no existe colision entre las AABB.
-		if (sim_RIGHT_BOTTOM.x > obj_LEFT_BOTTOM.x &&
-			sim_LEFT_BOTTOM.x < obj_RIGHT_BOTTOM.x &&
-			sim_LEFT_TOP.y > obj_LEFT_BOTTOM.y &&
-			sim_LEFT_BOTTOM.y < obj_LEFT_TOP.y &&
-			sim_FAR_Z.z <= obj_LEFT_TOP.z &&
-			sim_LEFT_TOP.z >= obj_FAR_Z.z)
+		if (nodeName != vObjects[x]->m_node->getName())
 		{
-			collision = true;
-			obj = vObjects[x];
+			//Obtenemos los extremos del objeto
+			std::vector<Ogre::Vector3> vNodeCoords = getOccupiedCoords(vObjects[x]->m_node);
+
+			//Teorema del plano de separacion
+			//Proyectamos las cajas sobre cada uno de los ejes y si alguna de las proyecciones
+			//No se solapan, podremos asegurar que no existe colision entre las AABB.
+			if (vSimulatedCoords[0].x > vNodeCoords[1].x &&
+				vSimulatedCoords[1].x < vNodeCoords[0].x &&
+				vSimulatedCoords[2].y > vNodeCoords[1].y &&
+				vSimulatedCoords[1].y < vNodeCoords[2].y &&
+				vSimulatedCoords[4].z <= vNodeCoords[2].z &&
+				vSimulatedCoords[2].z >= vNodeCoords[4].z)
+			{
+				collision = true;
+				obj = vObjects[x];
+			}
 		}
 	}
 
 	return obj;
 }
 
+//---------------------------------------------------------------------
+//Dadas las coordenadas simuladas de un nodo, comprueba si en ese movimiento se produce o no una colision con el jugador
+//Parametro: las coordenadas simuladas del futuro emplazamiento del nodo
+//---------------------------------------------------------------------
+bool testCollisionWithPlayer(std::vector<Ogre::Vector3> vSimulatedCoords)
+{
+	std::vector<Ogre::Vector3> vPlayerCoords = getOccupiedCoords(gPlayer->node); 
 
+	if (vSimulatedCoords[0].x > vPlayerCoords[1].x &&
+		vSimulatedCoords[1].x < vPlayerCoords[0].x &&
+		vSimulatedCoords[2].y > vPlayerCoords[1].y &&
+		vSimulatedCoords[1].y < vPlayerCoords[2].y &&
+		vSimulatedCoords[4].z <= vPlayerCoords[2].z &&
+		vSimulatedCoords[2].z >= vPlayerCoords[4].z)
+	{
+		return true;
+	}
+
+	return false;
+}
 
 
 

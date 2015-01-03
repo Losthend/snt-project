@@ -9,20 +9,32 @@ public:
 	//Constructor, destructor
     Object(std::string id, int objType);
     virtual ~Object(void);
+	bool update(Ogre::Vector3 vDistance);
+	void gravity();
 	
+	//Velocidad del juego (duracion de cada frame)
+	double FPS;
+
+	//Nombre del nodo y de la entidad
+	std::string m_entName;
+	std::string m_nodeName;
+
+	//Declaracion de la entidad y del nodo correspondiente al cubo
+	Ogre::Entity* m_entity;
+	Ogre::SceneNode* m_node;	
+
 	//Tipo de objeto
 	int m_objType; 
+
+	//Vector de movimiento/direccion
+	Ogre::Vector3 m_direction;
 
 	//Velocidad de movimiento
 	Ogre::Real m_moveX;
 	Ogre::Real m_moveY;
 
-	//Booleano de colision: (true) colisionable, (false) no colisionable
-	bool m_collision;
+	double m_gravity;
 
-	//Declaracion de la entidad y del nodo correspondiente al cubo
-	Ogre::Entity* m_entity;
-	Ogre::SceneNode* m_node;	
 };
 
 //---------------------------------------------------------------------------
