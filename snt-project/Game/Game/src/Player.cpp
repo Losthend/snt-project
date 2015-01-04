@@ -112,6 +112,10 @@ bool Player::keyboardControl()
 	//Tratamos el salto
 	jumpSolution(obj);
 
+	//Tratamos el agarre de objetos
+	if(m_catch)
+		catchSolution(vDistance);
+
 	//Reset del movimiento en X
 	m_direction.x = 0;	
 
@@ -198,20 +202,6 @@ void Player::collisionSolution(Ogre::Vector3 vDistance, Object* obj)
 		gCamera->move(vDistance);	
 	}
 
-	//==================================================================
-
-	//Vincular el objeto que queremos agarrar al jugador y actuar en consecuencia
-
-	//Si has colisionado, solicitando agarrar objetos, no has agarrado ninguno y puedes agarrar el que colisionas
-	if (obj != 0 && m_catch && m_catchObj == 0 && obj->m_objType == 2)
-		m_catchObj = obj;
-
-	//Si estas agarrando un objeto, intentas mover el objeto como te mueves tu
-	if (m_catch && m_catchObj != 0)
-		m_catchObj->update(vDistance);
-
-	//==================================================================
-
 	//Con cualquier colision
 	if (obj != 0)
 	{
@@ -239,6 +229,49 @@ void Player::jumpSolution(Object* obj)
 }
 
 //=====================================================================================
+
+//------------------------------------------------------------
+//Metodo para el control del agarre de objetos
+//------------------------------------------------------------
+void Player::catchSolution(Ogre::Vector3 vDistance)
+{
+	//Si no has agarrado ningun objeto aun
+	if (m_catchObj == 0)
+	{
+		//Recorres el vector de objetos
+		std::vector<int>::size_type sz = vObjects.size();
+		for (unsigned x=0; x < sz; x++)
+		{
+			//Si el objeto es de tipo 2
+			Object* obj = vObjects[x];
+			if (obj->m_objType == 2)
+			{
+				//Buscas la distancia minima entre el jugador y los extremos del objeto
+				std::vector<Ogre::Vector3> vCoords = getOccupiedCoords(obj->m_node);
+				Ogre::Real RIGHT_BOTTOM = gPlayer->node->_getWorldAABB().squaredDistance(vCoords[0]);
+				Ogre::Real LEFT_BOTTOM = gPlayer->node->_getWorldAABB().squaredDistance(vCoords[1]);
+				Ogre::Real LEFT_TOP = gPlayer->node->_getWorldAABB().squaredDistance(vCoords[2]);
+				Ogre::Real RIGHT_TOP = gPlayer->node->_getWorldAABB().squaredDistance(vCoords[3]);
+					
+				Ogre::Real minDistance = std::min(RIGHT_BOTTOM, std::min(LEFT_BOTTOM, std::min(LEFT_TOP, RIGHT_TOP)));
+				
+				//Si la distancia entre el jugador y el objeto es menor de 10 unidades, lo agarras
+				if (minDistance < 10)
+				{
+					m_catchObj = obj;
+				}
+			}
+		}
+	}
+	//Si has agarrado un objeto
+	else
+	{
+		m_catchObj->update(vDistance);
+	}
+}
+
+
+
 
 //---------------------------------------------------------------------------
 //--Animacion de movimiento del personaje
