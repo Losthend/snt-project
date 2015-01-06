@@ -83,7 +83,7 @@ bool Object::update(Ogre::Vector3 vDistance)
 	std::vector<Ogre::Vector3> vSimCoords = simulateOccupiedCoords(m_node, vDistance);
 	//Comprobamos si hay colisiones
 	Object* obj = testCollisionAABB(vSimCoords, m_nodeName);
-	bool playerCollision = testCollisionWithPlayer(vSimCoords);
+	bool playerCollision = testCollisionWithSingleNode(vSimCoords, gPlayer->node);
 	//Si NO hay colision, se mueve
 	if (obj == 0 && !playerCollision)
 	{

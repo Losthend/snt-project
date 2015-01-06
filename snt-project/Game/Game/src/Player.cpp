@@ -86,35 +86,113 @@ bool Player::keyboardControl()
 {
 	if(gKeyboard->isKeyDown(OIS::KC_ESCAPE)) return false;
 	
+	//========================PRE-OPERACIONES================================
+
 	//Comprobamos el teclado
 	keyPressed();
 
-	//Obtenemos el desplazamiento CON gravedad
-	Ogre::Real temp = m_direction.y;
+	//Calculamos la distancia a movernos en este frame, la gravedad siempre se aplica
 	m_direction.y = m_direction.y - m_gravity;
 	Ogre::Vector3 vDistance = m_direction * FPS;
-	std::vector<Ogre::Vector3> vPlayerCoords = simulateOccupiedCoords(node, vDistance);	
-	Object* obj = testCollisionAABB(vPlayerCoords, m_nodeName);
 
-	//Si colisiona con gravedad probamos sin gravedad
-	if (obj != 0)
+	//========================PRE-VARIABLES================================
+
+	//Definimos variables para los procesos posteriores
+	std::vector<Ogre::Vector3> vCoords;
+	Ogre::Real minDistance;
+	Object* objX = 0;
+	Object* objY = 0;
+
+	//========================MOVIMIENTO_X================================
+
+	//MOVIMIENTO EN EL EJE X, solo si hay movimiento en X
+	if (vDistance.x != 0)
 	{
-		//Obtenemos el desplazamiento SIN gravedad
-		m_direction.y = temp;
-		vDistance = m_direction * FPS;
-		vPlayerCoords = simulateOccupiedCoords(node, vDistance);
-		obj = testCollisionAABB(vPlayerCoords, m_nodeName);
+		Ogre::Vector3 tempMoveX = Ogre::Vector3(vDistance.x, 0, 0);
+		//Simulamos el movimiento
+		vCoords = simulateOccupiedCoords(node, tempMoveX);
+		objX = testCollisionAABB(vCoords, m_nodeName);
+
+		//Si hay colision
+		if (objX != 0)
+		{
+			//Buscamos el movimiento minimo para acercarse lo maximo posible al objeto sin colisionar
+			minDistance = collisionCorrection(node, objX->m_node);
+			if (minDistance > 1)
+			{
+				//Reescribimos el movimiento en X
+				if (vDistance.x > 0)
+					vDistance.x =  minDistance*FPS*10;
+				else
+					vDistance.x = -minDistance*FPS*10;
+			}
+			else
+				vDistance.x = 0;
+		}
 	}
 
-	//Segun las colisiones realizamos una accion u otra
-	collisionSolution(vDistance, obj);
+	//========================MOVIMIENTO_Y================================
 
-	//Tratamos el salto
-	jumpSolution(obj);
+	Ogre::Vector3 tempMoveY = Ogre::Vector3(0, vDistance.y, 0);
+	//Simulamos el movimiento
+	vCoords = simulateOccupiedCoords(node, tempMoveY);
+	objY = testCollisionAABB(vCoords, m_nodeName);
+
+	//Si hay colision
+	if (objY != 0)
+	{
+		//Buscamos el movimiento minimo para acercarse lo maximo posible al objeto sin colisionar
+		minDistance = collisionCorrection(node, objY->m_node);
+		if (minDistance > 1)
+		{
+			//Reescribimos el movimiento en Y
+			if (vDistance.y > 0 && m_jumpUp)
+				vDistance.y =  minDistance*FPS*10;
+			else if (m_jumpUp)
+				vDistance.y = -minDistance*FPS*10;
+			else
+				vDistance.y = 0;
+		}
+		else
+			vDistance.y = 0;
+	}
+
+	//========================MOVIMIENTO FINAL================================
+
+	if (vDistance.x != 0 || vDistance.y != 0)
+	{
+		node->translate(vDistance, Ogre::Node::TS_LOCAL);
+		gCamera->move(vDistance);	
+	}
+
+	//========================SALTO================================
+
+	//Si NO hay colision, estas saltando y has llegado al "maximo" del salto
+	if (objX == 0 && objY == 0 && m_jumpUp && m_direction.y <= 200)
+	{
+		//Desbloquea el salto solo si no has superado el maximo permitido
+		if (m_jumpCount < m_maxNumJump)
+			m_jumpUp = false;
+	}	
+
+	//========================AGARRE================================
 
 	//Tratamos el agarre de objetos
 	if(m_catch)
 		catchSolution(vDistance);
+
+	//========================RESETS================================
+
+	//NOTA: Con la condicion "objX != 0 || objY != 0" se pega a las paredes y al techo (en las paredes se resbala)
+	//NOTA: Con la condicion "objY != 0" se pega al techo pero no a las paredes
+	//NOTA: Con la condicion "objY != 0 && m_direction.y <= 0" no se pega ni al techo ni a las paredes
+	if (objY != 0 && m_direction.y <= 0)
+	{
+		//Desbloqueamos el salto y evitamos terminamos el efecto de la gravedad
+		m_jumpUp = false;
+		m_jumpCount = 0;
+		m_direction.y = 0;
+	}
 
 	//Reset del movimiento en X
 	m_direction.x = 0;	
@@ -191,46 +269,6 @@ void Player::keyPressed(void)
 //=====================================================================================
 
 //------------------------------------------------------------
-//Metodo para el control del personaje en funcion de las colisiones
-//------------------------------------------------------------
-void Player::collisionSolution(Ogre::Vector3 vDistance, Object* obj)
-{
-	//Si NO hay colision, permitimos el movimiento 
-	if (obj == 0)
-	{
-		node->translate(vDistance, Ogre::Node::TS_LOCAL);
-		gCamera->move(vDistance);	
-	}
-
-	//Con cualquier colision
-	if (obj != 0)
-	{
-		//El salto se desbloquea, el contador de saltos vuelve a cero y reset de la posicion en Y
-		m_jumpUp = false;
-		m_jumpCount = 0;
-		m_direction.y = 0;
-	}
-}
-
-//=====================================================================================
-
-//------------------------------------------------------------
-//Metodo para el control del salto
-//------------------------------------------------------------
-void Player::jumpSolution(Object* obj)
-{
-	//Si NO hay colision, estas saltando y has llegado al "maximo" del salto
-	if (obj == 0 && m_jumpUp && m_direction.y <= 200)
-	{
-		//Desbloquea el salto solo si no has superado el maximo permitido
-		if (m_jumpCount < m_maxNumJump)
-			m_jumpUp = false;
-	}	
-}
-
-//=====================================================================================
-
-//------------------------------------------------------------
 //Metodo para el control del agarre de objetos
 //------------------------------------------------------------
 void Player::catchSolution(Ogre::Vector3 vDistance)
@@ -246,12 +284,12 @@ void Player::catchSolution(Ogre::Vector3 vDistance)
 			Object* obj = vObjects[x];
 			if (obj->m_objType == 2)
 			{
-				//Buscas la distancia minima entre el jugador y los extremos del objeto
-				std::vector<Ogre::Vector3> vCoords = getOccupiedCoords(obj->m_node);
-				Ogre::Real RIGHT_BOTTOM = gPlayer->node->_getWorldAABB().squaredDistance(vCoords[0]);
-				Ogre::Real LEFT_BOTTOM = gPlayer->node->_getWorldAABB().squaredDistance(vCoords[1]);
-				Ogre::Real LEFT_TOP = gPlayer->node->_getWorldAABB().squaredDistance(vCoords[2]);
-				Ogre::Real RIGHT_TOP = gPlayer->node->_getWorldAABB().squaredDistance(vCoords[3]);
+				//Buscas la distancia minima entre cualquier punto del objeto y el jugador
+				std::vector<Ogre::Vector3> vCoords = getOccupiedCoords(node);
+				Ogre::Real RIGHT_BOTTOM = obj->m_node->_getWorldAABB().squaredDistance(vCoords[0]);
+				Ogre::Real LEFT_BOTTOM = obj->m_node->_getWorldAABB().squaredDistance(vCoords[1]);
+				Ogre::Real LEFT_TOP = obj->m_node->_getWorldAABB().squaredDistance(vCoords[2]);
+				Ogre::Real RIGHT_TOP = obj->m_node->_getWorldAABB().squaredDistance(vCoords[3]);
 					
 				Ogre::Real minDistance = std::min(RIGHT_BOTTOM, std::min(LEFT_BOTTOM, std::min(LEFT_TOP, RIGHT_TOP)));
 				

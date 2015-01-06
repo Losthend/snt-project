@@ -56,8 +56,6 @@ private:
 
 	//METODOS
 	void keyPressed(void);
-	void collisionSolution(Ogre::Vector3 vDistance, Object* obj);
-	void jumpSolution(Object* obj);
 	void Player::catchSolution(Ogre::Vector3 vDistance);
 
 	//VARIABLES privadas

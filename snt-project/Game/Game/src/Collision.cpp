@@ -167,11 +167,11 @@ Object* testCollisionAABB(std::vector<Ogre::Vector3> vSimulatedCoords, Ogre::Str
 
 //---------------------------------------------------------------------
 //Dadas las coordenadas simuladas de un nodo, comprueba si en ese movimiento se produce o no una colision con el jugador
-//Parametro: las coordenadas simuladas del futuro emplazamiento del nodo
+//Parametro: las coordenadas simuladas del futuro emplazamiento del nodo y nodo con el que colisionara
 //---------------------------------------------------------------------
-bool testCollisionWithPlayer(std::vector<Ogre::Vector3> vSimulatedCoords)
+bool testCollisionWithSingleNode(std::vector<Ogre::Vector3> vSimulatedCoords, Ogre::SceneNode* node)
 {
-	std::vector<Ogre::Vector3> vPlayerCoords = getOccupiedCoords(gPlayer->node); 
+	std::vector<Ogre::Vector3> vPlayerCoords = getOccupiedCoords(node); 
 
 	if (vSimulatedCoords[0].x > vPlayerCoords[1].x &&
 		vSimulatedCoords[1].x < vPlayerCoords[0].x &&
@@ -187,93 +187,19 @@ bool testCollisionWithPlayer(std::vector<Ogre::Vector3> vSimulatedCoords)
 }
 
 
-
-
-
-
-
-
-
-
-
-
-/*
-//---------------------------------------------------------------------
-//Devuelve un vector que contiene todas las coordenadas de contorno ocupadas en el frustum actual
-//Nota: si el nodo es el del jugador, automaticamente lo descarta
-//---------------------------------------------------------------------
-std::vector<Ogre::Vector3> getAllOccupiedCoords()
+//------------------------------------------------------------
+//Metodo para obtener el movimiento optimo tras una colision para acabar cerca del objeto sin colisionar
+//------------------------------------------------------------
+Ogre::Real collisionCorrection(Ogre::SceneNode* node1, Ogre::SceneNode* node2)
 {
-	//Obtenemos los objetos que hay en el frustum
-	std::vector<Ogre::SceneNode*> vNodes = inCameraFrustumObjects();
-	//Declaramos el vector final a devolver
-	std::vector<Ogre::Vector3> vCoords;
-	//Para cada uno de estos objetos, obtenemos las coordenadas que ocupan
-	for (std::vector<Ogre::SceneNode*>::iterator it = vNodes.begin(); it != vNodes.end(); it++)
-	{
-		if ((*it)->getName() != gPlayer->node->getName())
-		{
-			std::vector<Ogre::Vector3> vNodeCoords = getOccupiedCoords((*it));
-			vCoords.push_back(vNodeCoords[0]);
-			vCoords.push_back(vNodeCoords[1]);
-			vCoords.push_back(vNodeCoords[2]);
-			vCoords.push_back(vNodeCoords[3]);
-			//Añadimos un vertice del plano trasero para disponer de la profundidad maxima
-			vCoords.push_back(vNodeCoords[4]);
-		}
-	}
+	//Buscas la distancia minima entre cualquier punto de un nodo (node1) y los extremos del otro (node2)
+	std::vector<Ogre::Vector3> vCoords = getOccupiedCoords(node1);
+	Ogre::Real RIGHT_BOTTOM = node2->_getWorldAABB().squaredDistance(vCoords[0]);
+	Ogre::Real LEFT_BOTTOM = node2->_getWorldAABB().squaredDistance(vCoords[1]);
+	Ogre::Real LEFT_TOP = node2->_getWorldAABB().squaredDistance(vCoords[2]);
+	Ogre::Real RIGHT_TOP = node2->_getWorldAABB().squaredDistance(vCoords[3]);
+		
+	Ogre::Real minDistance = std::min(RIGHT_BOTTOM, std::min(LEFT_BOTTOM, std::min(LEFT_TOP, RIGHT_TOP)));
 
-	return vCoords;
+	return minDistance;
 }
-
-//---------------------------------------------------------------------
-//Devuelve TRUE si hay colision o FALSE en caso contrario
-//---------------------------------------------------------------------
-bool testColision(std::vector<Ogre::Vector3> vAllCoords, std::vector<Ogre::Vector3> vPlayerCoords)
-{	
-	//Booleano para detener la busqueda si alguno de los puntos colisiona
-
-	bool collision = false;
-
-	//Obtenemos el tamaño del vector
-	std::vector<int>::size_type sz = vAllCoords.size();
-
-	//Obtenemos los extremos del jugador
-	Ogre::Vector3 player_RIGHT_BOTTOM = vPlayerCoords[0];
-	Ogre::Vector3 player_LEFT_BOTTOM = vPlayerCoords[1];
-	Ogre::Vector3 player_LEFT_TOP = vPlayerCoords[2];
-	Ogre::Vector3 player_RIGHT_TOP = vPlayerCoords[3];
-	//Añadimos un vertice del plano trasero para disponer de la profundidad maxima
-	Ogre::Vector3 player_FAR_Z = vPlayerCoords[4];
-	
-	for (unsigned x=0; x < sz && !collision; x++)
-	{
-		//Obtenemos los extremos de un objeto 
-		Ogre::Vector3 obj_RIGHT_BOTTOM = vAllCoords[x];
-		Ogre::Vector3 obj_LEFT_BOTTOM = vAllCoords[x+1];
-		Ogre::Vector3 obj_LEFT_TOP = vAllCoords[x+2];
-		Ogre::Vector3 obj_RIGHT_TOP = vAllCoords[x+3];
-		//Añadimos un vertice del plano trasero para disponer de la profundidad maxima
-		Ogre::Vector3 obj_FAR_Z = vAllCoords[x+4];
-		x += 4;
-
-		//Teorema del plano de separacion
-		//Proyectamos las cajas sobre cada uno de los ejes y si alguna de las proyecciones
-		//No se solapan, podremos asegurar que no existe colision entre las AABB.
-		if (player_RIGHT_BOTTOM.x > obj_LEFT_BOTTOM.x &&
-			player_LEFT_BOTTOM.x < obj_RIGHT_BOTTOM.x &&
-			player_LEFT_TOP.y > obj_LEFT_BOTTOM.y &&
-			player_LEFT_BOTTOM.y < obj_LEFT_TOP.y &&
-			player_FAR_Z.z <= obj_LEFT_TOP.z &&
-			player_LEFT_TOP.z >= obj_FAR_Z.z)
-		{
-			collision = true;
-		}
-		else
-		{
-			collision = false;
-		}
-	}
-	return collision;
-}
-*/

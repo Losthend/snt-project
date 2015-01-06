@@ -8,7 +8,6 @@ std::vector<Ogre::Vector3> simulateOccupiedCoords(Ogre::SceneNode* node, Ogre::V
 
 Object* testCollisionAABB(std::vector<Ogre::Vector3> vSimulatedCoords, Ogre::String nodeName);
 
-bool testCollisionWithPlayer(std::vector<Ogre::Vector3> vSimulatedCoords);
+bool testCollisionWithSingleNode(std::vector<Ogre::Vector3> vSimulatedCoords, Ogre::SceneNode* node);
 
-//std::vector<Ogre::Vector3> getAllOccupiedCoords();
-//bool testColision(std::vector<Ogre::Vector3> vAllCoords, std::vector<Ogre::Vector3> vPlayerCoords);
+Ogre::Real collisionCorrection(Ogre::SceneNode* node1, Ogre::SceneNode* node2);
