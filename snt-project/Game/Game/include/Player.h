@@ -56,8 +56,8 @@ private:
 
 	//METODOS
 	void keyPressed(void);
-	void collisionManagementX(int);
-	void collisionManagementY(int, Object*);
+	void collisionManagementX(Object*);
+	void collisionManagementY(Object*);
 	void Player::catchSolution(Ogre::Vector3 vDistance);
 
 	//VARIABLES privadas

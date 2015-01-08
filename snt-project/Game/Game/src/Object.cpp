@@ -97,11 +97,3 @@ bool Object::update(Ogre::Vector3 vDistance)
 	}
 	return true;
 }
-
-void Object::movement()
-{
-	/*std::vector<Ogre::Vector3> vSimCoords = simulateOccupiedCoords(m_node, vDistance);
-	bool playerCollision = testCollisionWithSingleNode(vSimCoords, gPlayer->node);
-	if(playerCollision)
-		imprimir("muerte");*/
-}

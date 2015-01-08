@@ -54,8 +54,8 @@ void GameApplication::createScene(void)
 	//Techo
 	Object* obj4 = new Object("4", 1,"ManualObjectCube");
 	obj4->m_node->scale(14.0, 1.0, 1.0);
-	obj4->m_node->setPosition(0.0, 100.0, 0.0);
-	imprimir("HOLAKASE");
+	obj4->m_node->setPosition(0.0, 100.0, 0.0)
+
 	//Objeto dinamico
 	Object* obj5 = new Object("5", 2, "ManualObjectCube");
 	obj5->m_node->setPosition(50.0, 0.0, 0.0);

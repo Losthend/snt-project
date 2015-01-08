@@ -117,11 +117,7 @@ bool Player::keyboardControl()
 
 		//Si hay colision
 		if (objX != 0)
-		{
-			//recogemos el tipo de objeto con el que ha colisionado y llamamos al tratamiento de la colisionen funcion del tipo
-			m_objType = objX->m_objType;
-			collisionManagementX(m_objType);
-
+		{	
 			//Buscamos el movimiento minimo para acercarse lo maximo posible al objeto sin colisionar
 			minDistance = collisionCorrection(node, objX->m_node);
 			if (minDistance > 1)
@@ -153,10 +149,6 @@ bool Player::keyboardControl()
 	//Si hay colision
 	if (objY != 0)
 	{
-		//recogemos el tipo de objeto con el que ha colisionado y llamamos al tratamiento de la colisionen funcion del tipo
-		m_objType = objY->m_objType;
-		collisionManagementY(m_objType, objY);
-
 		//Buscamos el movimiento minimo para acercarse lo maximo posible al objeto sin colisionar
 		minDistance = collisionCorrection(node, objY->m_node);
 		if (minDistance > 1)
@@ -196,6 +188,14 @@ bool Player::keyboardControl()
 	//Tratamos el agarre de objetos
 	if(m_catch)
 		catchSolution(vDistance);
+
+	//===================COLLISIONMANAGEMENT========================
+
+	//recogemos el tipo de objeto con el que ha colisionado y llamamos al tratamiento de la colisionen funcion del tipo	
+	if(objX != 0 )
+		collisionManagementX(objX);
+	if(objY != 0)
+		collisionManagementY(objY);	
 
 	//========================RESETS================================
 
@@ -329,7 +329,8 @@ void Player::catchSolution(Ogre::Vector3 vDistance)
 //------------------------------------------------------------
 //Metodo para el tratamiento de colisones si es en el eje X
 //------------------------------------------------------------
-void Player::collisionManagementX(int objType){
+void Player::collisionManagementX(Object* obj){
+	 int objType = obj->m_objType;
 	 switch ( objType )
       {
 		 //en caso de ser del tipo 3, es decir, trampa de pinchos en X
@@ -348,9 +349,11 @@ void Player::collisionManagementX(int objType){
 //------------------------------------------------------------
 //Metodo para el tratamiento de colisones si es en el eje Y
 //------------------------------------------------------------
-void Player::collisionManagementY(int objType, Object* obj){
+void Player::collisionManagementY(Object* obj){
+	 int objType = obj->m_objType;
 	 switch ( objType )
       {
+		  
 		 //en caso de ser del tipo 3, es decir, trampa de pinchos en X
          case 3:
 			 //eliminamos la entidad del nodo

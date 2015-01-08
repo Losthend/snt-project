@@ -11,7 +11,6 @@ public:
     virtual ~Object(void);
 	bool update(Ogre::Vector3 vDistance);
 	void gravity();
-	void movement();
 	
 	//Velocidad del juego (duracion de cada frame)
 	double FPS;
