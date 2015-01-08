@@ -44,7 +44,7 @@ public:
 
 	//Otras variables
 	bool m_crouchDown;
-
+	int m_objType;
 	double m_gravity;
 
 	//Vector de movimiento/direccion
@@ -56,6 +56,8 @@ private:
 
 	//METODOS
 	void keyPressed(void);
+	void collisionManagementX(int);
+	void collisionManagementY(int, Object*);
 	void Player::catchSolution(Ogre::Vector3 vDistance);
 
 	//VARIABLES privadas

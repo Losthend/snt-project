@@ -58,9 +58,9 @@ bool RenderActions::frameRenderingQueued(const Ogre::FrameEvent& evt)
 	std::vector<int>::size_type sz = vObjects.size();
 	for (unsigned x=0; x < sz; x++)
 	{
-		Object* obj = vObjects[x];
+		Object* obj = vObjects[x];	
 		if (obj->m_objType == 2)
-		{
+		{			
 			obj->gravity();
 		}
 	}

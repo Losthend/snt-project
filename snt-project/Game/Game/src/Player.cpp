@@ -49,7 +49,7 @@ Player::Player(void)
 	
 	//Creacion (entidad y nodo)
 	//-----------Carga de la textura del robot---------------
-	//entity = gSceneMgr->createEntity(entName, "robot.mesh");
+	//entity = gSceneMgr->createEntity(m_entName, "robot.mesh");
 	//-----------Cubo creado de forma manual-------------------
 	entity = gSceneMgr->createEntity(m_entName, "ManualObjectCube");
 	node = gSceneMgr->getRootSceneNode()->createChildSceneNode(m_nodeName);
@@ -57,15 +57,17 @@ Player::Player(void)
 
 	
 	//Posicionamiento y escalado (por defecto)
-	node->setPosition(0.0, 0.0, 0.0);
+	node->setPosition(0.0, 50.0, 0.0);
 	node->scale(1.0, 1.0, 1.0);
 
 	/*
+	///*
 	//Asociamos las animaciones. Requier el skeleton en la carpeta de media.
 	pWalk = entity->getAnimationState("Walk");
 	pWalk->setLoop(true);		
 	pWalk->setLength(Ogre::Real(1.0));
 	*/
+
 	/*
 	//El robot no sabe saltar, asi que esto tiene que estar comentado o usar el ninja
 	pJump = entity->getAnimationState("Jump");
@@ -116,6 +118,10 @@ bool Player::keyboardControl()
 		//Si hay colision
 		if (objX != 0)
 		{
+			//recogemos el tipo de objeto con el que ha colisionado y llamamos al tratamiento de la colisionen funcion del tipo
+			m_objType = objX->m_objType;
+			collisionManagementX(m_objType);
+
 			//Buscamos el movimiento minimo para acercarse lo maximo posible al objeto sin colisionar
 			minDistance = collisionCorrection(node, objX->m_node);
 			if (minDistance > 1)
@@ -129,6 +135,12 @@ bool Player::keyboardControl()
 			else
 				vDistance.x = 0;
 		}
+		/*else{
+			if (objX != 0 && objX->m_objType == 3)
+				node->setPosition(0.0, 50.0, 0.0);
+		}*/
+
+
 	}
 
 	//========================MOVIMIENTO_Y================================
@@ -141,6 +153,10 @@ bool Player::keyboardControl()
 	//Si hay colision
 	if (objY != 0)
 	{
+		//recogemos el tipo de objeto con el que ha colisionado y llamamos al tratamiento de la colisionen funcion del tipo
+		m_objType = objY->m_objType;
+		collisionManagementY(m_objType, objY);
+
 		//Buscamos el movimiento minimo para acercarse lo maximo posible al objeto sin colisionar
 		minDistance = collisionCorrection(node, objY->m_node);
 		if (minDistance > 1)
@@ -308,6 +324,44 @@ void Player::catchSolution(Ogre::Vector3 vDistance)
 	}
 }
 
+//=====================================================================================
+
+//------------------------------------------------------------
+//Metodo para el tratamiento de colisones si es en el eje X
+//------------------------------------------------------------
+void Player::collisionManagementX(int objType){
+	 switch ( objType )
+      {
+		 //en caso de ser del tipo 3, es decir, trampa de pinchos en X
+         case 3:
+			//reseteamos el personaje al punto inicial			 			
+			//preferiria usar estaforma, pero como da problemas con la camara por ahora, usaremos la manual)
+			//node->setPosition(node->getInitialPosition());			
+			node->setPosition(0.0, 50.0, 0.0);
+			gCamera->setPosition(0.0, 50.0, 450.0);
+            break;
+	 }
+}
+
+//=====================================================================================
+
+//------------------------------------------------------------
+//Metodo para el tratamiento de colisones si es en el eje Y
+//------------------------------------------------------------
+void Player::collisionManagementY(int objType, Object* obj){
+	 switch ( objType )
+      {
+		 //en caso de ser del tipo 3, es decir, trampa de pinchos en X
+         case 3:
+			 //eliminamos la entidad del nodo
+			 obj->m_node->detachObject(obj->m_entity);
+			 //buscamos el nodo en el vector de objetos y lo borramos
+			 for(int i = 0; i < vObjects.size(); i++)
+				if(vObjects[i] == obj)
+					vObjects.erase(vObjects.begin()+i);
+            break;
+	 }
+}
 
 
 

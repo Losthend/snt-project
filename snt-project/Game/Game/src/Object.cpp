@@ -6,11 +6,12 @@
 #include "Global.h"
 #include "Collision.h"
 #include "FrameRate.h"
+#include "funcionesGenerales.h"
 
 //---------------------------------------------------------------------------
 //Constructor
 //---------------------------------------------------------------------------
-Object::Object(std::string id, int objType)
+Object::Object(std::string id, int objType, std::string EntityMeshFilename)
 {
 	//Inicializamos variables
 
@@ -36,7 +37,11 @@ Object::Object(std::string id, int objType)
 	
 	//Creacion (entidad y nodo)
 	//-----------Cubo creado de forma manual-------------------
-	m_entity = gSceneMgr->createEntity(m_entName, "ManualObjectCube");
+	/*m_entity = gSceneMgr->createEntity(m_entName, "ManualObjectCube");
+	m_node = gSceneMgr->getRootSceneNode()->createChildSceneNode(m_nodeName);
+	m_node->attachObject(m_entity);*/
+
+	m_entity = gSceneMgr->createEntity(m_entName,EntityMeshFilename);
 	m_node = gSceneMgr->getRootSceneNode()->createChildSceneNode(m_nodeName);
 	m_node->attachObject(m_entity);
 
@@ -91,4 +96,12 @@ bool Object::update(Ogre::Vector3 vDistance)
 		return false;
 	}
 	return true;
+}
+
+void Object::movement()
+{
+	/*std::vector<Ogre::Vector3> vSimCoords = simulateOccupiedCoords(m_node, vDistance);
+	bool playerCollision = testCollisionWithSingleNode(vSimCoords, gPlayer->node);
+	if(playerCollision)
+		imprimir("muerte");*/
 }

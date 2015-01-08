@@ -7,10 +7,11 @@ class Object
 //Aqui se establecen las declaraciones de metodos y variables
 public:
 	//Constructor, destructor
-    Object(std::string id, int objType);
+    Object(std::string id, int objType, std::string EntityMeshFilename);
     virtual ~Object(void);
 	bool update(Ogre::Vector3 vDistance);
 	void gravity();
+	void movement();
 	
 	//Velocidad del juego (duracion de cada frame)
 	double FPS;

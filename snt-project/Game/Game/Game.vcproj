@@ -237,6 +237,22 @@
 					/>
 				</FileConfiguration>
 			</File>
+			<File
+				RelativePath=".\src\tinystr.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\tinyxml.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\tinyxmlerror.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\tinyxmlparser.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -249,6 +265,10 @@
 			</File>
 			<File
 				RelativePath=".\include\Collision.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\dotScene.h"
 				>
 			</File>
 			<File
@@ -281,6 +301,14 @@
 			</File>
 			<File
 				RelativePath=".\include\stdafx.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\tinystr.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\tinyxml.h"
 				>
 			</File>
 		</Filter>
