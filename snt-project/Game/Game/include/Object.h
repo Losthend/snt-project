@@ -11,6 +11,7 @@ public:
     virtual ~Object(void);
 	bool update(Ogre::Vector3 vDistance);
 	void gravity();
+	void move();
 	
 	//Velocidad del juego (duracion de cada frame)
 	double FPS;
@@ -32,6 +33,14 @@ public:
 	//Velocidad de movimiento
 	Ogre::Real m_moveX;
 	Ogre::Real m_moveY;
+
+	//lista de puntos entre los que patrulla
+	std::deque<Ogre::Vector3> m_WalkList;
+	//vector que indica la posicion del punto de ruta actual
+	Ogre::Vector3 targetPosition;
+
+	//para saber si ha llegado al punto de cambio de ruta de la patrulla
+	virtual bool nextLocation(void);
 
 	double m_gravity;
 

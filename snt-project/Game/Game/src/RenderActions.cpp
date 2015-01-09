@@ -54,14 +54,18 @@ bool RenderActions::frameRenderingQueued(const Ogre::FrameEvent& evt)
 
 	//gPlayer->updateAnimation();
 	
-	//Ejecutamos las actualizaciones de gravedad de los objetos de tipo 2
+	//Ejecutamos las actualizaciones de gravedad de los objetos de tipo 2 o 3
 	std::vector<int>::size_type sz = vObjects.size();
 	for (unsigned x=0; x < sz; x++)
 	{
 		Object* obj = vObjects[x];	
-		if (obj->m_objType == 2)
+		if (obj->m_objType == 2 || obj->m_objType == 3)
 		{			
 			obj->gravity();
+		}
+		if (obj->m_objType == 3)
+		{			
+			obj->move();
 		}
 	}
 
