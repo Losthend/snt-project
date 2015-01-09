@@ -39,9 +39,6 @@ public:
 	//vector que indica la posicion del punto de ruta actual
 	Ogre::Vector3 targetPosition;
 
-	//para saber si ha llegado al punto de cambio de ruta de la patrulla
-	virtual bool nextLocation(void);
-
 	double m_gravity;
 
 };

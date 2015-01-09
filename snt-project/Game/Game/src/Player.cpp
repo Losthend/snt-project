@@ -12,6 +12,8 @@
 #include "FuncionesGenerales.h"
 //Para obtener los FPS
 #include "FrameRate.h"
+//para el tratamiento de colisiones
+#include "CollisionManagement.h"
 
 //---------------------------------------------------------------------------
 Player::Player(void)
@@ -131,12 +133,6 @@ bool Player::keyboardControl()
 			else
 				vDistance.x = 0;
 		}
-		/*else{
-			if (objX != 0 && objX->m_objType == 3)
-				node->setPosition(0.0, 50.0, 0.0);
-		}*/
-
-
 	}
 
 	//========================MOVIMIENTO_Y================================
@@ -193,9 +189,9 @@ bool Player::keyboardControl()
 
 	//recogemos el tipo de objeto con el que ha colisionado y llamamos al tratamiento de la colisionen funcion del tipo	
 	if(objX != 0 )
-		collisionManagementX(objX);
+		collisionManagementX(objX, node);
 	if(objY != 0)
-		collisionManagementY(objY);	
+		collisionManagementY(objY, node);	
 
 	//========================RESETS================================
 
@@ -323,51 +319,6 @@ void Player::catchSolution(Ogre::Vector3 vDistance)
 		m_catchObj->update(vDistance);
 	}
 }
-
-//=====================================================================================
-
-//------------------------------------------------------------
-//Metodo para el tratamiento de colisones si es en el eje X
-//------------------------------------------------------------
-void Player::collisionManagementX(Object* obj){
-	 int objType = obj->m_objType;
-	 switch ( objType )
-      {
-		 //en caso de ser del tipo 3, es decir, trampa de pinchos en X
-         case 3:
-			//reseteamos el personaje al punto inicial			 			
-			//preferiria usar estaforma, pero como da problemas con la camara por ahora, usaremos la manual)
-			//node->setPosition(node->getInitialPosition());			
-			node->setPosition(0.0, 50.0, 0.0);
-			gCamera->setPosition(0.0, 50.0, 450.0);
-            break;
-	 }
-}
-
-//=====================================================================================
-
-//------------------------------------------------------------
-//Metodo para el tratamiento de colisones si es en el eje Y
-//------------------------------------------------------------
-void Player::collisionManagementY(Object* obj){
-	 int objType = obj->m_objType;
-	 switch ( objType )
-      {
-		  
-		 //en caso de ser del tipo 3, es decir, trampa de pinchos en X
-         case 3:
-			 //eliminamos la entidad del nodo
-			 obj->m_node->detachObject(obj->m_entity);
-			 //buscamos el nodo en el vector de objetos y lo borramos
-			 for(int i = 0; i < vObjects.size(); i++)
-				if(vObjects[i] == obj)
-					vObjects.erase(vObjects.begin()+i);
-            break;
-	 }
-}
-
-
-
 //---------------------------------------------------------------------------
 //--Animacion de movimiento del personaje
 //---------------------------------------------------------------------------

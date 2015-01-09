@@ -106,6 +106,7 @@ void Object::move(){
 		vDistance.x = -m_moveX * FPS;
 		
 	}
+
 	m_node->translate(vDistance);
 }
 
@@ -125,6 +126,6 @@ bool Object::update(Ogre::Vector3 vDistance)
 	{
 		m_node->translate(vDistance, Ogre::Node::TS_LOCAL);
 		return false;
-	}
+	}		 
 	return true;
 }
