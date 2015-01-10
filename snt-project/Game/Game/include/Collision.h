@@ -10,4 +10,4 @@ Object* testCollisionAABB(std::vector<Ogre::Vector3> vSimulatedCoords, Ogre::Str
 
 bool testCollisionWithSingleNode(std::vector<Ogre::Vector3> vSimulatedCoords, Ogre::SceneNode* node);
 
-Ogre::Real collisionCorrection(Ogre::SceneNode* node1, Ogre::SceneNode* node2);
+Ogre::Real getMinDistance(Ogre::SceneNode* node1, Ogre::SceneNode* node2);

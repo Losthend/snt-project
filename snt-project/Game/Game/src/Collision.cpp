@@ -188,17 +188,19 @@ bool testCollisionWithSingleNode(std::vector<Ogre::Vector3> vSimulatedCoords, Og
 
 
 //------------------------------------------------------------
-//Metodo para obtener el movimiento optimo tras una colision para acabar cerca del objeto sin colisionar
+//Metodo para obtener la distancia minima entre dos objetos
+//Distancia minima entre cualquier punto de un nodo (node1) y los extremos del otro (node2)
 //------------------------------------------------------------
-Ogre::Real collisionCorrection(Ogre::SceneNode* node1, Ogre::SceneNode* node2)
+Ogre::Real getMinDistance(Ogre::SceneNode* node1, Ogre::SceneNode* node2)
 {
-	//Buscas la distancia minima entre cualquier punto de un nodo (node1) y los extremos del otro (node2)
-	std::vector<Ogre::Vector3> vCoords = getOccupiedCoords(node1);
-	Ogre::Real RIGHT_BOTTOM = node2->_getWorldAABB().squaredDistance(vCoords[0]);
-	Ogre::Real LEFT_BOTTOM = node2->_getWorldAABB().squaredDistance(vCoords[1]);
-	Ogre::Real LEFT_TOP = node2->_getWorldAABB().squaredDistance(vCoords[2]);
-	Ogre::Real RIGHT_TOP = node2->_getWorldAABB().squaredDistance(vCoords[3]);
-		
+	//Obtenemos los extremos del node2
+	std::vector<Ogre::Vector3> vCoords = getOccupiedCoords(node2);
+	//Obtenemos la distancia desde los extremos a cualquier punto del node1
+	Ogre::Real RIGHT_BOTTOM = node1->_getWorldAABB().squaredDistance(vCoords[0]);
+	Ogre::Real LEFT_BOTTOM = node1->_getWorldAABB().squaredDistance(vCoords[1]);
+	Ogre::Real LEFT_TOP = node1->_getWorldAABB().squaredDistance(vCoords[2]);
+	Ogre::Real RIGHT_TOP = node1->_getWorldAABB().squaredDistance(vCoords[3]);
+	//Nos quedamos con la distancia minima
 	Ogre::Real minDistance = std::min(RIGHT_BOTTOM, std::min(LEFT_BOTTOM, std::min(LEFT_TOP, RIGHT_TOP)));
 
 	return minDistance;

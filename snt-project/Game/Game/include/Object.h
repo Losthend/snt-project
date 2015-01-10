@@ -9,8 +9,7 @@ public:
 	//Constructor, destructor
     Object(std::string id, int objType, std::string EntityMeshFilename);
     virtual ~Object(void);
-	bool update(Ogre::Vector3 vDistance);
-	void gravity();
+	int update(Ogre::Vector3 vDistance);
 	void move();
 	
 	//Velocidad del juego (duracion de cada frame)

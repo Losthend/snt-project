@@ -55,13 +55,12 @@ bool RenderActions::frameRenderingQueued(const Ogre::FrameEvent& evt)
 	//gPlayer->updateAnimation();
 	
 	//Ejecutamos las actualizaciones de gravedad de los objetos de tipo 2 o 3
-	std::vector<int>::size_type sz = vObjects.size();
-	for (unsigned x=0; x < sz; x++)
+	for (unsigned x=0; x < vObjects.size(); x++)
 	{
 		Object* obj = vObjects[x];	
-		if (obj->m_objType == 2 || obj->m_objType == 3)
+		if (obj->m_objType == 2)
 		{			
-			obj->gravity();
+			obj->update(Ogre::Vector3::ZERO);
 		}
 		if (obj->m_objType == 3)
 		{			
@@ -71,8 +70,6 @@ bool RenderActions::frameRenderingQueued(const Ogre::FrameEvent& evt)
 
 	//Llamamos al metodo de control del teclado para el jugador
 	if(!gPlayer->keyboardControl())return false;	
-
-	
 
 	//Finalizacion del frame
 	endFrame();

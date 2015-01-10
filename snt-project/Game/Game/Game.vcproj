@@ -186,6 +186,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\CollisionManagement.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\FrameRate.cpp"
 				>
 			</File>

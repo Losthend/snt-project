@@ -38,12 +38,15 @@ public:
 	Ogre::Real m_jumpCount;
 	Ogre::Real m_maxNumJump;
 
+	//Agacharse y correr
+	bool m_crouchDown;
+	bool m_run;
+
 	//Variables de arrastrar objetos
 	bool m_catch;
 	Object* m_catchObj;
 
 	//Otras variables
-	bool m_crouchDown;
 	int m_objType;
 	double m_gravity;
 

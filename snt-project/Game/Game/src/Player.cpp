@@ -12,7 +12,7 @@
 #include "FuncionesGenerales.h"
 //Para obtener los FPS
 #include "FrameRate.h"
-//para el tratamiento de colisiones
+//Para el tratamiento de colisiones
 #include "CollisionManagement.h"
 
 //---------------------------------------------------------------------------
@@ -37,6 +37,10 @@ Player::Player(void)
 	//Por defecto no estas agarrando ningun objeto
 	m_catch = false;
 	m_catchObj = 0;
+
+	//Por defecto, no estas agachado ni corriendo
+	m_crouchDown = false;
+	m_run = false;
 
 	//Vector de direccion del personaje
 	m_direction = Ogre::Vector3::ZERO;
@@ -80,7 +84,6 @@ Player::Player(void)
 //---------------------------------------------------------------------------
 Player::~Player(void)
 {
-	delete this;
 }
 
 //---------------------------------------------------------------------------
@@ -96,14 +99,18 @@ bool Player::keyboardControl()
 	keyPressed();
 
 	//Calculamos la distancia a movernos en este frame, la gravedad siempre se aplica
-	m_direction.y = m_direction.y - m_gravity;
+	m_direction.y = Ogre::Real(m_direction.y - m_gravity);
 	Ogre::Vector3 vDistance = m_direction * FPS;
+	//La siguiente linea eliminaria el warning
+	//Ogre::Vector3 vDistance(Ogre::Real(m_direction.x*FPS), Ogre::Real(m_direction.y*FPS), Ogre::Real(m_direction.z*FPS));
 
 	//========================PRE-VARIABLES================================
 
 	//Definimos variables para los procesos posteriores
 	std::vector<Ogre::Vector3> vCoords;
 	Ogre::Real minDistance;
+	Ogre::Real dist1;
+	Ogre::Real dist2;
 	Object* objX = 0;
 	Object* objY = 0;
 
@@ -121,14 +128,16 @@ bool Player::keyboardControl()
 		if (objX != 0)
 		{	
 			//Buscamos el movimiento minimo para acercarse lo maximo posible al objeto sin colisionar
-			minDistance = collisionCorrection(node, objX->m_node);
+			dist1 = getMinDistance(node, objX->m_node);
+			dist2 = getMinDistance(objX->m_node, node);
+			minDistance = std::min(dist1, dist2);
 			if (minDistance > 1)
 			{
 				//Reescribimos el movimiento en X
 				if (vDistance.x > 0)
-					vDistance.x =  minDistance*FPS*10;
+					vDistance.x =  Ogre::Real(minDistance*FPS*10);
 				else
-					vDistance.x = -minDistance*FPS*10;
+					vDistance.x = Ogre::Real(-minDistance*FPS*10);
 			}
 			else
 				vDistance.x = 0;
@@ -146,14 +155,14 @@ bool Player::keyboardControl()
 	if (objY != 0)
 	{
 		//Buscamos el movimiento minimo para acercarse lo maximo posible al objeto sin colisionar
-		minDistance = collisionCorrection(node, objY->m_node);
+		dist1 = getMinDistance(node, objY->m_node);
+		dist2 = getMinDistance(objY->m_node, node);
+		minDistance = std::min(dist1, dist2);
 		if (minDistance > 1)
 		{
 			//Reescribimos el movimiento en Y
-			if (vDistance.y > 0 && m_jumpUp)
-				vDistance.y =  minDistance*FPS*10;
-			else if (m_jumpUp)
-				vDistance.y = -minDistance*FPS*10;
+			if (vDistance.y > 0)
+				vDistance.y =  Ogre::Real(minDistance*FPS*10);
 			else
 				vDistance.y = 0;
 		}
@@ -189,9 +198,9 @@ bool Player::keyboardControl()
 
 	//recogemos el tipo de objeto con el que ha colisionado y llamamos al tratamiento de la colisionen funcion del tipo	
 	if(objX != 0 )
-		collisionManagementX(objX, node);
+		collisionManagementX(objX);
 	if(objY != 0)
-		collisionManagementY(objY, node);	
+		collisionManagementY(objY);	
 
 	//========================RESETS================================
 
@@ -219,43 +228,47 @@ bool Player::keyboardControl()
 //------------------------------------------------------------
 void Player::keyPressed(void)
 {
-	//Agachado
-	if(gKeyboard->isKeyDown(OIS::KC_S) && !m_jumpUp){
+	//Agacharse (mientras no saltes ni corras ni agarres un objeto)
+	if(gKeyboard->isKeyDown(OIS::KC_S) && !m_jumpUp && !m_run && m_catchObj == 0)
 		m_crouchDown = true;
-	}
-	else{
+	else
 		m_crouchDown = false;
-	}
+
+	//Correr (mientras no estes agachado ni agarres un objeto)
+	if(gKeyboard->isKeyDown(OIS::KC_LSHIFT) && !m_crouchDown && m_catchObj == 0)
+		m_run = true;
+	else
+		m_run = false;
 
 	//Izquierda
 	if (gKeyboard->isKeyDown(OIS::KC_A))
 	{	
-		//Agachado y moviendose
+		//Si estas agachado
 		if(m_crouchDown)
 			m_direction.x = -m_moveX/2;
-		else
-		//correr
-		if(gKeyboard->isKeyDown(OIS::KC_LSHIFT))
-			m_direction.x = 2*-m_moveX;
+		//Si estas corriendo
+		else if(m_run)
+			m_direction.x = -m_moveX*2;
+		//Si estas caminando
 		else
 			m_direction.x = -m_moveX;
 	}
 
-	// Derecha
+	//Derecha
 	if (gKeyboard->isKeyDown(OIS::KC_D))
 	{
-		//Agachado y moviendose
+		//Si estas agachado
 		if(m_crouchDown)
 			m_direction.x = m_moveX/2;
-		else
-		//correr
-		if(gKeyboard->isKeyDown(OIS::KC_LSHIFT))
-			m_direction.x = 2*m_moveX;
+		//Si estas corriendo
+		else if(m_run)
+			m_direction.x = m_moveX*2;
+		//Si estas caminando
 		else
 			m_direction.x = m_moveX;
 	}
 
-	// Espacio (salto)
+	//Saltar (mientras no estes realizando un salto)
 	if (gKeyboard->isKeyDown(OIS::KC_SPACE) && !m_jumpUp)
 	{
 		//Aplicamos el desplazamiento deseado en el eje Y
@@ -266,7 +279,7 @@ void Player::keyPressed(void)
 		m_jumpCount++;
 	}
 
-	//Coger objetos
+	//Agarrar objetos
 	if(gKeyboard->isKeyDown(OIS::KC_E))
 	{
 		m_catch = true;
@@ -296,19 +309,27 @@ void Player::catchSolution(Ogre::Vector3 vDistance)
 			Object* obj = vObjects[x];
 			if (obj->m_objType == 2)
 			{
-				//Buscas la distancia minima entre cualquier punto del objeto y el jugador
-				std::vector<Ogre::Vector3> vCoords = getOccupiedCoords(node);
-				Ogre::Real RIGHT_BOTTOM = obj->m_node->_getWorldAABB().squaredDistance(vCoords[0]);
-				Ogre::Real LEFT_BOTTOM = obj->m_node->_getWorldAABB().squaredDistance(vCoords[1]);
-				Ogre::Real LEFT_TOP = obj->m_node->_getWorldAABB().squaredDistance(vCoords[2]);
-				Ogre::Real RIGHT_TOP = obj->m_node->_getWorldAABB().squaredDistance(vCoords[3]);
-					
-				Ogre::Real minDistance = std::min(RIGHT_BOTTOM, std::min(LEFT_BOTTOM, std::min(LEFT_TOP, RIGHT_TOP)));
-				
-				//Si la distancia entre el jugador y el objeto es menor de 10 unidades, lo agarras
-				if (minDistance < 10)
+				//Obtenemos la distancia minima entre los objetos
+				Ogre::Real dist1 = getMinDistance(node, obj->m_node);
+				Ogre::Real dist2 = getMinDistance(obj->m_node, node);
+				Ogre::Real minDistance = std::min(dist1, dist2);
+
+				//Si la distancia entre el jugador y el objeto es menor de 20 unidades
+				if (minDistance < 20)
 				{
-					m_catchObj = obj;
+					//Comprobamos si lo intentas agarrar por los lados (no esta permitido agarrar por arriba/debajo)
+					std::vector<Ogre::Vector3> vCoordsPlayer = getOccupiedCoords(node);
+					std::vector<Ogre::Vector3> vCoordsObj = getOccupiedCoords(obj->m_node);
+					bool onlyX = true;
+
+					//Si player_RIGHT_TOP.y esta por debajo del obj_RIGHT_BOTTOM.y (evitar agarrarlo por debajo)
+					//Si player_RIGHT_BOTTOM.y esta por encima del obj_RIGHT_TOP.y (evitar agarrarlo por arriba)
+					if ( vCoordsPlayer[3].y < vCoordsObj[0].y || vCoordsPlayer[0].y > vCoordsObj[3].y )
+						onlyX = false;
+
+					//Si solo lo estas intentando agarrar por los lados, entonces lo agarras definitivamente
+					if (onlyX)
+						m_catchObj = obj;
 				}
 			}
 		}
@@ -319,8 +340,9 @@ void Player::catchSolution(Ogre::Vector3 vDistance)
 		m_catchObj->update(vDistance);
 	}
 }
+
 //---------------------------------------------------------------------------
-//--Animacion de movimiento del personaje
+//Animacion de movimiento del personaje
 //---------------------------------------------------------------------------
 /*
 void Player::updateAnimation(){
