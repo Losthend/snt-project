@@ -37,6 +37,7 @@ Player::Player(void)
 	//Por defecto no estas agarrando ningun objeto
 	m_catch = false;
 	m_catchObj = 0;
+	m_catchPost = false;
 
 	//Por defecto, no estas agachado ni corriendo
 	m_crouchDown = false;
@@ -75,7 +76,7 @@ Player::Player(void)
 	*/
 
 	/*
-	//El robot no sabe saltar, asi que esto tiene que estar comentado o usar el ninja
+	//El robot no salta, asi que esto tiene que estar comentado o usar el ninja
 	pJump = entity->getAnimationState("Jump");
 	pJump->setLoop(true);		
 	pJump->setLength(Ogre::Real(1.0));
@@ -113,6 +114,13 @@ bool Player::keyboardControl()
 	Ogre::Real dist2;
 	Object* objX = 0;
 	Object* objY = 0;
+
+	//========================PRE-AGARRE================================
+
+	//Acciones a realizar cuando tienes agarrado un objeto
+	if (m_catchObj != 0)
+		catchActions(vDistance);
+
 
 	//========================MOVIMIENTO_X================================
 
@@ -188,11 +196,18 @@ bool Player::keyboardControl()
 			m_jumpUp = false;
 	}	
 
-	//========================AGARRE================================
+	//========================POST-AGARRE================================
 
-	//Tratamos el agarre de objetos
-	if(m_catch)
-		catchSolution(vDistance);
+	//Tratamiento de objeto agarrado
+	if (m_catchPost)
+	{
+		m_catchObj->update(vDistance);
+		m_catchPost = false;
+	}
+
+	//Tratamiento de objeto No agarrado
+	if(m_catch && m_catchObj == 0)
+		catchSolution();
 
 	//===================COLLISIONMANAGEMENT========================
 
@@ -294,53 +309,92 @@ void Player::keyPressed(void)
 //=====================================================================================
 
 //------------------------------------------------------------
-//Metodo para el control del agarre de objetos
+//Metodo para el agarre de objetos
 //------------------------------------------------------------
-void Player::catchSolution(Ogre::Vector3 vDistance)
+void Player::catchSolution()
 {
-	//Si no has agarrado ningun objeto aun
-	if (m_catchObj == 0)
+	//Recorres el vector de objetos
+	std::vector<int>::size_type sz = vObjects.size();
+	for (unsigned x=0; x < sz; x++)
 	{
-		//Recorres el vector de objetos
-		std::vector<int>::size_type sz = vObjects.size();
-		for (unsigned x=0; x < sz; x++)
+		//Si el objeto es de tipo 2
+		Object* obj = vObjects[x];
+		if (obj->m_objType == 2)
 		{
-			//Si el objeto es de tipo 2
-			Object* obj = vObjects[x];
-			if (obj->m_objType == 2)
+			//Obtenemos la distancia minima entre los objetos
+			Ogre::Real dist1 = getMinDistance(node, obj->m_node);
+			Ogre::Real dist2 = getMinDistance(obj->m_node, node);
+			Ogre::Real minDistance = std::min(dist1, dist2);
+
+			//Si la distancia entre el jugador y el objeto es menor de 20 unidades
+			if (minDistance < 20)
 			{
-				//Obtenemos la distancia minima entre los objetos
-				Ogre::Real dist1 = getMinDistance(node, obj->m_node);
-				Ogre::Real dist2 = getMinDistance(obj->m_node, node);
-				Ogre::Real minDistance = std::min(dist1, dist2);
+				//Comprobamos si lo intentas agarrar por los lados (no esta permitido agarrar por arriba/debajo)
+				std::vector<Ogre::Vector3> vCoordsPlayer = getOccupiedCoords(node);
+				std::vector<Ogre::Vector3> vCoordsObj = getOccupiedCoords(obj->m_node);
+				bool onlyX = true;
 
-				//Si la distancia entre el jugador y el objeto es menor de 20 unidades
-				if (minDistance < 20)
-				{
-					//Comprobamos si lo intentas agarrar por los lados (no esta permitido agarrar por arriba/debajo)
-					std::vector<Ogre::Vector3> vCoordsPlayer = getOccupiedCoords(node);
-					std::vector<Ogre::Vector3> vCoordsObj = getOccupiedCoords(obj->m_node);
-					bool onlyX = true;
+				//Si player_RIGHT_TOP.y esta por debajo del obj_RIGHT_BOTTOM.y (evitar agarrarlo por debajo)
+				//Si player_RIGHT_BOTTOM.y esta por encima del obj_RIGHT_TOP.y (evitar agarrarlo por arriba)
+				if ( vCoordsPlayer[3].y < vCoordsObj[0].y || vCoordsPlayer[0].y > vCoordsObj[3].y )
+					onlyX = false;
 
-					//Si player_RIGHT_TOP.y esta por debajo del obj_RIGHT_BOTTOM.y (evitar agarrarlo por debajo)
-					//Si player_RIGHT_BOTTOM.y esta por encima del obj_RIGHT_TOP.y (evitar agarrarlo por arriba)
-					if ( vCoordsPlayer[3].y < vCoordsObj[0].y || vCoordsPlayer[0].y > vCoordsObj[3].y )
-						onlyX = false;
-
-					//Si solo lo estas intentando agarrar por los lados, entonces lo agarras definitivamente
-					if (onlyX)
-						m_catchObj = obj;
-				}
+				//Si solo lo estas intentando agarrar por los lados, entonces lo agarras definitivamente
+				if (onlyX)
+					m_catchObj = obj;
 			}
 		}
 	}
-	//Si has agarrado un objeto
-	else
-	{
-		m_catchObj->update(vDistance);
-	}
 }
 
+//------------------------------------------------------------
+//Metodo para el control de objetos agarrados
+//------------------------------------------------------------
+void Player::catchActions(Ogre::Vector3 vDistance)
+{
+	//Primero comprobamos si estamos a una distancia minima del objeto
+	Ogre::Real dist1 = getMinDistance(node, m_catchObj->m_node);
+	Ogre::Real dist2 = getMinDistance(m_catchObj->m_node, node);
+	Ogre::Real minDistance = std::min(dist1, dist2);
+	//Si estamos a una distancia aceptable
+	if (minDistance < 40)
+	{
+		std::vector<Ogre::Vector3> vCoordsPlayer = getOccupiedCoords(node);
+		std::vector<Ogre::Vector3> vCoordsObj = getOccupiedCoords(m_catchObj->m_node);
+		//Nos asegurarnos de que no estas por arriba ni por debajo del objeto (podria suceder)
+		//Si player_RIGHT_TOP.y esta por debajo del obj_RIGHT_BOTTOM.y (agarrado por debajo)
+		//Si player_RIGHT_BOTTOM.y esta por encima del obj_RIGHT_TOP.y (agarrado por arriba)
+		if ( vCoordsPlayer[3].y < vCoordsObj[0].y || vCoordsPlayer[0].y > vCoordsObj[3].y )
+		{
+			//Soltamos el objeto
+			m_catchObj = 0;
+		}
+		//Comprobamos si nos movemos en la direccion en la que tenemos agarrado el objeto
+		//Si player_RIGHT_BOTTOM.x < obj_LEFT_BOTTOM.x, esta agarrado por la derecha, y te diriges hacia la derecha
+		else if (vCoordsPlayer[0].x < vCoordsObj[1].x && vDistance.x > 0)
+		{
+			//Tratar el movimiento del objeto antes que el del jugador
+			m_catchObj->update(vDistance);
+		}
+		//Si player_LEFT_BOTTOM.x > obj_RIGHT_BOTTOM.x, esta agarrado por la izquierda, y te diriges hacia la izquierda
+		else if (vCoordsPlayer[1].x > vCoordsObj[0].x && vDistance.x < 0)
+		{
+			//Tratar el movimiento del objeto antes que el del jugador
+			m_catchObj->update(vDistance);
+		}
+		else
+		{
+			//En cualquier otro caso, debemos tratar el movimiento del objeto agarrado despues del movimiento del jugador
+			m_catchPost = true;
+		}
+	}
+	else
+	{
+		//Soltamos el objeto
+		m_catchObj = 0;
+	}
+
+}
 //---------------------------------------------------------------------------
 //Animacion de movimiento del personaje
 //---------------------------------------------------------------------------

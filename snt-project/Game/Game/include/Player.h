@@ -45,6 +45,7 @@ public:
 	//Variables de arrastrar objetos
 	bool m_catch;
 	Object* m_catchObj;
+	bool m_catchPost;
 
 	//Otras variables
 	int m_objType;
@@ -59,7 +60,8 @@ private:
 
 	//METODOS
 	void keyPressed(void);
-	void Player::catchSolution(Ogre::Vector3 vDistance);
+	void catchSolution();
+	void catchActions(Ogre::Vector3 vDistance);
 
 	//VARIABLES privadas
 

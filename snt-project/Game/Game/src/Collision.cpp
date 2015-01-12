@@ -53,6 +53,12 @@ std::vector<Ogre::SceneNode*> inCameraFrustumObjects(void)
 //---------------------------------------------------------------------
 //Devuelve un vector con las coordenadas AABB de los extremos de un nodo
 //Parametros: el nodo que queremos saber cuanto ocupa
+//Orden de los extremos en los vectores:
+//		[0] RIGHT_BOTTOM
+//		[1] LEFT_BOTTOM
+//		[2] LEFT_TOP
+//		[3] RIGHT_TOP
+//		[4] FAR_Z
 //---------------------------------------------------------------------
 std::vector<Ogre::Vector3> getOccupiedCoords(Ogre::SceneNode* node)
 {
@@ -119,15 +125,6 @@ std::vector<Ogre::Vector3> simulateOccupiedCoords(Ogre::SceneNode* node, Ogre::V
 //---------------------------------------------------------------------
 Object* testCollisionAABB(std::vector<Ogre::Vector3> vSimulatedCoords, Ogre::String nodeName)
 {
-	/*
-		Orden de los extremos en los vectores:
-		[0] RIGHT_BOTTOM
-		[1] LEFT_BOTTOM
-		[2] LEFT_TOP
-		[3] RIGHT_TOP
-		[4] FAR_Z
-	*/
-
 	//Declaramos bool de colision
 	bool collision = false;
 
