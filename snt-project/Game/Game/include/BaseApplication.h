@@ -10,40 +10,49 @@ public:
     virtual ~BaseApplication(void);
     bool go(void);
 
-	//VARIABLES
 	//Objeto Root, la base del proyecto
 	Ogre::Root*				mRoot;
-	//El SceneManager 
-	Ogre::SceneManager*		mSceneMgr;
-	//La ventana de renderizado
-	Ogre::RenderWindow*		mWindow;
-	//La camara
-	Ogre::Camera*			mCamera;
-	Ogre::Viewport*			mViewport;
-	//Dispositivos de entrada OIS
-	OIS::InputManager*		mInputManager;
-	OIS::Mouse*				mMouse;
-	OIS::Keyboard*			mKeyboard;
 
 private:
 
-	//METODOS "principales"
-	virtual void getResources(void);
-	virtual void activateOIS(void);
-	//Para los WindowEventListener
-	virtual void windowResized(Ogre::RenderWindow* rw);
-	virtual void windowClosed(Ogre::RenderWindow* rw);
-	//Configuracion inicial del proyecto
-	virtual void setUp(void);
+	virtual bool setup();
+	virtual bool configure(void);
+    virtual void chooseSceneManager(void);
+    virtual void createCamera(void);
+    virtual void createFrameListener(void);
+    virtual void destroyScene(void);
+    virtual void createViewports(void);
+    virtual void setupResources(void);
+    virtual void loadResources(void);
+
+    virtual void windowResized(Ogre::RenderWindow* rw);
+    virtual void windowClosed(Ogre::RenderWindow* rw);
 
 	//ELIMINAR el siguiente metodo cuando ya no sean necesario nuestros "cubos manuales"
 	void simpleCube(void);
 
 	//VARIABLES
 	
-	//Origen de recursos y plugins, necesario debido al SDK
+	Ogre::SceneManager*		mSceneMgr;
+	Ogre::RenderWindow*		mWindow;
+	Ogre::Camera*			mCamera;
+	Ogre::Viewport*			mViewport;
+	OIS::InputManager*		mInputManager;
+	OIS::Mouse*				mMouse;
+	OIS::Keyboard*			mKeyboard;
+
+	bool                    mShutDown;
+
 	Ogre::String			mResourcesCfg;
 	Ogre::String			mPluginsCfg;
+	Ogre::String            m_ResourcePath;   
+
+	//Overlay para Ogre 1.9
+	Ogre::OverlaySystem*        mOverlaySystem;
+
+	#ifdef OGRE_STATIC_LIB
+		Ogre::StaticPluginLoader m_StaticPluginLoader;
+	#endif
 };
 
 //---------------------------------------------------------------------------

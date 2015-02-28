@@ -17,3 +17,5 @@ extern Ogre::Viewport*			gViewport;
 extern OIS::InputManager*		gInputManager;
 extern OIS::Mouse*				gMouse;
 extern OIS::Keyboard*			gKeyboard;
+
+extern bool						gShutDown;

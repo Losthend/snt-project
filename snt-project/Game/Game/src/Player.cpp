@@ -182,7 +182,7 @@ bool Player::keyboardControl()
 
 	if (vDistance.x != 0 || vDistance.y != 0)
 	{
-		node->translate(vDistance, Ogre::Node::TS_LOCAL);
+		node->translate(vDistance, Ogre::Node::TS_WORLD);
 		gCamera->move(vDistance);	
 	}
 
@@ -241,6 +241,7 @@ bool Player::keyboardControl()
 //------------------------------------------------------------
 //Metodo para el control de los inputs del teclado
 //------------------------------------------------------------
+
 void Player::keyPressed(void)
 {
 	//Agacharse (mientras no saltes ni corras ni agarres un objeto)

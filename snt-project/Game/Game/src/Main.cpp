@@ -27,17 +27,22 @@ extern "C" {
     {
 		//Configuramos el entorno
 		BaseApplication* baseApp = new BaseApplication();
-		//Listeners y acciones de renderizado para los frame
-		RenderActions* renderAct = new RenderActions();
-		//Creamos el juego (personaje y escenario)
-		GameApplication* gameApp = new GameApplication();
+		bool setupOK = baseApp->go();
 
-		//Momento de ejecucion del primer frame
-		initFrameRate();
+		if (setupOK){
 
-		//Iniciamos el bucle de renderizado infinito (ver "frameRenderingQueued" en "RenderActions")
-		baseApp->mRoot->startRendering();
+			//Listeners y acciones de renderizado para los frame
+			RenderActions* renderAct = new RenderActions();
 
+			//Creamos el juego (personaje y escenario)
+			GameApplication* gameApp = new GameApplication();
+
+			//Momento de ejecucion del primer frame
+			initFrameRate();
+
+			//Iniciamos el bucle de renderizado infinito (ver "frameRenderingQueued" en "RenderActions")
+			baseApp->mRoot->startRendering();
+		}
 		return 0;
     }
  

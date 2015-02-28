@@ -16,3 +16,5 @@ OIS::InputManager*		gInputManager;
 OIS::Mouse*				gMouse;
 OIS::Keyboard*			gKeyboard;
 
+bool					gShutDown;
+
