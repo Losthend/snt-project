@@ -1,0 +1,80 @@
+1) Nos descargamos la version bullet-2.82-r2704 de la siguiente pagina:
+
+	https://code.google.com/p/bullet/downloads/list
+
+Es una version estable, la siguiente es la bullet 3.X que parece que sigue alpha y mejor quitarnos de problemas.
+
+
+2) Descomprimir el contenido del archivo en: 
+
+	C:\Ogre
+
+De modo que se nos quedara: C:\Ogre\bullet-2.82-r2704
+
+
+3) IMPORTANTE:
+	3.1) Vamos a "C:\Ogre\bullet-2.82-r2704\build"
+	3.2) Ejecutamos el archivo: vs2010.bat
+	3.3) Se nos crea la carpeta: vs2010
+	3.4) IMPORTANTE: 
+		3.4.1) Abrimos el VS2012, y abrimos el archivo "0BulletSolution" que esta en:
+			C:\Ogre\bullet-2.82-r2704\build\vs2010
+		3.4.2) Nos dira que es la version para 2010 y que si queremos actualizar...
+			ACTUALIZARLO, por supuesto
+		3.4.3) Una vez el proyecto se haya actualizado, no hacer nada mas en el
+				Ni ejecutar ningun archivo ni nada, cerrar el VS2012
+		3.4.4) Volvemos a:
+			C:\Ogre\bullet-2.82-r2704\build
+		3.4.5) Finalmente, cambiamos el nombre de la carpeta vs2010 que antes se generó por vs2012
+
+4) Hasta aqui, tenemos configurado Bullet para funcionar con DLL, compilador y demas de VS2012
+
+5) Seguir el siguiente enlace desde DESPUES del punto "Create a new C++ Win32..."
+
+	https://dementedvice.wordpress.com/2013/03/05/how-to-bullet-physics-in-visual-studio-2012/
+
+HASTA EL PUNTO DEL EJEMPLO. 
+
+Obviamente, tener en cuante las RUTAS QUE USAMOS NOSOTROS, que son similares a las que dice el manual pero
+empezando desde "C:\Ogre" en lugar de "C:\" y la version de bullet que utiliza es diferente, etc.
+
+-------------------------
+
+6) NOTA: Esta parte no se si es necesaria, en caso de algun error al compilar probarla:
+
+	6.1)Nos vamos a cada uno de los nuevos proyectos (BulletCollision, BulletDynamics y LinearMath)
+		
+	6.2) Ir a: Propiedades de configuracion->C/C++->Generacion de codigo
+		6.2.1) En ActiveDebug: 
+			Biblioteca de tiempo de ejecucion: DLL de depuración multiproceso (/MDd)
+		6.2.2) En release:
+			Biblioteca de tiempo de ejecucion: DLL multiproceso (/MD)
+			
+Estas son las bibliotecas que tiene nuestro proyecto y, en consecuencia, las que debe usar Bullet.
+
+-------------------------
+
+6) Añadir en el stdafx.h 
+
+	#include "btBulletDynamicsCommon.h"
+	#include "btBulletCollisionCommon.h"
+
+7) Ya podemos usar bullet en nuestro proyecto, a falta de alguna otra libreria que se vaya necesitando.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+https://dementedvice.wordpress.com/2013/03/05/how-to-bullet-physics-in-visual-studio-2012/

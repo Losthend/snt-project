@@ -13,6 +13,10 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 
+//LIBRERIAS DE BULLET
+#include "btBulletDynamicsCommon.h"
+#include "btBulletCollisionCommon.h"
+
 //LIBRERIAS DE OGRE
 
 //La libreria para Root
