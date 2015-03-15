@@ -4,13 +4,16 @@
 #include "../include/RenderActions.h"
 //Acceso a variables globales
 #include "../include/Global.h"
-//Acceso a Object y Player
+//Acceso a Object, Player y SceneObject
 #include "../include/Object.h"
 #include "../include/Player.h"
+#include "../include/SceneObject.h"
 //Para el control de FPS
 #include "../include/FrameRate.h"
-
+//Para mostrar mensajes por pantalla
 #include "../include/FuncionesGenerales.h"
+//Para el uso de fisicas
+#include "../include/PhysicsManager.h"
 
 //------------------------------------------------------------------
 //Esta clase esta orientada a establecer los listeners, permitiendo 
@@ -31,8 +34,9 @@ RenderActions::RenderActions(void)
     gMouse->setEventCallback(this);
     gKeyboard->setEventCallback(this);
 
+	/*
 	//-------------------------------------------------------------------------
-	//PROVISIONAL: Creacion de paneles (menus)
+	//PROVISIONAL: Creacion de paneles (menus) - ¿Optimizacion con clase propia?
 	//-------------------------------------------------------------------------
 	mInputContext.mKeyboard = gKeyboard;
     mInputContext.mMouse = gMouse;
@@ -60,7 +64,7 @@ RenderActions::RenderActions(void)
     mDetailsPanel->setParamValue(10, "Solid");
     mDetailsPanel->hide();
 	//-------------------------------------------------------------------------
-
+	*/
 }
 
 //------------------------------------------------------------------
@@ -69,8 +73,15 @@ RenderActions::RenderActions(void)
 
 RenderActions::~RenderActions(void)
 {
-	if (mTrayMgr) delete mTrayMgr;
+	//if (mTrayMgr) delete mTrayMgr;
 
+	//Vaciado del vector global de SceneObject
+	for(int i = 0, len = gObjects.size(); i < len; ++i)
+	{
+		delete gObjects[i];
+	}
+
+	//Finalizar listeners y delete root
 	Ogre::WindowEventUtilities::removeWindowEventListener(gWindow, this);
 	windowClosed(gWindow);
 	delete gRoot;
@@ -95,6 +106,17 @@ bool RenderActions::frameRenderingQueued(const Ogre::FrameEvent& evt)
 
 	//gPlayer->updateAnimation();
 	
+	//---------------------------------------------------------------------
+	//Control de fisica y colisiones entre objetos de bullet
+	//---------------------------------------------------------------------
+
+	gPhysics->update(0.1);
+	for(int i = 0, len = gObjects.size(); i < len; i++)
+		gObjects[i]->update();
+
+	//---------------------------------------------------------------------
+
+	/*
 	//Ejecutamos las actualizaciones de gravedad de los objetos de tipo 2 o 3
 	for (unsigned x=0; x < vObjects.size(); x++)
 	{
@@ -108,10 +130,12 @@ bool RenderActions::frameRenderingQueued(const Ogre::FrameEvent& evt)
 			obj->move();
 		}
 	}
+	*/
 
 	//Llamamos al metodo de control del teclado para el jugador
-	if(!gPlayer->keyboardControl())return false;	
+	//if(!gPlayer->keyboardControl())return false;	
 
+	/*
 	//-------------------------------------------------------------------------
 	//PROVISIONAL: Visualizacion de datos en el menu
 	//-------------------------------------------------------------------------
@@ -130,6 +154,7 @@ bool RenderActions::frameRenderingQueued(const Ogre::FrameEvent& evt)
         }
     }
 	//-------------------------------------------------------------------------
+	*/
 
 	//Finalizacion del frame
 	endFrame();

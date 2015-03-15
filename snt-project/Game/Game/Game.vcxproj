@@ -20,8 +20,10 @@
     <ClInclude Include="include\GameApplication.h" />
     <ClInclude Include="include\Global.h" />
     <ClInclude Include="include\Object.h" />
+    <ClInclude Include="include\PhysicsManager.h" />
     <ClInclude Include="include\Player.h" />
     <ClInclude Include="include\RenderActions.h" />
+    <ClInclude Include="include\SceneObject.h" />
     <ClInclude Include="include\stdafx.h" />
     <ClInclude Include="include\tinystr.h" />
     <ClInclude Include="include\tinyxml.h" />
@@ -36,8 +38,10 @@
     <ClCompile Include="src\Global.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\Object.cpp" />
+    <ClCompile Include="src\PhysicsManager.cpp" />
     <ClCompile Include="src\Player.cpp" />
     <ClCompile Include="src\RenderActions.cpp" />
+    <ClCompile Include="src\SceneObject.cpp" />
     <ClCompile Include="src\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -46,6 +50,17 @@
     <ClCompile Include="src\tinyxml.cpp" />
     <ClCompile Include="src\tinyxmlerror.cpp" />
     <ClCompile Include="src\tinyxmlparser.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="C:\Ogre\bullet-2.82-r2704\build\vs2012\BulletCollision.vcxproj">
+      <Project>{a98ccc0d-f10d-7a48-be8b-7a20d78f15fc}</Project>
+    </ProjectReference>
+    <ProjectReference Include="C:\Ogre\bullet-2.82-r2704\build\vs2012\BulletDynamics.vcxproj">
+      <Project>{f37ec149-4b6c-034b-98b5-9bef8778fdd4}</Project>
+    </ProjectReference>
+    <ProjectReference Include="C:\Ogre\bullet-2.82-r2704\build\vs2012\LinearMath.vcxproj">
+      <Project>{6cc091da-9e3a-b54e-bd87-d318c5990406}</Project>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{091322C4-584A-4E69-8A1C-A124358052D5}</ProjectGuid>

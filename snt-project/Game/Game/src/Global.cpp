@@ -4,6 +4,9 @@
 //Jugador (ver constructor de GameApplication.cpp)
 Player* gPlayer;
 //Vector con los demas objetos (ver createScene de GameApplication.cpp) 
+std::vector<SceneObject*> gObjects;
+std::vector<btCollisionShape*> gCollisionShapes;
+
 std::vector<Object*> vObjects;
 
 //Variables globales (ver BaseApplication.cpp)
@@ -17,4 +20,6 @@ OIS::Mouse*				gMouse;
 OIS::Keyboard*			gKeyboard;
 
 bool					gShutDown;
+
+PhysicsManager*			gPhysics;
 
