@@ -17,17 +17,7 @@
 //========================================================================
 void collisionManagementX(Object* obj)
 {
-	 int objType = obj->m_objType;
-	 switch ( objType )
-      {
-		 //En caso de ser del tipo 3
-         case 3:
-			//Reseteamos el personaje al punto inicial			 			
-			Ogre::Vector3 initPos = gPlayer->node->getInitialPosition();
-			gPlayer->node->setPosition(initPos);			
-			gCamera->setPosition(initPos.x, initPos.y, 450.0);
-            break;
-	 }
+	 
 }
 
 //========================================================================
@@ -35,13 +25,5 @@ void collisionManagementX(Object* obj)
 //========================================================================
 void collisionManagementY(Object* obj)
 {
-	 int objType = obj->m_objType;
-	 switch ( objType )
-      {
-		 //En caso de ser del tipo 3
-         case 3:
-			 //Eliminamos el objeto
-			 obj->~Object();
-            break;
-	 }
+	 
 }

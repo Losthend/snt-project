@@ -9,7 +9,7 @@ public:
     virtual ~SceneObject(void);
 	void update();
 
-private:
+public:
 	Ogre::SceneNode &mNode;
 	btRigidBody &mRigidBody;
 

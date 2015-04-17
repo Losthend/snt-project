@@ -11,8 +11,6 @@ extern Player* gPlayer;
 extern std::vector<SceneObject*> gObjects;
 extern std::vector<btCollisionShape*> gCollisionShapes;
 
-extern std::vector<Object*> vObjects;
-
 //Declaramos las variables de configuracion para que puedan ser usadas como globales
 extern Ogre::Root*				gRoot;
 extern Ogre::SceneManager*		gSceneMgr;

@@ -28,9 +28,9 @@ void SceneObject::update()
 	btTransform transform;
 	
 	//Accedemos al cuerpo rigido y obtenemos su "estado de movimiento"
-	//mRigidBody.getMotionState()->getWorldTransform(transform);
-	btMotionState* state = mRigidBody.getMotionState();
-	state->getWorldTransform(transform);
+	mRigidBody.getMotionState()->getWorldTransform(transform);
+	//btMotionState* state = mRigidBody.getMotionState();
+	//state->getWorldTransform(transform);
 	
 	//Copiamos su Quaternion y la rotacion del SceneNode
 	btQuaternion rotation(transform.getRotation());

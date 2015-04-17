@@ -7,8 +7,6 @@ Player* gPlayer;
 std::vector<SceneObject*> gObjects;
 std::vector<btCollisionShape*> gCollisionShapes;
 
-std::vector<Object*> vObjects;
-
 //Variables globales (ver BaseApplication.cpp)
 Ogre::Root*				gRoot;
 Ogre::SceneManager*		gSceneMgr;

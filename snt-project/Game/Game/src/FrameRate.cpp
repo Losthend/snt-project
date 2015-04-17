@@ -1,7 +1,6 @@
 #include "../include/stdafx.h"
 #include "../include/FrameRate.h"
 #include "../include/Global.h"
-#include "../include/FuncionesGenerales.h"
 
 //Frames por segundo
 const int frameRate = 60; 

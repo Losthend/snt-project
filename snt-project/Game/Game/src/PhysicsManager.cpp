@@ -10,6 +10,7 @@ PhysicsManager::PhysicsManager()
 {
 	mCollisionDispatcher = new btCollisionDispatcher(&mCollisionConfig);
 	mWorld = new btDiscreteDynamicsWorld(mCollisionDispatcher, &mBroadphase, &mConstraintSolver, &mCollisionConfig);
+	mWorld->setGravity(btVector3(0,-9.81f,0));
 }
 
 //---------------------------------------------------------------------------
@@ -57,6 +58,10 @@ btRigidBody* PhysicsManager::createBody(const btTransform &transform, float mass
 	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass,myMotionState, &shape, localInertia);
 	btRigidBody* body = new btRigidBody(rbInfo);
 	mWorld->addRigidBody(body);
+	
+	//Movimiento solo en 2D
+	body->setLinearFactor(btVector3(1,1,0));
+	body->setAngularFactor(btVector3(1,0,0));
 
 	return body;
 
@@ -67,7 +72,7 @@ btRigidBody* PhysicsManager::createBody(const btTransform &transform, float mass
 //---------------------------------------------------------------------------
 void PhysicsManager::update(float ticks)
 {
-	mWorld->stepSimulation(ticks);
+	mWorld->stepSimulation(ticks, 0);
 }
 
 //---------------------------------------------------------------------------
@@ -91,9 +96,6 @@ SceneObject* PhysicsManager::createBoxObject(const char *name, const Ogre::Vecto
 	
 	//Creacion del cuerpo rigido que envuelve al sceneNode
 	btRigidBody* body = gPhysics->createBody(btTransform(btQuaternion::getIdentity(), btVector3(pos.x, pos.y, pos.z)), mass, shape);
-	
-	//Guardado del cuerpo rigido en gObjects (vector global)
-	//gObjects.push_back(new SceneObject(*node1, body));
 
 	//Creacion de la entidad y attach de la misma al objeto
 	Ogre::Entity *entity = gSceneMgr->createEntity(name, "ManualObjectCube");

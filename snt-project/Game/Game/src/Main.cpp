@@ -1,13 +1,10 @@
 #include "../include/stdafx.h"
 
-//Instancia las clases principales, a saber: 
-//Configuración de variables globales
 #include "../include/BaseApplication.h"
-//Listener para el renderizado de cada frame
+
+#include "../include/KeyboardMouse.h"
 #include "../include/RenderActions.h"
-//Creación de escenario
 #include "../include/GameApplication.h"
-//Para el control de FPS
 #include "../include/FrameRate.h"
 
 
@@ -30,6 +27,9 @@ extern "C" {
 		bool setupOK = baseApp->go();
 
 		if (setupOK){
+
+			//Controlador de teclado y raton
+			KeyboardMouse* keyboardMouse = new KeyboardMouse();
 
 			//Listeners y acciones de renderizado para los frame
 			RenderActions* renderAct = new RenderActions();
