@@ -238,6 +238,14 @@ void BaseApplication::createFrameListener(void)
     windowHndStr << windowHnd;
     pl.insert(std::make_pair(std::string("WINDOW"), windowHndStr.str()));
 
+	//con esto el raton se muestra en pantalla, con el cursor del sistema, sin estar "atrapado" por la ventana del juego.
+	#if defined OIS_WIN32_PLATFORM
+		pl.insert(std::make_pair(std::string("w32_mouse"), std::string("DISCL_FOREGROUND" )));
+		pl.insert(std::make_pair(std::string("w32_mouse"), std::string("DISCL_NONEXCLUSIVE")));
+		pl.insert(std::make_pair(std::string("w32_keyboard"), std::string("DISCL_FOREGROUND")));
+		pl.insert(std::make_pair(std::string("w32_keyboard"), std::string("DISCL_NONEXCLUSIVE")));
+	#endif
+
     mInputManager = OIS::InputManager::createInputSystem(pl);
 
 	//Controladores de teclado y raton

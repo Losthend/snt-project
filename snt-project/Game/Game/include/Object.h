@@ -12,13 +12,12 @@ public:
 
     Object(int objType, SceneObject* sceneObject);
     virtual ~Object(void);
-	int update(Ogre::Vector3 vDistance);
-	void move();
+	void update();
 	
 	//VARIABLES
 
 	//SceneObject: Node + btRigidBody
-	SceneObject*		m_SceneObject;
+	SceneObject*		m_sceneObject;
 	//Velocidad del juego (duracion de cada frame)
 	double				FPS;
 	//Tipo de objeto
@@ -26,6 +25,7 @@ public:
 	//Velocidad de movimiento
 	Ogre::Real			m_moveX;
 	Ogre::Real			m_moveY;
+	Ogre::Real			m_speed;
 	//Vector de movimiento/direccion
 	Ogre::Vector3		m_direction;
 

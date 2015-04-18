@@ -3,7 +3,9 @@
 #include "../include/KeyboardMouse.h"
 #include "../include/Global.h"
 #include "../include/Player.h"
+#include "../include/Object.h"
 #include "../include/SceneObject.h"
+#include "../include/PhysicsManager.h"
 
 KeyboardMouse::KeyboardMouse(void)
 {
@@ -96,10 +98,42 @@ bool KeyboardMouse::mouseMoved(const OIS::MouseEvent &arg)
 //---------------------------------------------------------------------------
 bool KeyboardMouse::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 {
-    return true;
+
+	if (id == OIS::MB_Right)
+	{
+		Object* obj = 0;
+	
+		//Raycasting
+		OIS::MouseState ms = gMouse->getMouseState();
+		Ogre::Ray ray = gCamera->getCameraToViewportRay(ms.X.abs/(float)gWindow->getWidth(),ms.Y.abs/(float)gWindow->getHeight()); 
+		Ogre::RaySceneQuery* mRaySceneQuery = gSceneMgr->createRayQuery(ray); 
+		mRaySceneQuery->setRay(ray);
+		mRaySceneQuery->setSortByDistance(true);
+		Ogre::RaySceneQueryResult& result = mRaySceneQuery->execute();
+		Ogre::RaySceneQueryResult::iterator i = result.begin();
+
+		//Busqueda del objeto
+		if(i != result.end())
+			for(int x = 0; x < gObjects.size(); x++)
+				if(i->movable->getParentNode()->getName() == gObjects[x]->m_sceneObject->mNode.getName())
+					obj = gObjects[x];
+
+		//Comprobacion del objeto
+		if(obj!=0 && obj->m_objType == 2)
+		{
+			//Agarrar el objeto
+			gPlayer->catchSolution(obj);
+		}
+	}
+
+	return true;
 }
 //---------------------------------------------------------------------------
 bool KeyboardMouse::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 {
+	if (id == OIS::MB_Right)
+	{
+		gPlayer->m_catchObj = 0;
+	}
 	return true;
 }

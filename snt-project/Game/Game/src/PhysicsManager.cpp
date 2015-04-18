@@ -61,7 +61,7 @@ btRigidBody* PhysicsManager::createBody(const btTransform &transform, float mass
 	
 	//Movimiento solo en 2D
 	body->setLinearFactor(btVector3(1,1,0));
-	body->setAngularFactor(btVector3(1,0,0));
+	body->setAngularFactor(btVector3(1,1,0));
 
 	return body;
 

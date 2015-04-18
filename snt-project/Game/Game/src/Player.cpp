@@ -14,6 +14,7 @@ Player::Player(SceneObject* sceneObject)
 	FPS = getframeLength();
 
 	m_sceneObject = sceneObject;
+	m_sceneObject->mRigidBody.setAngularFactor(btVector3(0,0,0));
 	//m_sceneObject->mRigidBody.setActivationState(DISABLE_DEACTIVATION);
 
 	m_jump = false;
@@ -28,6 +29,9 @@ Player::Player(SceneObject* sceneObject)
 
 	m_Speed = 20;
 
+	m_catchObj = 0;
+	m_tkDistance = 10000;
+
 	m_direction = Ogre::Vector3::ZERO;
 }
 //---------------------------------------------------------------------------
@@ -41,6 +45,15 @@ Player::~Player(void)
 //---------------------------------------------------------------------------
 void Player::update()
 {
+	//-------------------------------------------------------------------
+	//CONTROL DE AGARRE
+	//---------------------------------------------------------------------
+	if (m_catchObj != 0)
+		catchActions();
+
+	//-------------------------------------------------------------------
+	//PRE-VARIABLES
+	//---------------------------------------------------------------------
 	//Obtenemos la velocidad lineal del rigidbody
 	btVector3 linearVelocity = m_sceneObject->mRigidBody.getLinearVelocity();
 	btScalar velX = linearVelocity.x();
@@ -80,6 +93,56 @@ void Player::update()
 		m_sceneObject->mRigidBody.activate(true);
 		//Movimiento mediante impulse (mas realista)
 		m_sceneObject->mRigidBody.applyCentralImpulse(btVector3(m_direction.x*m_moveX, 0, 0));
+	}
+
+	//-------------------------------------------------------------------
+	//UPDATES
+	//-------------------------------------------------------------------
+	//Para que los movimientos del jugador se adapten al entorno de Bullet 
+	m_sceneObject->update();
+
+	//Para que la camara siga al jugador
+	Ogre::Vector3 pos = m_sceneObject->mNode.getPosition();
+	pos.z = gCamera->getPosition().z;
+	gCamera->setPosition(pos);
+}
+
+
+
+//------------------------------------------------------------
+//Metodo para el agarre de objetos
+//------------------------------------------------------------
+void Player::catchSolution(Object* obj)
+{
+	//A falta de control de distancia
+	Ogre::Real distance = m_sceneObject->mNode._getWorldAABB().squaredDistance(obj->m_sceneObject->mNode.getPosition());
+
+	//Si la distancia entre el jugador y el objeto es menor de X unidades
+	if (distance < m_tkDistance)
+	{
+		//Agarra el objeto
+		m_catchObj = obj;
+	}
+}
+
+//------------------------------------------------------------
+//Metodo para el control de objetos agarrados
+//------------------------------------------------------------
+void Player::catchActions()
+{
+	//A falta de control de distancia
+	Ogre::Real distance = m_sceneObject->mNode._getWorldAABB().squaredDistance(m_catchObj->m_sceneObject->mNode.getPosition());
+
+	//Si estamos a una distancia aceptable
+	if (distance < m_tkDistance)
+	{
+		//Movemos el objeto segun el raton
+		m_catchObj->update();
+	}
+	else
+	{
+		//Soltamos el objeto
+		m_catchObj = 0;
 	}
 }
 

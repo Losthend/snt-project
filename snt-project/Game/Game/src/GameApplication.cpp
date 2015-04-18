@@ -25,7 +25,7 @@ GameApplication::GameApplication(void)
 	SceneObject* player = gPhysics->createBoxObject("Player", Ogre::Vector3(10, 10, 10), Ogre::Vector3(0, 100, 0), 1, cubeShape);
 	
 	gPlayer = new Player(player);
-	gObjects.push_back(player);
+	//gObjects.push_back(player);
 
 	//Tambien el "mundo"
 	createScene();
@@ -44,21 +44,28 @@ void GameApplication::createScene(void)
 	//CREACION DE OBJETOS MEDIANTE BULLET
 	//-------------------------------------------------------------------------------
 	
+	//Shapes
 	btCollisionShape &cubeShape = mPhysics->createBoxShape(20, 20, 20);
-	btCollisionShape &planeShape = mPhysics->createBoxShape(40, 6, 20);
+	btCollisionShape &planeShape = mPhysics->createBoxShape(80, 6, 20);
 	btCollisionShape &plane2Shape = mPhysics->createBoxShape(1600, 1, 200);
 	
-	SceneObject* obj1 = gPhysics->createBoxObject("cube1", Ogre::Vector3(10, 10, 10), Ogre::Vector3(-50, 100, 0), 1, cubeShape);
-	SceneObject* obj2 = gPhysics->createBoxObject("cube2", Ogre::Vector3(10, 10, 10), Ogre::Vector3(-50, 80, 0), 1, cubeShape);
-    SceneObject* obj3 = gPhysics->createBoxObject("cube3", Ogre::Vector3(10, 10, 10), Ogre::Vector3(50, 120, 0), 1, cubeShape);
-    SceneObject* obj4 = gPhysics->createBoxObject("cube4", Ogre::Vector3(10, 10, 10), Ogre::Vector3(50, 150, 0), 1, cubeShape);
+	//SceneObjects: necesarios para el control ejercido por Bullet
+	SceneObject* sceneObj1 = gPhysics->createBoxObject("cube1", Ogre::Vector3(10, 10, 10), Ogre::Vector3(-50, 100, 0), 1, cubeShape);
+	SceneObject* sceneObj2 = gPhysics->createBoxObject("cube2", Ogre::Vector3(10, 10, 10), Ogre::Vector3(-50, 80, 0), 1, cubeShape);
+    SceneObject* sceneObj3 = gPhysics->createBoxObject("cube3", Ogre::Vector3(10, 10, 10), Ogre::Vector3(50, 120, 0), 1, cubeShape);
+    SceneObject* sceneObj4 = gPhysics->createBoxObject("cube4", Ogre::Vector3(10, 10, 10), Ogre::Vector3(50, 150, 0), 1, cubeShape);
+    SceneObject* sceneObj5 = gPhysics->createBoxObject("plane", Ogre::Vector3(40, 3, 10), Ogre::Vector3(60, 110, 0), 1, planeShape);
+	SceneObject* sceneObj6 = gPhysics->createBoxObject("floor", Ogre::Vector3(800, 1, 100), Ogre::Vector3(0, -50, 0), 0, plane2Shape);
 
-    SceneObject* obj5 = gPhysics->createBoxObject("plane", Ogre::Vector3(20, 3, 10), Ogre::Vector3(60, 110, 0), 1, planeShape);
- 
-	SceneObject* obj6 = gPhysics->createBoxObject("floor", Ogre::Vector3(800, 1, 100), Ogre::Vector3(0, -50, 0), 0, plane2Shape);
+	//Objets: necesarios para nuestras propias definiciones de propiedades de objeto
+	Object* obj1 = new Object(2, sceneObj1);
+	Object* obj2 = new Object(2, sceneObj2);
+	Object* obj3 = new Object(2, sceneObj3);
+	Object* obj4 = new Object(2, sceneObj4);
+	Object* obj5 = new Object(2, sceneObj5);
+	Object* obj6 = new Object(1, sceneObj6);
 
-
-	//Guardado del nodo con su cuerpo rigido en gObjects (vector global)
+	//Almacenamiento del objeto completo en gObjects (vector global)
 	gObjects.push_back(obj1);
 	gObjects.push_back(obj2);
 	gObjects.push_back(obj3);

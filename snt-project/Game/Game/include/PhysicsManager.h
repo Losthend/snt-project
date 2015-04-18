@@ -16,7 +16,7 @@ public:
 
 	SceneObject* createBoxObject(const char *name, const Ogre::Vector3 &size, const Ogre::Vector3 &pos, float mass, btCollisionShape &shape);
 
-private:
+//private:
 	/*
 		mWorld: simulara un mundo fisico con objetos en movimiento. 
 				La detección de colision en este modo puede tener "efecto tunel", hay alternativas.

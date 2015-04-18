@@ -2,6 +2,7 @@
 #define __Player_h_
 
 class SceneObject;
+class Object;
 
 class Player
 {
@@ -12,6 +13,9 @@ public:
     Player(SceneObject* sceneObject);
     virtual ~Player(void);
 	void update();
+	void catchSolution(Object* obj);
+	void catchActions();
+	Ogre::Real RayCastingPlayerMouse();
 
 	//VARIABLES
 
@@ -30,6 +34,9 @@ public:
 	//Agacharse y correr
 	bool				m_crouchDown;
 	bool				m_run;
+	//Telequinesis
+	Object* m_catchObj;
+	Ogre::Real m_tkDistance;
 	//Vector de movimiento/direccion
 	Ogre::Vector3		m_direction;
 

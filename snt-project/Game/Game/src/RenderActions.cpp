@@ -33,7 +33,7 @@ RenderActions::RenderActions(void)
 
 RenderActions::~RenderActions(void)
 {
-	//Vaciado del vector global de SceneObject
+	//Vaciado del vector global de objects
 	for(int i = 0, len = gObjects.size(); i < len; ++i)
 	{
 		delete gObjects[i];
@@ -63,16 +63,18 @@ bool RenderActions::frameRenderingQueued(const Ogre::FrameEvent& evt)
     gMouse->capture();
 	
 	//---------------------------------------------------------------------
-	//Control de fisica y colisiones entre objetos de bullet
+	//Control de fisica y colisiones bullet
 	//---------------------------------------------------------------------
 
-	gPhysics->update(0.06);
+	//Objetos
+	gPhysics->update(0.07);
 	for(int i = 0, len = gObjects.size(); i < len; i++)
-		gObjects[i]->update();
+		gObjects[i]->m_sceneObject->update();
+
+	//Jugador
+	gPlayer->update();
 
 	//---------------------------------------------------------------------
-
-	gPlayer->update();
 
 	//SdkTrays
 	//sdkTrays->update(evt);
