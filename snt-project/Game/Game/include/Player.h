@@ -26,7 +26,6 @@ public:
 	//Velocidad de movimiento
 	Ogre::Real			m_moveX;
 	Ogre::Real			m_moveY;
-	Ogre::Real			m_Speed;
 	//Variables de salto
 	bool				m_jump;
 	Ogre::Real			m_jumpCount;

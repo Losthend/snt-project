@@ -15,7 +15,8 @@ Player::Player(SceneObject* sceneObject)
 
 	m_sceneObject = sceneObject;
 	m_sceneObject->mRigidBody.setAngularFactor(btVector3(0,0,0));
-	//m_sceneObject->mRigidBody.setActivationState(DISABLE_DEACTIVATION);
+	//Requiere esto ya que, tras cada iteración, si no hay movimiento lineal se bloquea el rigidbody
+	m_sceneObject->mRigidBody.setActivationState(DISABLE_DEACTIVATION);
 
 	m_jump = false;
 	m_jumpCount = 0;
@@ -26,8 +27,6 @@ Player::Player(SceneObject* sceneObject)
 
 	m_moveX = 2;
 	m_moveY = 20;
-
-	m_Speed = 20;
 
 	m_catchObj = 0;
 	m_tkDistance = 10000;
@@ -63,16 +62,13 @@ void Player::update()
 	//SALTOS (Movimiento en eje +Y)
 	//---------------------------------------------------------------------
 
-	//2ª condicion: alcanzado el numero maximo de saltos, se permitira saltar cuando lleges dejes de caer/saltar
+	//Alcanzado el numero maximo de saltos, se permitira saltar cuando lleges dejes de caer/saltar
 	if (m_jumpCount >= m_maxNumJump && velY < 0.001 && velY > -0.001)
-	{
 		m_jumpCount = 0;
-	}
 
-	//1ª condicion: se permite saltar un numero limitado de veces (m_jumpCount) controlado en KeyboardMouse
+	//Se permite saltar un numero limitado de veces (m_jumpCount) controlado en KeyboardMouse
 	if (m_jump == true)
 	{
-		m_sceneObject->mRigidBody.activate(true);
 		//Aplicamos el salto
 		m_sceneObject->mRigidBody.applyCentralImpulse(btVector3(0, m_direction.y*m_moveY, 0));
 		//Acumulamos los saltos
@@ -86,14 +82,7 @@ void Player::update()
 	//MOVIMIENTO EN EL EJE X
 	//--------------------------------------------------------------------
 
-	//Limitamos la velocidad de movimiento (LinearVelocity) en X segun la velocidad del jugador (m_speed)
-	if ( (m_direction.x > 0 &&  velX < m_Speed) || (m_direction.x < 0 &&  velX > -m_Speed))
-	{
-		//Requiere activacion, dado que tras cada iteración, si no hay movimiento lineal, se bloquea el rigidbody
-		m_sceneObject->mRigidBody.activate(true);
-		//Movimiento mediante impulse (mas realista)
-		m_sceneObject->mRigidBody.applyCentralImpulse(btVector3(m_direction.x*m_moveX, 0, 0));
-	}
+	m_sceneObject->mRigidBody.translate(btVector3(m_direction.x*m_moveX, 0, 0));
 
 	//-------------------------------------------------------------------
 	//UPDATES
@@ -114,7 +103,7 @@ void Player::update()
 //------------------------------------------------------------
 void Player::catchSolution(Object* obj)
 {
-	//A falta de control de distancia
+	//Control de distancia
 	Ogre::Real distance = m_sceneObject->mNode._getWorldAABB().squaredDistance(obj->m_sceneObject->mNode.getPosition());
 
 	//Si la distancia entre el jugador y el objeto es menor de X unidades
@@ -122,6 +111,8 @@ void Player::catchSolution(Object* obj)
 	{
 		//Agarra el objeto
 		m_catchObj = obj;
+		//Elimina el efecto de la gravedad en el objeto
+		m_catchObj->m_sceneObject->mRigidBody.setGravity(btVector3(0,0,0));
 	}
 }
 
@@ -130,7 +121,7 @@ void Player::catchSolution(Object* obj)
 //------------------------------------------------------------
 void Player::catchActions()
 {
-	//A falta de control de distancia
+	//Control de distancia
 	Ogre::Real distance = m_sceneObject->mNode._getWorldAABB().squaredDistance(m_catchObj->m_sceneObject->mNode.getPosition());
 
 	//Si estamos a una distancia aceptable
@@ -141,7 +132,9 @@ void Player::catchActions()
 	}
 	else
 	{
-		//Soltamos el objeto
+		//Devuelve el efecto de la gravedad al objeto
+		m_catchObj->m_sceneObject->mRigidBody.setGravity(btVector3(0,-9.81f,0));
+		//Suelta el objeto
 		m_catchObj = 0;
 	}
 }

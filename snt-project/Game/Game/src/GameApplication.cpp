@@ -50,11 +50,11 @@ void GameApplication::createScene(void)
 	btCollisionShape &plane2Shape = mPhysics->createBoxShape(1600, 1, 200);
 	
 	//SceneObjects: necesarios para el control ejercido por Bullet
-	SceneObject* sceneObj1 = gPhysics->createBoxObject("cube1", Ogre::Vector3(10, 10, 10), Ogre::Vector3(-50, 100, 0), 1, cubeShape);
-	SceneObject* sceneObj2 = gPhysics->createBoxObject("cube2", Ogre::Vector3(10, 10, 10), Ogre::Vector3(-50, 80, 0), 1, cubeShape);
-    SceneObject* sceneObj3 = gPhysics->createBoxObject("cube3", Ogre::Vector3(10, 10, 10), Ogre::Vector3(50, 120, 0), 1, cubeShape);
-    SceneObject* sceneObj4 = gPhysics->createBoxObject("cube4", Ogre::Vector3(10, 10, 10), Ogre::Vector3(50, 150, 0), 1, cubeShape);
-    SceneObject* sceneObj5 = gPhysics->createBoxObject("plane", Ogre::Vector3(40, 3, 10), Ogre::Vector3(60, 110, 0), 1, planeShape);
+	SceneObject* sceneObj1 = gPhysics->createBoxObject("cube1", Ogre::Vector3(10, 10, 10), Ogre::Vector3(-50, 100, 0), 10, cubeShape);
+	SceneObject* sceneObj2 = gPhysics->createBoxObject("cube2", Ogre::Vector3(10, 10, 10), Ogre::Vector3(-50, 80, 0), 10, cubeShape);
+    SceneObject* sceneObj3 = gPhysics->createBoxObject("cube3", Ogre::Vector3(10, 10, 10), Ogre::Vector3(50, 120, 0), 10, cubeShape);
+    SceneObject* sceneObj4 = gPhysics->createBoxObject("cube4", Ogre::Vector3(10, 10, 10), Ogre::Vector3(50, 150, 0), 10, cubeShape);
+    SceneObject* sceneObj5 = gPhysics->createBoxObject("plane", Ogre::Vector3(40, 3, 10), Ogre::Vector3(60, 110, 0), 10, planeShape);
 	SceneObject* sceneObj6 = gPhysics->createBoxObject("floor", Ogre::Vector3(800, 1, 100), Ogre::Vector3(0, -50, 0), 0, plane2Shape);
 
 	//Objets: necesarios para nuestras propias definiciones de propiedades de objeto

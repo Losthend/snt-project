@@ -32,23 +32,25 @@ bool KeyboardMouse::keyPressed( const OIS::KeyEvent &arg )
 			gShutDown = true;
 			break;
 		case OIS::KC_A:
-			gPlayer->m_direction.x = -1;
+			if (gPlayer->m_direction.x == 0)
+				gPlayer->m_direction.x = -1;
 			break;
 		case OIS::KC_D:
-			gPlayer->m_direction.x = 1;
+			if (gPlayer->m_direction.x == 0)
+				gPlayer->m_direction.x = 1;
 			break;
 		case OIS::KC_S:
 			if (gPlayer->m_run == false)
 			{
 				gPlayer->m_crouchDown = true;
-				gPlayer->m_Speed = gPlayer->m_Speed / 2;
+				gPlayer->m_moveX = gPlayer->m_moveX / 2;
 			}
 			break;
 		case OIS::KC_LSHIFT:
 			if (gPlayer->m_crouchDown == false)
 			{
 				gPlayer->m_run = true;
-				gPlayer->m_Speed = gPlayer->m_Speed * 2;
+				gPlayer->m_moveX = gPlayer->m_moveX * 2;
 			}
 			break;
 		case OIS::KC_SPACE:
@@ -68,22 +70,24 @@ bool KeyboardMouse::keyReleased(const OIS::KeyEvent &arg)
 	switch (arg.key)
 	{
 		case OIS::KC_A:
-			gPlayer->m_direction.x = 0;
+			if (gPlayer->m_direction.x == -1)
+				gPlayer->m_direction.x = 0;
 			break;
 		case OIS::KC_D:
-			gPlayer->m_direction.x = 0;
+			if (gPlayer->m_direction.x == 1)
+				gPlayer->m_direction.x = 0;
 			break;
 		case OIS::KC_S:
 			if (gPlayer->m_crouchDown == true)
 			{
 				gPlayer->m_crouchDown = false;
-				gPlayer->m_Speed = gPlayer->m_Speed * 2;
+				gPlayer->m_moveX = gPlayer->m_moveX * 2;
 			}
 		case OIS::KC_LSHIFT:
 			if (gPlayer->m_run == true)
 			{
 				gPlayer->m_run = false;
-				gPlayer->m_Speed = gPlayer->m_Speed / 2;
+				gPlayer->m_moveX = gPlayer->m_moveX / 2;
 			}
 			break;
 	}
@@ -121,7 +125,7 @@ bool KeyboardMouse::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID 
 		//Comprobacion del objeto
 		if(obj!=0 && obj->m_objType == 2)
 		{
-			//Agarrar el objeto
+			//Intenta agarrar el objeto
 			gPlayer->catchSolution(obj);
 		}
 	}
@@ -131,8 +135,11 @@ bool KeyboardMouse::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID 
 //---------------------------------------------------------------------------
 bool KeyboardMouse::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 {
-	if (id == OIS::MB_Right)
+	if (id == OIS::MB_Right && gPlayer->m_catchObj != 0)
 	{
+		//Devuelve el efecto de la gravedad al objeto
+		gPlayer->m_catchObj->m_sceneObject->mRigidBody.setGravity(btVector3(0,-9.81f,0));
+		//Suelta el objeto
 		gPlayer->m_catchObj = 0;
 	}
 	return true;

@@ -22,13 +22,15 @@
 Object::Object(int objType, SceneObject* sceneObject)
 {
 	m_sceneObject = sceneObject;
+	
+	m_sceneObject->mRigidBody.setActivationState(DISABLE_DEACTIVATION);
 
 	FPS = getframeLength();
 
 	m_objType = objType;
 
-	m_moveX = 1;
-	m_moveY = 1;
+	m_moveX = 2;
+	m_moveY = 2;
 
 	m_speed = 20;
 
@@ -51,36 +53,36 @@ void Object::update()
 	//Objetos Tipo 2: pueden agarrarse
 	if (m_objType == 2)
 	{
-		//Activación del objeto
-		m_sceneObject->mRigidBody.activate(true);
-
 		//Raycasting para obtener las coordenadas del raton
 		OIS::MouseState ms = gMouse->getMouseState();
 		Ogre::Ray ray = gCamera->getCameraToViewportRay(ms.X.abs/(float)gWindow->getWidth(),ms.Y.abs/(float)gWindow->getHeight()); 
 
-		//Coordenadas en el mundo del raton
-		Ogre::Vector3 coord = ray.getPoint(gCamera->getPosition().z);
+		//Coordenadas del raton
+		Ogre::Vector3 mouseCoord = ray.getPoint(gCamera->getPosition().z);
 
-		//Posicion absoluta del objeto a mover
-		Ogre::Vector3 pos = m_sceneObject->mNode.getPosition();
+		//Coordenadas del objeto a mover
+		Ogre::Vector3 objCoord = m_sceneObject->mNode.getPosition();
 
 		//Direccion del impulso
 		Ogre::Real x = 0;
 		Ogre::Real y = 0;
 
+		//Margen minimo de acercamiento "mouse/obj"
+		Ogre::Real minNear = 5;
+
 		//Control X
-		if(coord.x > pos.x)
+		if(mouseCoord.x-minNear > objCoord.x)
 			x = m_moveX;
-		else if (coord.x < pos.x)
+		else if (mouseCoord.x+minNear < objCoord.x)
 			x = -m_moveX;
 
 		//Control Y
-		if(coord.y > pos.y)
+		if(mouseCoord.y-minNear > objCoord.y)
 			y = m_moveY;
-		else if (coord.y < pos.y)
+		else if (mouseCoord.y+minNear < objCoord.y)
 			y = -m_moveY;
 
 		//Movimiento
-		m_sceneObject->mRigidBody.applyCentralImpulse(btVector3(x, y, 0));
+		m_sceneObject->mRigidBody.translate(btVector3(x, y, 0));
 	}
 }
