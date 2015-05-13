@@ -40,7 +40,7 @@ Player::~Player(void)
 }
 
 //---------------------------------------------------------------------------
-//--Control, mediante teclado, del jugador
+//--Control del jugador
 //---------------------------------------------------------------------------
 void Player::update()
 {
@@ -109,9 +109,8 @@ void Player::catchSolution(Object* obj)
 	//Si la distancia entre el jugador y el objeto es menor de X unidades
 	if (distance < m_tkDistance)
 	{
-		//Agarra el objeto
+		//Agarra el objeto y elimina su efecto de la gravedad
 		m_catchObj = obj;
-		//Elimina el efecto de la gravedad en el objeto
 		m_catchObj->m_sceneObject->mRigidBody.setGravity(btVector3(0,0,0));
 	}
 }
@@ -132,11 +131,23 @@ void Player::catchActions()
 	}
 	else
 	{
-		//Devuelve el efecto de la gravedad al objeto
+		//Devuelve el efecto de la gravedad al objeto y suelta el objeto
 		m_catchObj->m_sceneObject->mRigidBody.setGravity(btVector3(0,-9.81f,0));
-		//Suelta el objeto
 		m_catchObj = 0;
 	}
+}
+
+void Player::catchAttack()
+{
+	Ogre::Vector3 direction = m_catchObj->m_sceneObject->mNode.getPosition() - m_sceneObject->mNode.getPosition();
+	
+	btScalar power = 10;
+	btScalar x = direction.x*power;
+	btScalar y = direction.y*power;
+
+	m_catchObj->m_sceneObject->mRigidBody.applyCentralImpulse(btVector3(x, y, 0));
+	m_catchObj->m_sceneObject->mRigidBody.setGravity(btVector3(0,-9.81f,0));
+	m_catchObj = 0;
 }
 
 

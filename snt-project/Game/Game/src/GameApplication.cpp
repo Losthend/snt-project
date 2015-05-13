@@ -85,5 +85,5 @@ void GameApplication::createScene(void)
 	gSceneMgr->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));
 	Ogre::Light* light = gSceneMgr->createLight("MainLight");
 	light->setPosition(20,80,50);
-	//mSceneMgr->setSkyBox(true, "Examples/SpaceSkyBox");
+	//gSceneMgr->setSkyBox(true, "Examples/SpaceSkyBox");
 }

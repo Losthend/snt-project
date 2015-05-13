@@ -15,6 +15,7 @@ public:
 	void update();
 	void catchSolution(Object* obj);
 	void catchActions();
+	void Player::catchAttack();
 	Ogre::Real RayCastingPlayerMouse();
 
 	//VARIABLES

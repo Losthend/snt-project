@@ -130,6 +130,14 @@ bool KeyboardMouse::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID 
 		}
 	}
 
+	if (id == OIS::MB_Left)
+	{
+		if (gPlayer->m_catchObj != 0)
+		{
+			gPlayer->catchAttack();
+		}
+	}
+
 	return true;
 }
 //---------------------------------------------------------------------------
