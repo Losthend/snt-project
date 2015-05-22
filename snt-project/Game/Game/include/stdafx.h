@@ -38,23 +38,21 @@
 //Querys de frustum
 #include <OgreSceneQuery.h>
 
+//CEGUI
+#include "CEGUI\CEGUI.h"
+#include "CEGUI\RendererModules\Ogre\Renderer.h"
+
 //Librerias de inputs para Windows o Apple
 #if OGRE_PLATFORM == OGRE_PLATFORM_APPLE
 #  include <OIS/OISEvents.h>
 #  include <OIS/OISInputManager.h>
 #  include <OIS/OISKeyboard.h>
 #  include <OIS/OISMouse.h>
-
-#  include <OGRE/SdkTrays.h>
-#  include <OGRE/SdkCameraMan.h>
 #else
 #  include <OISEvents.h>
 #  include <OISInputManager.h>
 #  include <OISKeyboard.h>
 #  include <OISMouse.h>
-
-#  include <SdkTrays.h>
-#  include <SdkCameraMan.h>
 #endif
  
 //Otros headers que pueden incluirse

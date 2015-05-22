@@ -18,9 +18,6 @@
     <ClInclude Include="include\BaseApplication.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="include\CollisionManagement.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
     <ClInclude Include="include\FrameRate.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
@@ -51,15 +48,12 @@
     <ClInclude Include="include\KeyboardMouse.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="include\SdkTrayMgr.h">
+    <ClInclude Include="include\CCegui.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\BaseApplication.cpp">
-      <Filter>Archivos de código fuente</Filter>
-    </ClCompile>
-    <ClCompile Include="src\CollisionManagement.cpp">
       <Filter>Archivos de código fuente</Filter>
     </ClCompile>
     <ClCompile Include="src\FrameRate.cpp">
@@ -95,7 +89,7 @@
     <ClCompile Include="src\KeyboardMouse.cpp">
       <Filter>Archivos de código fuente</Filter>
     </ClCompile>
-    <ClCompile Include="src\SdkTrayMgr.cpp">
+    <ClCompile Include="src\CCegui.cpp">
       <Filter>Archivos de código fuente</Filter>
     </ClCompile>
   </ItemGroup>

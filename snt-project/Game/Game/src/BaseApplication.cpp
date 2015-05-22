@@ -15,7 +15,6 @@ BaseApplication::BaseApplication(void)
     mWindow(0),
     mResourcesCfg(Ogre::StringUtil::BLANK),
     mPluginsCfg(Ogre::StringUtil::BLANK),
-	mOverlaySystem(0),
     mInputManager(0),
     mMouse(0),
     mKeyboard(0)
@@ -102,7 +101,7 @@ bool BaseApplication::setup(void)
 	//En caso de cancelarse la seleccion, detiene la ejecucion del programa
     if (!carryOn) return false;
 
-	//Creacion del sceneManager (+overlay), la camara y el viewport
+	//Creacion del sceneManager, la camara y el viewport
     chooseSceneManager();
     createCamera();
     createViewports();
@@ -175,7 +174,7 @@ bool BaseApplication::configure(void)
         return false;
     }
 
-	//Establecer manualmente el sistema de renderizado (tambien Direct3D9, por ejemplo)
+	//Establecer manualmente el sistema de renderizado
 	//Ogre::RenderSystem* rs = mRoot->getRenderSystemByName("OpenGL Rendering Subsystem");
 	//mRoot->setRenderSystem(rs);
 	//rs->setConfigOption("Full Screen", "No");
@@ -188,11 +187,7 @@ bool BaseApplication::configure(void)
 void BaseApplication::chooseSceneManager(void)
 {
     //Crea un sceneManager generico
-    mSceneMgr = mRoot->createSceneManager(Ogre::ST_GENERIC);
-
-	//Inicializa el sistema de Overlay (Ogre 1.9)
-    mOverlaySystem = new Ogre::OverlaySystem();
-    mSceneMgr->addRenderQueueListener(mOverlaySystem);  
+    mSceneMgr = mRoot->createSceneManager(Ogre::ST_GENERIC); 
 }
 
 //---------------------------------------------------------------------------
@@ -238,14 +233,15 @@ void BaseApplication::createFrameListener(void)
     windowHndStr << windowHnd;
     pl.insert(std::make_pair(std::string("WINDOW"), windowHndStr.str()));
 
-	//con esto el raton se muestra en pantalla, con el cursor del sistema, sin estar "atrapado" por la ventana del juego.
+	//Con esto el raton se muestra en pantalla, con el cursor del sistema, sin estar "atrapado" por la ventana del juego.
+	
 	#if defined OIS_WIN32_PLATFORM
 		pl.insert(std::make_pair(std::string("w32_mouse"), std::string("DISCL_FOREGROUND" )));
 		pl.insert(std::make_pair(std::string("w32_mouse"), std::string("DISCL_NONEXCLUSIVE")));
 		pl.insert(std::make_pair(std::string("w32_keyboard"), std::string("DISCL_FOREGROUND")));
 		pl.insert(std::make_pair(std::string("w32_keyboard"), std::string("DISCL_NONEXCLUSIVE")));
 	#endif
-
+	
     mInputManager = OIS::InputManager::createInputSystem(pl);
 
 	//Controladores de teclado y raton
@@ -265,7 +261,6 @@ void BaseApplication::loadResources(void)
 //---------------------------------------------------------------------------
 void BaseApplication::destroyScene(void)
 {
-	 if (mOverlaySystem) delete mOverlaySystem;
 }
 
 //---------------------------------------------------------------------------

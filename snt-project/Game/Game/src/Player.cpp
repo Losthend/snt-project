@@ -5,7 +5,6 @@
 #include "../include/Object.h"
 #include "../include/Global.h"
 #include "../include/FrameRate.h"
-#include "../include/CollisionManagement.h"
 #include "../include/SceneObject.h"
 
 //---------------------------------------------------------------------------

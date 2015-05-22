@@ -6,17 +6,20 @@
 #include "../include/Object.h"
 #include "../include/SceneObject.h"
 #include "../include/PhysicsManager.h"
+#include "../include/CCegui.h"
 
 KeyboardMouse::KeyboardMouse(void)
 {
 	//Creacion del frame listener para teclado/raton
     gMouse->setEventCallback(this);
     gKeyboard->setEventCallback(this);
+
+	//Creación de CEGUI
+	gCCegui = new CCegui();
 }
 
 KeyboardMouse::~KeyboardMouse(void)
 {
-	
 }
 
 //--------------------------------------------------------------------------
@@ -26,6 +29,11 @@ KeyboardMouse::~KeyboardMouse(void)
 //-------------------------------------------------------------------------
 bool KeyboardMouse::keyPressed( const OIS::KeyEvent &arg )
 {
+	//Injectar eventos de teclado en CEGUI
+	CEGUI::GUIContext& context = CEGUI::System::getSingleton().getDefaultGUIContext();
+	context.injectKeyDown((CEGUI::Key::Scan)arg.key);
+	context.injectChar((CEGUI::Key::Scan)arg.text);
+
 	switch (arg.key)
 	{
 		case OIS::KC_ESCAPE:
@@ -67,6 +75,9 @@ bool KeyboardMouse::keyPressed( const OIS::KeyEvent &arg )
 //---------------------------------------------------------------------------
 bool KeyboardMouse::keyReleased(const OIS::KeyEvent &arg)
 {
+	//Injectar eventos de teclado en CEGUI
+	CEGUI::System::getSingleton().getDefaultGUIContext().injectKeyUp((CEGUI::Key::Scan)arg.key);
+
 	switch (arg.key)
 	{
 		case OIS::KC_A:
@@ -97,11 +108,59 @@ bool KeyboardMouse::keyReleased(const OIS::KeyEvent &arg)
 //---------------------------------------------------------------------------
 bool KeyboardMouse::mouseMoved(const OIS::MouseEvent &arg)
 {
-    return true;
+	//Configuraciones del raton (unión CEGUI/OIS/Sistema)
+
+	static int iOSCursorVisible = 0;
+	static bool bCEGUICursorVisible = true;
+	
+	if ((unsigned int)arg.state.X.abs == gWindow->getWidth() || 
+		(unsigned int)arg.state.Y.abs == gWindow->getHeight() ||
+		arg.state.X.abs == 0 || 
+		arg.state.Y.abs == 0)
+	{
+		//Cursor fuera de la aplicación: ocultar cursor de CEGUI y mostrar cursor de sistema
+		while (iOSCursorVisible < 0)
+		{
+			iOSCursorVisible = ShowCursor(true);
+		}
+		CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseLeaves();
+		if (bCEGUICursorVisible)
+		{
+		CEGUI::System::getSingleton().setMutedState(true);
+		CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().hide();
+		bCEGUICursorVisible = false;
+		}
+	}
+	else
+	{
+		//Cursor dentro de la aplicación: mostrar cursor de CEGUI y ocultar cursor de sistema
+		while (iOSCursorVisible > -1)
+		{
+			iOSCursorVisible = ShowCursor(false);
+		}
+		if (!bCEGUICursorVisible)
+		{
+			CEGUI::System::getSingleton().setMutedState(false);
+			CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().show();
+			bCEGUICursorVisible = true;
+		}
+	}
+
+	//Inyectar el movimiento del raton a CEGUI segun OIS
+	CEGUI::System::getSingleton().getDefaultGUIContext().injectMousePosition(arg.state.X.abs, arg.state.Y.abs);
+	
+	//Rueda de scroll
+	//if (arg.state.Z.rel)
+	//	sys.getDefaultGUIContext().injectMouseWheelChange(arg.state.Z.rel / 120.0f);
+
+	return true;
 }
+
 //---------------------------------------------------------------------------
 bool KeyboardMouse::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 {
+	//Injectar eventos de raton en CEGUI
+	CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonDown(gCCegui->convertButton(id));
 
 	if (id == OIS::MB_Right)
 	{
@@ -143,6 +202,9 @@ bool KeyboardMouse::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID 
 //---------------------------------------------------------------------------
 bool KeyboardMouse::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 {
+	//Injectar eventos de raton en CEGUI
+	CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonUp(gCCegui->convertButton(id));
+
 	if (id == OIS::MB_Right && gPlayer->m_catchObj != 0)
 	{
 		//Devuelve el efecto de la gravedad al objeto

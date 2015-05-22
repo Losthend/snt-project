@@ -7,7 +7,6 @@
 #include "../include/Player.h"
 #include "../include/SceneObject.h"
 #include "../include/FrameRate.h"
-#include "../include/SdkTrayMgr.h"
 
 #include "../include/PhysicsManager.h"
 
@@ -21,10 +20,6 @@ RenderActions::RenderActions(void)
 
 	//Necesario para que la funcion frameRenderingQueued sea llamada 
 	gRoot->addFrameListener(this);
-
-	//Inicializacion del SdkTrays
-	//sdkTrays = new SdkTrayMgr();
-
 }
 
 //------------------------------------------------------------------
@@ -61,6 +56,9 @@ bool RenderActions::frameRenderingQueued(const Ogre::FrameEvent& evt)
     //Realiza la captura de eventos del teclado y del raton
     gKeyboard->capture();
     gMouse->capture();
+
+	//Es necesario inyectar "timestamps" al sistema de CEGUI
+    CEGUI::System::getSingleton().injectTimePulse(evt.timeSinceLastFrame);
 	
 	//---------------------------------------------------------------------
 	//Control de fisica y colisiones bullet
@@ -75,9 +73,6 @@ bool RenderActions::frameRenderingQueued(const Ogre::FrameEvent& evt)
 	gPlayer->update();
 
 	//---------------------------------------------------------------------
-
-	//SdkTrays
-	//sdkTrays->update(evt);
 
 	//Finalizacion del frame
 	endFrame();

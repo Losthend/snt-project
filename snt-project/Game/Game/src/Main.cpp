@@ -28,7 +28,7 @@ extern "C" {
 
 		if (setupOK){
 
-			//Controlador de teclado y raton
+			//Controlador de teclado y raton + CEGUI
 			KeyboardMouse* keyboardMouse = new KeyboardMouse();
 
 			//Listeners y acciones de renderizado para los frame

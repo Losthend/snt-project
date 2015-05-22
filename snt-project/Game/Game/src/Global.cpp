@@ -20,4 +20,5 @@ OIS::Keyboard*			gKeyboard;
 bool					gShutDown;
 
 PhysicsManager*			gPhysics;
+CCegui*					gCCegui;
 

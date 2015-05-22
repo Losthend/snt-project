@@ -5,8 +5,6 @@
 #include "../include/Player.h"
 #include "../include/Global.h"
 #include "../include/FrameRate.h"
-//Para el tratamiento de colisiones
-#include "../include/CollisionManagement.h"
 #include "../include/SceneObject.h"
 
 /* 

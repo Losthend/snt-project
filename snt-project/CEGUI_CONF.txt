@@ -1,0 +1,223 @@
+Compilacion de dependencias
+	https://www.youtube.com/watch?v=VaD-MQJLtWk
+
+Compilacion de cegui
+	http://cegui.org.uk/wiki/Building_CEGUI_for_Ogre_/_OgreRenderer
+
+LLEGAR AL PASO 8 DE LAS INSTRUCCIONES de compilacion de cegui, despues:
+
+NOTA IMPORTANTE:
+	Cegui será descomprimido en la rama "C:\Ogre" quedando "C:\Ogre\cegui-0.8.4" como ruta
+	Asi mismo, el build se realizará DENTRO, quedando "C:\Ogre\cegui-0.8.4\build"
+	Es importante mantener esta estructura, ya que posterioremente será referenciada,
+	ademas que los .dll y .lib se configurar con esta ruta al usar "generar" de cmake.
+	NOTA: Se necesita CMAKE.
+
+En principio OGRE lo detecta sin problemas mediante OGRE_HOME (variable de entorno),
+para BOOST y OIS se necesita hacer lo siguiente:
+
+-----------------------------------------------------------------------------------
+
+Al principio del cmakelist en C:\Ogre\cegui-0.8.4
+
+################################################################################
+# Custom cmake module for CEGUI to find BOOST
+################################################################################
+
+set(Boost_INCLUDE_DIR C:/Ogre/OgreSDK_vc11_v1-9-0/boost)
+set(Boost_LIBRARY_DIR C:/Ogre/OgreSDK_vc11_v1-9-0/boost/lib)
+
+set(Boost_SYSTEM_LIBRARY_DEBUG C:/Ogre/OgreSDK_vc11_v1-9-0/boost/lib/libboost_system-vc110-mt-gd-1_55.lib)
+set(Boost_SYSTEM_LIBRARY_RELEASE C:/Ogre/OgreSDK_vc11_v1-9-0/boost/lib/libboost_system-vc110-mt-1_55.lib)
+
+set(Boost_THREAD_LIBRARY_DEBUG C:/Ogre/OgreSDK_vc11_v1-9-0/boost/lib/libboost_thread-vc110-mt-gd-1_55.lib)
+set(Boost_THREAD_LIBRARY_RELEASE C:/Ogre/OgreSDK_vc11_v1-9-0/boost/lib/libboost_thread-vc110-mt-1_55.lib)
+
+set(Boost_INCLUDE_DIRS ${Boost_INCLUDE_DIR})
+set(Boost_LIBRARY_DIRS ${Boost_LIBRARY_DIR})
+
+################################################################################
+
+En C:\Ogre\cegui-0.8.4\cmake\FindOIS SUSTITUIR todo por:
+
+################################################################################
+# 
+Custom cmake module for CEGUI to find OIS
+
+################################################################################
+
+include(FindPackageHandleStandardArgs)
+
+
+set (OIS_H_PATH C:/Ogre/OgreSDK_vc11_v1-9-0/include/OIS)
+
+set (OIS_LIB C:/Ogre/OgreSDK_vc11_v1-9-0/lib/Release/OIS.lib)
+
+set (OIS_LIB_DBG C:/Ogre/OgreSDK_vc11_v1-9-0/lib/debug/OIS_d.lib)
+    
+
+mark_as_advanced(OIS_H_PATH OIS_LIB OIS_LIB_DBG)
+
+
+find_package_handle_standard_args(OIS DEFAULT_MSG OIS_LIB OIS_H_PATH)
+
+
+if (OIS_FOUND)
+    
+set (OIS_INCLUDE_DIR ${OIS_H_PATH})
+    
+set (OIS_LIBRARIES ${OIS_LIB})
+    
+if (OIS_LIB_DBG)
+        
+set (OIS_LIBRARIES_DBG ${OIS_LIB_DBG})
+    
+endif()
+
+endif()
+
+-----------------------------------------------------------------------------------
+
+NOTA: Compilar (al final) tanto para debug como para release
+
+################################################################################
+
+################################################################################
+
+
+
+Ejemplo con CEGUI
+	http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Basic+Tutorial+7
+
+#####################################################################
+
+VARIABLE DE ENTORNO
+
+	CEGUI_HOME
+	C:\Ogre\cegui-0.8.4
+
+Tras eso, pasamos a la configuracion del proyecto "Game":
+
+TODAS las CONFIGURACIONES
+--------------------------
+C++ - General - Directorios de inclusion adicionales
+*Nota: tambien se deben incluir los archivos generados en el build (version, config y ModuleConfig)
+
+	$(CEGUI_HOME)\build\cegui\include
+	$(CEGUI_HOME)\cegui\include
+
+Vinculador - General - Directorios de bibliotecas adicionales
+
+	$(CEGUI_HOME)\build\bin
+
+SOLO en DEBUG
+------------
+Vinculador - Entrada - Dependencias adicionales
+
+	CEGUIBase-0_d.lib
+	CEGUIOgreRenderer-0_d.lib
+
+SOLO en RELEASE
+---------------
+Vinculador - Entrada - Dependencias adicionales
+
+	CEGUIBase-0.lib
+	CEGUIOgreRenderer-0.lib	
+
+MOVER DLL
+---------
+
+Mover las versiones de debug y release a sus carpetas correspondientes
+	OGRE_HOME/bin/debug
+	OGRE_HOME/bin/release
+
+Los 3 ultimos se encuentran en las dependencias de cegui, mientras que los otros en "build/bin"
+
+	CEGUIBase-0.dll
+	CEGUIOgreRenderer-0.dll
+	expat.dll
+	freetype.dll
+	pcre.dll
+
+#####################################################################
+#####################################################################
+
+
+CONFIGURACION DEL RESOURCES DE OGRE
+-----------------------------------
+
+Ir a "resources_d" y "resources" en $OGRE_HOME/bin/debug o release:
+
+TENDRA (o deberia tener) EL SIGUIENTE ASPECTO:
+#####################################################################
+# Resources required by the sample browser and most samples.
+[Essential]
+Zip=../../Media/packs/profiler.zip
+FileSystem=../../Media/thumbnails
+
+# Common sample resources needed by many of the samples.
+# Rarely used resources should be separately loaded by the
+# samples which require them.
+[Popular]
+FileSystem=../../Media/materials/scripts
+FileSystem=../../Media/materials/textures
+FileSystem=../../media/materials/programs/GLSL
+
+[General]
+FileSystem=../../Media
+
+[Nuestros]
+FileSystem=C:\Ogre\Media
+
+# Materials for visual tests
+[Tests]
+FileSystem=../../Tests/Media
+#####################################################################
+
+Se ha eliminado el "Zip=../../Media/packs/SdkTrays.zip"
+Dado que ya no utilizamos el sdktrays y es tonteria seguir cargandolo.
+
+DESPUES, añadimos las siguientes lineas al final del archivo:
+
+
+#CEGUI
+[Imagesets]
+FileSystem=C:/Ogre/cegui-0.8.4/datafiles/imagesets
+[Fonts]
+FileSystem=C:/Ogre/cegui-0.8.4/datafiles/fonts
+[Schemes]
+FileSystem=C:/Ogre/cegui-0.8.4/datafiles/schemes
+[LookNFeel]
+FileSystem=C:/Ogre/cegui-0.8.4/datafiles/looknfeel
+[Layouts]
+FileSystem=C:/Ogre/cegui-0.8.4/datafiles/layouts
+
+#####################################################################
+#####################################################################
+
+
+Con esto daria por finalizada la configuracion de CEGUI 0.8.4 para Ogre 1.9.0
+
+El siguiente paso seria configurar un ejemplo básico en el proyecto siguiendo el manual (hecho).
+
+#####################################################################
+
+
+Bibliografia extra
+**********************************************
+http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Initial+Mouse+Position+With+OIS+and+CEGUI
+http://cegui.org.uk/wiki/Category:CEGUI_In_Practice_series
+http://www.wreckedgames.com/forum/index.php?topic=700.5;wap2
+
+
+
+
+
+
+
+
+
+
+
+
+

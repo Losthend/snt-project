@@ -47,9 +47,6 @@ private:
 	Ogre::String			mPluginsCfg;
 	Ogre::String            m_ResourcePath;   
 
-	//Overlay para Ogre 1.9
-	Ogre::OverlaySystem*        mOverlaySystem;
-
 	#ifdef OGRE_STATIC_LIB
 		Ogre::StaticPluginLoader m_StaticPluginLoader;
 	#endif
