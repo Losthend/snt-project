@@ -27,13 +27,6 @@ author:     Lukas E Meindl
 #ifndef _GameMenu_
 #define _GameMenu_
 
-enum WriteFocus
-{
-    WF_TopBar,
-    WF_BotBar,
-    WF_Count
-};
-
 // Sample class
 class GameMenu
 {
@@ -49,13 +42,10 @@ public:
 
     virtual void onEnteringSample();
 
-    virtual void update(float timeSinceLastUpdate);
-
 //protected:
     void setupWindows();
 
     void setupInnerButtonsSubOptionsLabels();
-    void setupNaviArrowWindows();
     void setupButtonClickHandlers();
     void setupNaviIconAnimationEventHandlers();
     void setupAnimations();
@@ -65,27 +55,11 @@ public:
     void resetAnimations();
     void startEntranceAnimations();
 
-    void updateIntroText();
-    void updateLoginWelcomeText(float passedTime);
-    void updateLoginStartButtonText(float passedTime);
-    void disableInteractivePlanetElements();
-    void enableInteractivePlanetElements();
-    void enableNavigationBarElements();
-    void disableNavigationBarElements();
-
-    bool handleLoginAcceptButtonClicked(const CEGUI::EventArgs& args);
     bool handleInnerPartStartClickAreaClick(const CEGUI::EventArgs& args);
     bool handleCheckIfNaviIconAnimationNeedsChange(const CEGUI::EventArgs& args);
     bool handleNaviSelectionIconAnimStart(const CEGUI::EventArgs& args);
 
-    bool handleMouseEntersLeftArrowArea(const CEGUI::EventArgs& args);
-    bool handleMouseLeavesLeftArrowArea(const CEGUI::EventArgs& args);
-    bool handleMouseEntersRightArrowArea(const CEGUI::EventArgs& args);
-    bool handleMouseLeavesRightArrowArea(const CEGUI::EventArgs& args);
-
-    bool handleStartPopupLinesSaveDisplay(const CEGUI::EventArgs& args);
     bool handleStartPopupLinesLoadDisplay(const CEGUI::EventArgs& args);
-    bool handleStartPopupLinesCharactersDisplay(const CEGUI::EventArgs& args);
     bool handleStartPopupLinesOptionsDisplay(const CEGUI::EventArgs& args);
     bool handleStartPopupLinesQuitDisplay(const CEGUI::EventArgs& args);
 
@@ -97,28 +71,10 @@ public:
     void makeAllSelectionIconsInvisible();
     void stopStartPopupLinesAnimations();
 
-    static const float s_firstStartDelay;
-    static const float s_secondStartDelay;
-    static const float s_loginDisplayStartDelay;
-
-    //CEGUI::GUIContext* d_guiContext;
     CEGUI::Window* d_root;
-	CEGUI::String d_usedFiles;
 
-    float d_timeSinceStart;
-
-    float d_timeSinceLoginAccepted;
-
-    bool d_interactiveElementsWereInitiallyBlendedOut;
-    bool d_interactivePlanetElementsAreEnabled;
-    bool d_navigationIsEnabled;
-    bool d_loginWasAccepted;
     bool d_mouseIsHoveringNavi;
     bool d_startButtonClicked;
-
-    WriteFocus d_currentWriteFocus;
-
-    CEGUI::String d_userName;
 
     CEGUI::AnimationInstance* d_topBarAnimInst;
     CEGUI::AnimationInstance* d_botBarAnimInst;
@@ -130,13 +86,7 @@ public:
     CEGUI::AnimationInstance* d_buttonFadeInAnimInst1;
     CEGUI::AnimationInstance* d_buttonFadeInAnimInst2;
     CEGUI::AnimationInstance* d_buttonFadeInAnimInst3;
-    CEGUI::AnimationInstance* d_buttonFadeInAnimInst4;
-    CEGUI::AnimationInstance* d_buttonFadeInAnimInst5;
 
-    CEGUI::AnimationInstance* d_loginContainerMoveInInst;
-    CEGUI::AnimationInstance* d_loginContainerMoveOutInst;
-    CEGUI::AnimationInstance* d_naviButtonLeftMoveInInst;
-    CEGUI::AnimationInstance* d_naviButtonRightMoveInInst;
     CEGUI::AnimationInstance* d_naviBotMoveInInst;
     CEGUI::AnimationInstance* d_startButtonBlendInAnimInst;
     CEGUI::AnimationInstance* d_navigationLabelBlendInAnimInst;
@@ -147,21 +97,11 @@ public:
     CEGUI::AnimationInstance* d_centerButtonsPartialBlendOutInst;
     CEGUI::AnimationInstance* d_centerButtonsBlendInInst;
 
-    CEGUI::AnimationInstance* d_botBarLabelBlendOutInst;
-
-    CEGUI::AnimationInstance* d_popupLinesSaveAnimInst;
     CEGUI::AnimationInstance* d_popupLinesLoadAnimInst;
-    CEGUI::AnimationInstance* d_popupLinesCharactersAnimInst;
     CEGUI::AnimationInstance* d_popupLinesOptionsAnimInst;
     CEGUI::AnimationInstance* d_popupLinesQuitAnimInst;
 
-    CEGUI::Window* d_topBarLabel;
-    CEGUI::Window* d_botBarLabel;
-    CEGUI::Window* d_loginContainer;
-    CEGUI::Window* d_botNaviLeftArrowArea;
-    CEGUI::Window* d_botNaviRightArrowArea;
     CEGUI::Window* d_botNaviCenter;
-    CEGUI::Window* d_loginAcceptButton;
     CEGUI::Window* d_startButtonClickArea;
     CEGUI::Window* d_navigationTravelIcon;
     CEGUI::Window* d_navigationSelectionIcon;

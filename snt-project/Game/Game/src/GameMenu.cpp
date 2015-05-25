@@ -31,10 +31,6 @@ author:     Lukas E Meindl
 #define M_PI 3.14159265358979323846
 #define _USE_MATH_DEFINES
 
-const float GameMenu::s_firstStartDelay = 5.0f;
-const float GameMenu::s_secondStartDelay = 11.0f;
-const float GameMenu::s_loginDisplayStartDelay = 15.77f;
-
 GameMenu::GameMenu(void)
 {
 	initialise();
@@ -55,13 +51,7 @@ bool GameMenu::initialise()
 
     setupAnimations();
 
-    d_interactiveElementsWereInitiallyBlendedOut = false;
-    d_interactivePlanetElementsAreEnabled = false;
-    d_navigationIsEnabled = false;
-    d_loginWasAccepted = false;
     d_mouseIsHoveringNavi = false;
-
-    d_currentWriteFocus = WF_BotBar;
 
 	onEnteringSample();
 
@@ -125,36 +115,13 @@ void GameMenu::setupAnimations()
     CEGUI::Window* window = d_root->getChild("InnerButtonsContainer/ButtonOptions");
     d_buttonFadeInAnimInst1->setTargetWindow(window);
     d_buttonFadeInAnimInst2 = animMgr.instantiateAnimation(buttonFadeInAnim);
+
     window = d_root->getChild("InnerButtonsContainer/ButtonLoad");
     d_buttonFadeInAnimInst2->setTargetWindow(window);
     d_buttonFadeInAnimInst3 = animMgr.instantiateAnimation(buttonFadeInAnim);
-    window = d_root->getChild("InnerButtonsContainer/ButtonSave");
-    d_buttonFadeInAnimInst3->setTargetWindow(window);
-    d_buttonFadeInAnimInst4 = animMgr.instantiateAnimation(buttonFadeInAnim);
-    window = d_root->getChild("InnerButtonsContainer/ButtonCharacters");
-    d_buttonFadeInAnimInst4->setTargetWindow(window);
-    d_buttonFadeInAnimInst5 = animMgr.instantiateAnimation(buttonFadeInAnim);
+
     window = d_root->getChild("InnerButtonsContainer/ButtonQuit");
-    d_buttonFadeInAnimInst5->setTargetWindow(window);
-
-    CEGUI::Animation* loginContainerMoveInAnim = animMgr.getAnimation("LoginMoveIn");
-    d_loginContainerMoveInInst = animMgr.instantiateAnimation(loginContainerMoveInAnim);
-    d_loginContainerMoveInInst->setTargetWindow(d_loginContainer);
-
-    CEGUI::Animation* loginContainerMoveOutAnim = animMgr.getAnimation("LoginMoveOut");
-    d_loginContainerMoveOutInst = animMgr.instantiateAnimation(loginContainerMoveOutAnim);
-    d_loginContainerMoveOutInst->setTargetWindow(d_loginContainer);
-
-
-    CEGUI::Animation* naviButtonRightMoveInAnim = animMgr.getAnimation("NaviButtonRightMoveIn");
-    d_naviButtonRightMoveInInst = animMgr.instantiateAnimation(naviButtonRightMoveInAnim);
-    window = d_root->getChild("BotNavigationContainer/RightArrow");
-    d_naviButtonRightMoveInInst->setTargetWindow(window);
-
-    CEGUI::Animation* naviButtonLeftMoveInAnim = animMgr.getAnimation("NaviButtonLeftMoveIn");
-    d_naviButtonLeftMoveInInst = animMgr.instantiateAnimation(naviButtonLeftMoveInAnim);
-    window = d_root->getChild("BotNavigationContainer/LeftArrow");
-    d_naviButtonLeftMoveInInst->setTargetWindow(window);
+	d_buttonFadeInAnimInst3->setTargetWindow(window);
 
     CEGUI::Animation* naviBotMoveInAnim = animMgr.getAnimation("NaviBotCenterMoveIn");
     d_naviBotMoveInInst = animMgr.instantiateAnimation(naviBotMoveInAnim);
@@ -193,32 +160,12 @@ void GameMenu::setupAnimations()
     CEGUI::AnimationInstance* travelRotateOutInst = animMgr.instantiateAnimation(travelRotateOutAnim);
     travelRotateOutInst->setTargetWindow(d_navigationTravelIcon);
 
-    CEGUI::Animation* blendOutAnim = animMgr.getAnimation("FullBlendOut");
-    d_botBarLabelBlendOutInst = animMgr.instantiateAnimation(blendOutAnim);
-    d_botBarLabelBlendOutInst->setTargetWindow(d_botBarLabel);
-
     CEGUI::Animation* loopRotateRightAnim = animMgr.getAnimation("LoopRotateRight");
     CEGUI::Animation* stopRotateAnim = animMgr.getAnimation("StopRotate");
     CEGUI::AnimationInstance* loopRotateRightAnimInst = animMgr.instantiateAnimation(loopRotateRightAnim);
     loopRotateRightAnimInst->setTargetWindow(d_navigationSelectionIcon);
     CEGUI::AnimationInstance* loopRotateLeftAnimInst = animMgr.instantiateAnimation(stopRotateAnim);
     loopRotateLeftAnimInst->setTargetWindow(d_navigationSelectionIcon);
-
-    window = d_root->getChild("BotNavigationContainer/RightArrow");
-    CEGUI::Animation* naviArrowRightTwitch = animMgr.getAnimation("NaviArrowRightTwitch");
-    CEGUI::AnimationInstance* naviArrowRightTwitchInst = animMgr.instantiateAnimation(naviArrowRightTwitch);
-    naviArrowRightTwitchInst->setTargetWindow(window);
-    CEGUI::Animation* naviArrowRightReturn = animMgr.getAnimation("NaviArrowRightReturn");
-    CEGUI::AnimationInstance* naviArrowRightReturnInst = animMgr.instantiateAnimation(naviArrowRightReturn);
-    naviArrowRightReturnInst->setTargetWindow(window);
-
-    window = d_root->getChild("BotNavigationContainer/LeftArrow");
-    CEGUI::Animation* naviArrowLeftTwitch = animMgr.getAnimation("NaviArrowLeftTwitch");
-    CEGUI::AnimationInstance* naviArrowLeftTwitchInst = animMgr.instantiateAnimation(naviArrowLeftTwitch);
-    naviArrowLeftTwitchInst->setTargetWindow(window);
-    CEGUI::Animation* naviArrowLeftReturn = animMgr.getAnimation("NaviArrowLeftReturn");
-    CEGUI::AnimationInstance* naviArrowLeftReturnInst = animMgr.instantiateAnimation(naviArrowLeftReturn);
-    naviArrowLeftReturnInst->setTargetWindow(window);
 
     setupPopupLinesAnimations();
 
@@ -229,34 +176,21 @@ void GameMenu::onEnteringSample()
 {
     d_navigationTravelIcon->setEnabled(false);
 
-    d_timeSinceStart = 0.0f;
 	/*
-    d_interactiveElementsWereInitiallyBlendedOut = false;
-    d_interactivePlanetElementsAreEnabled = false;
-    d_loginWasAccepted = false;
     d_startButtonClicked = false;
 	*/
-    d_botBarLabel->setAlpha(1.0f);
+
     d_botNaviContainer->setAlpha(1.0f);
 
     d_centerButtonsBlendInInst->setPosition(d_centerButtonsBlendInInst->getDefinition()->getDuration());
     d_centerButtonsBlendInInst->apply();
 
-    d_currentWriteFocus = WF_BotBar;
-
-    //Reset labels and visibility
-    d_topBarLabel->setText("");
-    d_botBarLabel->setText("");
-
-    d_root->getChild("InnerButtonsContainer/PopupLinesSave")->setVisible(false);
     d_root->getChild("InnerButtonsContainer/PopupLinesLoad")->setVisible(false);
-    d_root->getChild("InnerButtonsContainer/PopupLinesCharacters")->setVisible(false);
     d_root->getChild("InnerButtonsContainer/PopupLinesQuit")->setVisible(false);
     d_root->getChild("InnerButtonsContainer/PopupLinesOptions")->setVisible(false);
 
     resetAnimations();
 
-    d_loginContainer->setVisible(false);
     //d_startButtonClickArea->setVisible(false);
 
     //Start the animations
@@ -265,56 +199,8 @@ void GameMenu::onEnteringSample()
     makeAllSelectionIconsInvisible();
 }
 
-void GameMenu::update(float timeSinceLastUpdate)
-{
-    d_timeSinceStart += timeSinceLastUpdate;
-
-    updateIntroText();
-    if(d_loginWasAccepted)
-    {
-        d_timeSinceLoginAccepted += timeSinceLastUpdate;
-
-        updateLoginWelcomeText(timeSinceLastUpdate);
-        updateLoginStartButtonText(timeSinceLastUpdate);
-    }
-
-    if(d_timeSinceStart >= s_loginDisplayStartDelay && !d_loginContainer->isVisible())
-        d_loginContainerMoveInInst->start();
-
-    if(d_timeSinceStart >= s_secondStartDelay && !d_interactiveElementsWereInitiallyBlendedOut)
-    {
-        disableInteractivePlanetElements();
-        disableNavigationBarElements();
-    }
-}
-
-bool GameMenu::handleLoginAcceptButtonClicked(const CEGUI::EventArgs& args)
-{
-    d_startButtonClickArea->setAlpha(0.0f);
-    d_startButtonBlendInAnimInst->start();
-
-    enableNavigationBarElements();
-
-    d_loginContainerMoveOutInst->start();
-    d_navigationTravelIcon->setEnabled(true);
-
-    CEGUI::Editbox* loginEditbox = static_cast<CEGUI::Editbox*>(d_root->getChild("LoginContainer/LoginEditbox"));
-    d_userName = loginEditbox->getText();
-
-    d_timeSinceLoginAccepted = 0.0f;
-    d_loginWasAccepted = true;
-    d_currentWriteFocus = WF_TopBar;
-
-    d_botNaviContainer->setEnabled(true);
-
-    return false;
-}
-
 bool GameMenu::handleInnerPartStartClickAreaClick(const CEGUI::EventArgs& args)
 {
-    if(!d_interactivePlanetElementsAreEnabled)
-        enableInteractivePlanetElements();
-
     d_startButtonBlendInAnimInst->pause();
     d_startButtonClickArea->setVisible(false);
 
@@ -326,8 +212,6 @@ bool GameMenu::handleInnerPartStartClickAreaClick(const CEGUI::EventArgs& args)
 
 bool GameMenu::handleCheckIfNaviIconAnimationNeedsChange(const CEGUI::EventArgs& args)
 {
-    if(!d_loginWasAccepted)
-        return false;
 
     bool mouseIsHovering = false;
     CEGUI::Window* window;
@@ -338,8 +222,6 @@ bool GameMenu::handleCheckIfNaviIconAnimationNeedsChange(const CEGUI::EventArgs&
     mouseIsHovering |= window->isMouseContainedInArea();
     window = d_root->getChild("BotNavigationContainer/NaviCenterContainer/NaviBotSelectionIcon");
     mouseIsHovering |= window->isMouseContainedInArea();
-    mouseIsHovering |= d_botNaviRightArrowArea->isMouseContainedInArea();
-    mouseIsHovering |= d_botNaviLeftArrowArea->isMouseContainedInArea();
 
     //We fire an event to trigger the animation depending on if the mouse hovers a critical
     //window or not. Additionally we perform a check to not fire an event for an animation that is already running
@@ -388,58 +270,6 @@ bool GameMenu::handleNaviSelectionIconAnimStart(const CEGUI::EventArgs& args)
     return false;
 }
 
-bool GameMenu::handleMouseEntersLeftArrowArea(const CEGUI::EventArgs& args)
-{
-    CEGUI::EventArgs fireArgs;
-    if(d_loginWasAccepted)
-        d_root->getChild("BotNavigationContainer/LeftArrow")->fireEvent("StartTwitching", fireArgs);
-
-    return false;
-}
-
-bool GameMenu::handleMouseLeavesLeftArrowArea(const CEGUI::EventArgs& args)
-{
-    CEGUI::EventArgs fireArgs;
-    if(d_loginWasAccepted)
-        d_root->getChild("BotNavigationContainer/LeftArrow")->fireEvent("EndTwitching", fireArgs);
-
-    return false;
-}
-
-bool GameMenu::handleMouseEntersRightArrowArea(const CEGUI::EventArgs& args)
-{
-    CEGUI::EventArgs fireArgs;
-    if(d_loginWasAccepted)
-        d_root->getChild("BotNavigationContainer/RightArrow")->fireEvent("StartTwitching", fireArgs);
-
-    return false;
-}
-
-bool GameMenu::handleMouseLeavesRightArrowArea(const CEGUI::EventArgs& args)
-{
-    CEGUI::EventArgs fireArgs;
-    if(d_loginWasAccepted)
-        d_root->getChild("BotNavigationContainer/RightArrow")->fireEvent("EndTwitching", fireArgs);
-
-    return false;
-}
-
-
-bool GameMenu::handleStartPopupLinesSaveDisplay(const CEGUI::EventArgs& args)
-{
-    if(!d_startButtonClicked)
-        return false;
-
-    makeAllSelectionIconsInvisible();
-
-    stopStartPopupLinesAnimations();
-    d_popupLinesSaveAnimInst->start();
-
-    d_root->getChild("InnerButtonsContainer/SaveSelectionIcon")->setVisible(true);
-
-    return false;
-}
-
 bool GameMenu::handleStartPopupLinesLoadDisplay(const CEGUI::EventArgs& args)
 {
     if(!d_startButtonClicked)
@@ -454,25 +284,6 @@ bool GameMenu::handleStartPopupLinesLoadDisplay(const CEGUI::EventArgs& args)
 
     return false;
 }
-
-bool GameMenu::handleStartPopupLinesCharactersDisplay(const CEGUI::EventArgs& args)
-{
-    if(!d_startButtonClicked)
-        return false;
-
-    makeAllSelectionIconsInvisible();
-
-    d_root->getChild("InnerButtonsContainer/DeleteSelectionIcon")->setVisible(true);
-    d_root->getChild("InnerButtonsContainer/Name2SelectionIcon")->setVisible(true);
-    d_root->getChild("InnerButtonsContainer/SelectSelectionIcon")->setVisible(true);
-    d_root->getChild("InnerButtonsContainer/NewSelectionIcon")->setVisible(true);
-
-    stopStartPopupLinesAnimations();
-    d_popupLinesCharactersAnimInst->start();
-
-    return false;
-}
-
 
 bool GameMenu::handleStartPopupLinesOptionsDisplay(const CEGUI::EventArgs& args)
 {
@@ -538,7 +349,6 @@ void GameMenu::makeAllSelectionIconsInvisible()
 {
     CEGUI::EventArgs fireArgs;
 
-    d_root->getChild("InnerButtonsContainer/SaveSelectionIcon")->setVisible(false);
     d_root->getChild("InnerButtonsContainer/NoSelectionIcon")->setVisible(false);
     d_root->getChild("InnerButtonsContainer/SelectSelectionIcon")->setVisible(false);
     d_root->getChild("InnerButtonsContainer/YesSelectionIcon")->setVisible(false);
@@ -553,15 +363,9 @@ void GameMenu::makeAllSelectionIconsInvisible()
 
 void GameMenu::stopStartPopupLinesAnimations()
 {
-    d_popupLinesCharactersAnimInst->setPosition(d_popupLinesLoadAnimInst->getDefinition()->getDuration());
-    d_popupLinesCharactersAnimInst->apply();
-    d_popupLinesCharactersAnimInst->pause();
     d_popupLinesLoadAnimInst->setPosition(d_popupLinesLoadAnimInst->getDefinition()->getDuration());
     d_popupLinesLoadAnimInst->apply();
     d_popupLinesLoadAnimInst->pause();
-    d_popupLinesSaveAnimInst->setPosition(d_popupLinesSaveAnimInst->getDefinition()->getDuration());
-    d_popupLinesSaveAnimInst->apply();
-    d_popupLinesSaveAnimInst->pause();
     d_popupLinesQuitAnimInst->setPosition(d_popupLinesQuitAnimInst->getDefinition()->getDuration());
     d_popupLinesQuitAnimInst->apply();
     d_popupLinesQuitAnimInst->pause();
@@ -569,9 +373,7 @@ void GameMenu::stopStartPopupLinesAnimations()
     d_popupLinesOptionsAnimInst->apply();
     d_popupLinesOptionsAnimInst->pause();
 
-    d_root->getChild("InnerButtonsContainer/PopupLinesSave")->setVisible(false);
     d_root->getChild("InnerButtonsContainer/PopupLinesLoad")->setVisible(false);
-    d_root->getChild("InnerButtonsContainer/PopupLinesCharacters")->setVisible(false);
     d_root->getChild("InnerButtonsContainer/PopupLinesOptions")->setVisible(false);
     d_root->getChild("InnerButtonsContainer/PopupLinesQuit")->setVisible(false);
 
@@ -580,20 +382,10 @@ void GameMenu::stopStartPopupLinesAnimations()
 
 void GameMenu::setupWindows()
 {
-    d_botBarLabel = d_root->getChild("BotBar/BotBarLabel");
-    d_topBarLabel = d_root->getChild("TopBar/TopBarLabel");
-
-    d_loginContainer = d_root->getChild("LoginContainer");
-
-    setupNaviArrowWindows();
-
     setupButtonClickHandlers();
 
     d_botNaviContainer = d_root->getChild("BotNavigationContainer");
     d_botNaviCenter = d_root->getChild("BotNavigationContainer/NaviCenterContainer");
-
-    d_loginAcceptButton = d_loginContainer->getChild("AcceptButton");
-    d_loginAcceptButton->subscribeEvent(CEGUI::Window::EventMouseClick, CEGUI::Event::Subscriber(&GameMenu::handleLoginAcceptButtonClicked, this));
 
     d_startButtonClickArea = d_root->getChild("InnerPartContainer/InsideStartClickArea");   
     d_startButtonClickArea->subscribeEvent(CEGUI::Window::EventMouseClick, CEGUI::Event::Subscriber(&GameMenu::handleInnerPartStartClickAreaClick, this));
@@ -609,135 +401,8 @@ void GameMenu::setupWindows()
 
 }
 
-void GameMenu::disableInteractivePlanetElements()
-{
-    d_centerButtonsBlendInInst->pause();
-    d_centerButtonsPartialBlendOutInst->start();
-
-
-    d_interactiveElementsWereInitiallyBlendedOut = true;
-}
-
-void GameMenu::enableInteractivePlanetElements()
-{
-    d_centerButtonsPartialBlendOutInst->pause();
-    d_centerButtonsBlendInInst->start();
-
-    d_interactivePlanetElementsAreEnabled = true;
-}
-
-void GameMenu::disableNavigationBarElements()
-{
-    d_naviBlendInInst->pause();
-    d_naviPartialBlendOutInst->start();
-
-    d_navigationLabelBlendInAnimInst->stop();
-    d_navigationLabelPartialBlendOutInst->start();
-
-    d_navigationIsEnabled = false;
-}
-
-void GameMenu::enableNavigationBarElements()
-{
-    d_naviPartialBlendOutInst->pause();
-    d_naviBlendInInst->start();
-
-    d_navigationLabelPartialBlendOutInst->stop();
-    d_navigationLabelBlendInAnimInst->start();
-
-    d_navigationIsEnabled = true;
-}
-
-void GameMenu::updateIntroText()
-{
-    static const CEGUI::String firstPart = "Connection established...";
-    static const CEGUI::String secondPart = "Warning! User Authentication required!";
-
-    CEGUI::String finalText;
-
-    int firstPartTypeProgress = static_cast<int>((d_timeSinceStart - s_firstStartDelay) / 0.08f);
-    if(firstPartTypeProgress > 0)
-        finalText += firstPart.substr(0, std::min<unsigned int>(firstPart.length(), firstPartTypeProgress));
-
-    int secondPartTypeProgress = static_cast<int>((d_timeSinceStart - s_secondStartDelay) / 0.08f);
-    if(secondPartTypeProgress > 0)
-        finalText += "\n" + secondPart.substr(0, std::min<unsigned int>(secondPart.length(), secondPartTypeProgress));
-
-    finalText += "[font='DejaVuSans-12']";
-
-    static double blinkStartDelay = 3.6f;
-    double blinkPeriod = 0.8;
-    double blinkTime = std::modf(static_cast<double>(d_timeSinceStart), &blinkPeriod);
-    if(blinkTime > 0.55 || d_timeSinceStart < blinkStartDelay || d_currentWriteFocus != WF_BotBar)
-        finalText += "[colour='00000000']";
-
-    finalText += reinterpret_cast<const CEGUI::encoded_char*>("❚");
-
-    d_botBarLabel->setText(finalText);
-}
-
-void GameMenu::updateLoginWelcomeText(float passedTime)
-{
-    if(d_timeSinceLoginAccepted <= 0.0f)
-        return;
-
-    static const CEGUI::String firstPart = "Welcome ";
-    CEGUI::String displayText = firstPart + d_userName;
-    CEGUI::String finalText;
-
-    int progress = static_cast<int>(d_timeSinceLoginAccepted / 0.08f);
-    if(progress > 0)
-        finalText += displayText.substr(0, std::min<unsigned int>(displayText.length(), progress));
-
-    finalText += "[font='DejaVuSans-12']";
-
-    double blinkPeriod = 0.8;
-    double blinkTime = std::modf(static_cast<double>(d_timeSinceStart), &blinkPeriod);
-    if(blinkTime > 0.55 || d_currentWriteFocus != WF_TopBar)
-        finalText += "[colour='00000000']";
-
-    finalText += reinterpret_cast<const CEGUI::encoded_char*>("❚");
-
-    d_topBarLabel->setText(finalText);
-}
-
-
-void GameMenu::updateLoginStartButtonText(float passedTime)
-{
-    if(d_timeSinceLoginAccepted <= 0.0f)
-        return;
-
-    static const float writeDelay = 1.7f;
-    static const CEGUI::String displayText = "Proceed by selecting a planet";
-
-    CEGUI::String finalText;
-
-    int progress = static_cast<int>((d_timeSinceLoginAccepted - writeDelay) / 0.08f);
-    if(progress > 0)
-        finalText += displayText.substr(0, std::min<unsigned int>(displayText.length(), progress));
-
-    finalText += "[font='DejaVuSans-12']";
-
-
-    double blinkPeriod = 0.8;
-    double blinkTime = std::modf(static_cast<double>(d_timeSinceStart), &blinkPeriod);
-    if(blinkTime > 0.55 || d_currentWriteFocus != WF_BotBar)
-        finalText += "[colour='00000000']";
-
-    if(d_timeSinceLoginAccepted >= writeDelay)
-        d_currentWriteFocus = WF_BotBar;
-
-    finalText += reinterpret_cast<const CEGUI::encoded_char*>("❚");
-
-    d_botBarLabel->setText(finalText);
-}
-
 void GameMenu::setupNaviIconAnimationEventHandlers()
 {
-    d_botNaviLeftArrowArea->subscribeEvent(CEGUI::Window::EventMouseEntersArea, CEGUI::Event::Subscriber(&GameMenu::handleCheckIfNaviIconAnimationNeedsChange, this));
-    d_botNaviLeftArrowArea->subscribeEvent(CEGUI::Window::EventMouseLeavesArea, CEGUI::Event::Subscriber(&GameMenu::handleCheckIfNaviIconAnimationNeedsChange, this));
-    d_botNaviRightArrowArea->subscribeEvent(CEGUI::Window::EventMouseEntersArea, CEGUI::Event::Subscriber(&GameMenu::handleCheckIfNaviIconAnimationNeedsChange, this));
-    d_botNaviRightArrowArea->subscribeEvent(CEGUI::Window::EventMouseLeavesArea, CEGUI::Event::Subscriber(&GameMenu::handleCheckIfNaviIconAnimationNeedsChange, this));
     CEGUI::Window* window;
     window = d_root->getChild("BotNavigationContainer/NaviCenterContainer/NavigationLabel");
     window->subscribeEvent(CEGUI::Window::EventMouseEntersArea, CEGUI::Event::Subscriber(&GameMenu::handleCheckIfNaviIconAnimationNeedsChange, this));
@@ -761,10 +426,6 @@ void GameMenu::startEntranceAnimations()
     d_buttonFadeInAnimInst1->start();
     d_buttonFadeInAnimInst2->start();
     d_buttonFadeInAnimInst3->start();
-    d_buttonFadeInAnimInst4->start();
-    d_buttonFadeInAnimInst5->start();
-    d_naviButtonRightMoveInInst->start();
-    d_naviButtonLeftMoveInInst->start();
     d_naviBotMoveInInst->start();
 }
 
@@ -779,42 +440,18 @@ void GameMenu::resetAnimations()
     d_buttonFadeInAnimInst2->apply();
     d_buttonFadeInAnimInst3->setPosition(d_buttonFadeInAnimInst3->getDefinition()->getDuration());
     d_buttonFadeInAnimInst3->apply();
-    d_buttonFadeInAnimInst4->setPosition(d_buttonFadeInAnimInst4->getDefinition()->getDuration());
-    d_buttonFadeInAnimInst4->apply();
-    d_buttonFadeInAnimInst5->setPosition(d_buttonFadeInAnimInst5->getDefinition()->getDuration());
-    d_buttonFadeInAnimInst5->apply();
-    d_loginContainerMoveInInst->setPosition(d_loginContainerMoveInInst->getDefinition()->getDuration());
-    d_loginContainerMoveInInst->apply();
-    d_naviButtonRightMoveInInst->setPosition(d_naviButtonRightMoveInInst->getDefinition()->getDuration());
-    d_naviButtonRightMoveInInst->apply();
-    d_naviButtonLeftMoveInInst->setPosition(d_naviButtonLeftMoveInInst->getDefinition()->getDuration());
-    d_naviButtonLeftMoveInInst->apply();
     d_naviBotMoveInInst->setPosition(d_naviBotMoveInInst->getDefinition()->getDuration());
     d_naviBotMoveInInst->apply();
 }
 
 void GameMenu::setupButtonClickHandlers()
 {
-    CEGUI::Window* buttonSave = d_root->getChild("InnerButtonsContainer/ButtonSave");
-    buttonSave->subscribeEvent(CEGUI::Window::EventMouseClick, CEGUI::Event::Subscriber(&GameMenu::handleStartPopupLinesSaveDisplay, this));
     CEGUI::Window* buttonLoad = d_root->getChild("InnerButtonsContainer/ButtonLoad");
     buttonLoad->subscribeEvent(CEGUI::Window::EventMouseClick, CEGUI::Event::Subscriber(&GameMenu::handleStartPopupLinesLoadDisplay, this));
-    CEGUI::Window* buttonCharacters = d_root->getChild("InnerButtonsContainer/ButtonCharacters");
-    buttonCharacters->subscribeEvent(CEGUI::Window::EventMouseClick, CEGUI::Event::Subscriber(&GameMenu::handleStartPopupLinesCharactersDisplay, this));
     CEGUI::Window* buttonOptions = d_root->getChild("InnerButtonsContainer/ButtonOptions");
     buttonOptions->subscribeEvent(CEGUI::Window::EventMouseClick, CEGUI::Event::Subscriber(&GameMenu::handleStartPopupLinesOptionsDisplay, this));
     CEGUI::Window* buttonQuit = d_root->getChild("InnerButtonsContainer/ButtonQuit");
     buttonQuit->subscribeEvent(CEGUI::Window::EventMouseClick, CEGUI::Event::Subscriber(&GameMenu::handleStartPopupLinesQuitDisplay, this));
-}
-
-void GameMenu::setupNaviArrowWindows()
-{
-    d_botNaviLeftArrowArea = d_root->getChild("BotNavigationContainer/LeftArrowArea");
-    d_botNaviRightArrowArea = d_root->getChild("BotNavigationContainer/RightArrowArea");
-    d_botNaviLeftArrowArea->subscribeEvent(CEGUI::Window::EventMouseEntersArea, CEGUI::Event::Subscriber(&GameMenu::handleMouseEntersLeftArrowArea, this));
-    d_botNaviLeftArrowArea->subscribeEvent(CEGUI::Window::EventMouseLeavesArea, CEGUI::Event::Subscriber(&GameMenu::handleMouseLeavesLeftArrowArea, this));
-    d_botNaviRightArrowArea->subscribeEvent(CEGUI::Window::EventMouseEntersArea, CEGUI::Event::Subscriber(&GameMenu::handleMouseEntersRightArrowArea, this));
-    d_botNaviRightArrowArea->subscribeEvent(CEGUI::Window::EventMouseLeavesArea, CEGUI::Event::Subscriber(&GameMenu::handleMouseLeavesRightArrowArea, this));
 }
 
 void GameMenu::setupInnerButtonsSubOptionsLabels()
@@ -823,21 +460,7 @@ void GameMenu::setupInnerButtonsSubOptionsLabels()
     label = d_root->getChild("InnerButtonsContainer/PopupLinesLoad/LabelLoad");
     label->subscribeEvent(CEGUI::Window::EventMouseEntersArea, CEGUI::Event::Subscriber(&GameMenu::handleInnerButtonsLabelEntered, this));
     label->subscribeEvent(CEGUI::Window::EventMouseLeavesArea, CEGUI::Event::Subscriber(&GameMenu::handleInnerButtonsLabelLeft, this));
-    label = d_root->getChild("InnerButtonsContainer/PopupLinesSave/LabelSave");
-    label->subscribeEvent(CEGUI::Window::EventMouseEntersArea, CEGUI::Event::Subscriber(&GameMenu::handleInnerButtonsLabelEntered, this));
-    label->subscribeEvent(CEGUI::Window::EventMouseLeavesArea, CEGUI::Event::Subscriber(&GameMenu::handleInnerButtonsLabelLeft, this));
-    label = d_root->getChild("InnerButtonsContainer/PopupLinesCharacters/LabelName2");
-    label->subscribeEvent(CEGUI::Window::EventMouseEntersArea, CEGUI::Event::Subscriber(&GameMenu::handleInnerButtonsLabelEntered, this));
-    label->subscribeEvent(CEGUI::Window::EventMouseLeavesArea, CEGUI::Event::Subscriber(&GameMenu::handleInnerButtonsLabelLeft, this));
-    label = d_root->getChild("InnerButtonsContainer/PopupLinesCharacters/LabelNew");
-    label->subscribeEvent(CEGUI::Window::EventMouseEntersArea, CEGUI::Event::Subscriber(&GameMenu::handleInnerButtonsLabelEntered, this));
-    label->subscribeEvent(CEGUI::Window::EventMouseLeavesArea, CEGUI::Event::Subscriber(&GameMenu::handleInnerButtonsLabelLeft, this));
-    label = d_root->getChild("InnerButtonsContainer/PopupLinesCharacters/LabelSelect");
-    label->subscribeEvent(CEGUI::Window::EventMouseEntersArea, CEGUI::Event::Subscriber(&GameMenu::handleInnerButtonsLabelEntered, this));
-    label->subscribeEvent(CEGUI::Window::EventMouseLeavesArea, CEGUI::Event::Subscriber(&GameMenu::handleInnerButtonsLabelLeft, this));
-    label = d_root->getChild("InnerButtonsContainer/PopupLinesCharacters/LabelDelete");
-    label->subscribeEvent(CEGUI::Window::EventMouseEntersArea, CEGUI::Event::Subscriber(&GameMenu::handleInnerButtonsLabelEntered, this));
-    label->subscribeEvent(CEGUI::Window::EventMouseLeavesArea, CEGUI::Event::Subscriber(&GameMenu::handleInnerButtonsLabelLeft, this));
+
     label = d_root->getChild("InnerButtonsContainer/PopupLinesOptions/LabelVideo");
     label->subscribeEvent(CEGUI::Window::EventMouseEntersArea, CEGUI::Event::Subscriber(&GameMenu::handleInnerButtonsLabelEntered, this));
     label->subscribeEvent(CEGUI::Window::EventMouseLeavesArea, CEGUI::Event::Subscriber(&GameMenu::handleInnerButtonsLabelLeft, this));
@@ -872,15 +495,10 @@ void GameMenu::setupPopupLinesAnimations()
     CEGUI::AnimationManager& animMgr = CEGUI::AnimationManager::getSingleton();
 
     CEGUI::Animation* sizeGrowth = animMgr.getAnimation("SizeGrowth");
-    window = d_root->getChild("InnerButtonsContainer/PopupLinesSave");
-    d_popupLinesSaveAnimInst = animMgr.instantiateAnimation(sizeGrowth);
-    d_popupLinesSaveAnimInst->setTarget(window);
+
     window = d_root->getChild("InnerButtonsContainer/PopupLinesLoad");
     d_popupLinesLoadAnimInst = animMgr.instantiateAnimation(sizeGrowth);
     d_popupLinesLoadAnimInst->setTarget(window);
-    window = d_root->getChild("InnerButtonsContainer/PopupLinesCharacters");
-    d_popupLinesCharactersAnimInst = animMgr.instantiateAnimation(sizeGrowth);
-    d_popupLinesCharactersAnimInst->setTarget(window);
     window = d_root->getChild("InnerButtonsContainer/PopupLinesOptions");
     d_popupLinesOptionsAnimInst = animMgr.instantiateAnimation(sizeGrowth);
     d_popupLinesOptionsAnimInst->setTarget(window);
@@ -903,11 +521,6 @@ void GameMenu::setupSelectionIconAnimations()
     iconAnimInst->setTargetWindow(window);
     iconAnimInst = animMgr.instantiateAnimation(iconAnimationStop);
     iconAnimInst->setTargetWindow(window);
-    window = d_root->getChild("InnerButtonsContainer/SaveSelectionIcon");
-    iconAnimInst = animMgr.instantiateAnimation(iconAnimationLoop);
-    iconAnimInst->setTargetWindow(window);
-    iconAnimInst = animMgr.instantiateAnimation(iconAnimationStop);
-    iconAnimInst->setTargetWindow(window);
     window = d_root->getChild("InnerButtonsContainer/NoSelectionIcon");
     iconAnimInst = animMgr.instantiateAnimation(iconAnimationLoop);
     iconAnimInst->setTargetWindow(window);
@@ -919,11 +532,6 @@ void GameMenu::setupSelectionIconAnimations()
     iconAnimInst = animMgr.instantiateAnimation(iconAnimationStop);
     iconAnimInst->setTargetWindow(window);
     window = d_root->getChild("InnerButtonsContainer/SelectSelectionIcon");
-    iconAnimInst = animMgr.instantiateAnimation(iconAnimationLoop);
-    iconAnimInst->setTargetWindow(window);
-    iconAnimInst = animMgr.instantiateAnimation(iconAnimationStop);
-    iconAnimInst->setTargetWindow(window);
-    window = d_root->getChild("InnerButtonsContainer/SaveSelectionIcon");
     iconAnimInst = animMgr.instantiateAnimation(iconAnimationLoop);
     iconAnimInst->setTargetWindow(window);
     iconAnimInst = animMgr.instantiateAnimation(iconAnimationStop);

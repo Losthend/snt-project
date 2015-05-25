@@ -54,7 +54,7 @@ void CCegui::initLoads()
 	//Menu principal
     CEGUI::SchemeManager::getSingleton().createFromFile("GameMenu.scheme");
     CEGUI::SchemeManager::getSingleton().createFromFile("Generic.scheme");
-	CEGUI::FontManager::getSingleton().createFromFile("DejaVuSans-12.font");
+	//CEGUI::FontManager::getSingleton().createFromFile("DejaVuSans-12.font");
     CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("GameMenuImages/MouseCursor");
     CEGUI::Font& defaultFont = CEGUI::FontManager::getSingleton().createFromFile("Jura-13.font");
     CEGUI::System::getSingleton().getDefaultGUIContext().setDefaultFont(&defaultFont);
@@ -94,7 +94,7 @@ void CCegui::loadWindows()
 
 	//Por defecto, ventanas desactivadas
 	size_t numChild = wRoot->getChildCount();
-	for (int i = 0; i < numChild; i++)
+	for (int i = 1; i < numChild; i++)
 	{
 		wRoot->getChildAtIdx(i)->hide();
 	}
