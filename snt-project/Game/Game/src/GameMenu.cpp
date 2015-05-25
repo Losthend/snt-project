@@ -176,9 +176,7 @@ void GameMenu::onEnteringSample()
 {
     d_navigationTravelIcon->setEnabled(false);
 
-	/*
     d_startButtonClicked = false;
-	*/
 
     d_botNaviContainer->setAlpha(1.0f);
 
@@ -272,9 +270,6 @@ bool GameMenu::handleNaviSelectionIconAnimStart(const CEGUI::EventArgs& args)
 
 bool GameMenu::handleStartPopupLinesLoadDisplay(const CEGUI::EventArgs& args)
 {
-    if(!d_startButtonClicked)
-        return false;
-
     makeAllSelectionIconsInvisible();
 
     stopStartPopupLinesAnimations();
@@ -287,9 +282,6 @@ bool GameMenu::handleStartPopupLinesLoadDisplay(const CEGUI::EventArgs& args)
 
 bool GameMenu::handleStartPopupLinesOptionsDisplay(const CEGUI::EventArgs& args)
 {
-    if(!d_startButtonClicked)
-        return false;
-
     makeAllSelectionIconsInvisible();
 
     stopStartPopupLinesAnimations();
@@ -305,9 +297,6 @@ bool GameMenu::handleStartPopupLinesOptionsDisplay(const CEGUI::EventArgs& args)
 
 bool GameMenu::handleStartPopupLinesQuitDisplay(const CEGUI::EventArgs& args)
 {
-    if(!d_startButtonClicked)
-        return false;
-
     makeAllSelectionIconsInvisible();
 
     stopStartPopupLinesAnimations();
@@ -460,7 +449,6 @@ void GameMenu::setupInnerButtonsSubOptionsLabels()
     label = d_root->getChild("InnerButtonsContainer/PopupLinesLoad/LabelLoad");
     label->subscribeEvent(CEGUI::Window::EventMouseEntersArea, CEGUI::Event::Subscriber(&GameMenu::handleInnerButtonsLabelEntered, this));
     label->subscribeEvent(CEGUI::Window::EventMouseLeavesArea, CEGUI::Event::Subscriber(&GameMenu::handleInnerButtonsLabelLeft, this));
-
     label = d_root->getChild("InnerButtonsContainer/PopupLinesOptions/LabelVideo");
     label->subscribeEvent(CEGUI::Window::EventMouseEntersArea, CEGUI::Event::Subscriber(&GameMenu::handleInnerButtonsLabelEntered, this));
     label->subscribeEvent(CEGUI::Window::EventMouseLeavesArea, CEGUI::Event::Subscriber(&GameMenu::handleInnerButtonsLabelLeft, this));

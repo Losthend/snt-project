@@ -169,7 +169,7 @@ bool KeyboardMouse::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID 
 	//Injectar eventos de raton en CEGUI
 	CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonDown(gCCegui->convertButton(id));
 
-	if (id == OIS::MB_Right)
+	if (gPlayer != 0 && id == OIS::MB_Right)
 	{
 		Object* obj = 0;
 	
@@ -196,7 +196,7 @@ bool KeyboardMouse::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID 
 		}
 	}
 
-	if (id == OIS::MB_Left)
+	if (gPlayer != 0 && id == OIS::MB_Left)
 	{
 		if (gPlayer->m_catchObj != 0)
 		{
@@ -212,7 +212,7 @@ bool KeyboardMouse::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID
 	//Injectar eventos de raton en CEGUI
 	CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonUp(gCCegui->convertButton(id));
 
-	if (id == OIS::MB_Right && gPlayer->m_catchObj != 0)
+	if (gPlayer != 0 && id == OIS::MB_Right && gPlayer->m_catchObj != 0)
 	{
 		//Devuelve el efecto de la gravedad al objeto
 		gPlayer->m_catchObj->m_sceneObject->mRigidBody.setGravity(btVector3(0,-9.81f,0));

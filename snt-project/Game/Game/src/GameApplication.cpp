@@ -20,12 +20,6 @@ GameApplication::GameApplication(void)
 	mPhysics = new PhysicsManager();
 	gPhysics = mPhysics;
 
-	//Al crear el juego se crea el personaje (solo uno)
-	btCollisionShape &cubeShape = mPhysics->createBoxShape(20, 20, 20);
-	SceneObject* player = gPhysics->createBoxObject("Player", Ogre::Vector3(10, 10, 10), Ogre::Vector3(0, 100, 0), 1, cubeShape);
-	
-	gPlayer = new Player(player);
-
 	//Tambien el "mundo"
 	createScene();
 }
@@ -39,9 +33,12 @@ GameApplication::~GameApplication(void)
 //---------------------------------------------------------------------------
 void GameApplication::createScene(void)
 {
-	//--------------------------------------------------------------------------------
-	//CREACION DE OBJETOS MEDIANTE BULLET
-	//-------------------------------------------------------------------------------
+	//Creacion del personaje
+	btCollisionShape &playerShape = mPhysics->createBoxShape(20, 20, 20);
+	SceneObject* player = gPhysics->createBoxObject("Player", Ogre::Vector3(10, 10, 10), Ogre::Vector3(0, 100, 0), 1, playerShape);
+	gPlayer = new Player(player);
+
+	//Creacion de objetos
 	
 	//Shapes
 	btCollisionShape &cubeShape = mPhysics->createBoxShape(20, 20, 20);
@@ -71,10 +68,8 @@ void GameApplication::createScene(void)
 	gObjects.push_back(obj4);
 	gObjects.push_back(obj5);
 	gObjects.push_back(obj6);
-
-	//-------------------------------------------------------------------------------
-	//-------------------------------------------------------------------------------
 	
+	//Configuraciones finales 
 
 	//Posicionamos la camara en la posicion que nos interesa (donde esta el jugador)
 	Ogre::Vector3 playerPos = gPlayer->m_sceneObject->mNode.getPosition();

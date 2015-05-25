@@ -4,7 +4,6 @@
 
 #include "../include/KeyboardMouse.h"
 #include "../include/RenderActions.h"
-#include "../include/GameApplication.h"
 #include "../include/FrameRate.h"
 
 
@@ -33,9 +32,6 @@ extern "C" {
 
 			//Listeners y acciones de renderizado para los frame
 			RenderActions* renderAct = new RenderActions();
-
-			//Creamos el juego (personaje y escenario)
-			GameApplication* gameApp = new GameApplication();
 
 			//Momento de ejecucion del primer frame
 			initFrameRate();
