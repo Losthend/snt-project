@@ -15,6 +15,7 @@
     <ClInclude Include="include\CCegui.h" />
     <ClInclude Include="include\FrameRate.h" />
     <ClInclude Include="include\GameApplication.h" />
+    <ClInclude Include="include\GameMenu.h" />
     <ClInclude Include="include\Global.h" />
     <ClInclude Include="include\KeyboardMouse.h" />
     <ClInclude Include="include\Object.h" />
@@ -29,6 +30,7 @@
     <ClCompile Include="src\CCegui.cpp" />
     <ClCompile Include="src\FrameRate.cpp" />
     <ClCompile Include="src\GameApplication.cpp" />
+    <ClCompile Include="src\GameMenu.cpp" />
     <ClCompile Include="src\Global.cpp" />
     <ClCompile Include="src\KeyboardMouse.cpp" />
     <ClCompile Include="src\Main.cpp" />

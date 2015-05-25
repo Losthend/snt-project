@@ -68,7 +68,7 @@ void Player::update()
 	//Se permite saltar un numero limitado de veces (m_jumpCount) controlado en KeyboardMouse
 	if (m_jump == true)
 	{
-		//Aplicamos el salto
+		//Aplicamos el salto (DEPENDE DE LA MASA)
 		m_sceneObject->mRigidBody.applyCentralImpulse(btVector3(0, m_direction.y*m_moveY, 0));
 		//Acumulamos los saltos
 		m_jumpCount += 1;
@@ -136,11 +136,14 @@ void Player::catchActions()
 	}
 }
 
+//------------------------------------------------------------
+//Lanzar objetos agarrados
+//------------------------------------------------------------
 void Player::catchAttack()
 {
 	Ogre::Vector3 direction = m_catchObj->m_sceneObject->mNode.getPosition() - m_sceneObject->mNode.getPosition();
 	
-	btScalar power = 10;
+	btScalar power = 1; //DEPENDE DE LA MASA
 	btScalar x = direction.x*power;
 	btScalar y = direction.y*power;
 

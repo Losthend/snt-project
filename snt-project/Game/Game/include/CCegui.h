@@ -1,6 +1,8 @@
 #ifndef __CCegui_h_
 #define __CCegui_h_
 
+class GameMenu;
+
 class CCegui
 {
 public:
@@ -9,9 +11,12 @@ public:
 	CEGUI::MouseButton convertButton(OIS::MouseButtonID buttonID);
 
 	bool quit(const CEGUI::EventArgs &e);
-	void menu1();
+	void initLoads();
+	void loadWindows();
 
 	CEGUI::OgreRenderer* mRenderer;
+
+	GameMenu* mainMenu;
 };
 
 //---------------------------------------------------------------------------

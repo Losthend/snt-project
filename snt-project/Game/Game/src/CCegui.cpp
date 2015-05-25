@@ -3,11 +3,13 @@
 #include "../include/CCegui.h"
 #include "../include/Global.h"
 #include "../include/Player.h"
+#include "../include/GameMenu.h"
 
 CCegui::CCegui(void)
 {
 	//Se inicializa CEGUI
 	mRenderer = &CEGUI::OgreRenderer::bootstrapSystem();
+
 	//Se actualizan los resourceGroup (definidos en resources.cfg)
 	CEGUI::ImageManager::setImagesetDefaultResourceGroup("Imagesets");
 	CEGUI::Font::setDefaultResourceGroup("Fonts");
@@ -15,11 +17,8 @@ CCegui::CCegui(void)
 	CEGUI::WidgetLookManager::setDefaultResourceGroup("LookNFeel");
 	CEGUI::WindowManager::setDefaultResourceGroup("Layouts");
 
-	//Por ahora, utilizamos una "skin" (apariencia) por defecto tanto para el menu como para el raton
-	CEGUI::SchemeManager::getSingleton().createFromFile("TaharezLook.scheme");
-	CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("TaharezLook/MouseArrow");
-
-	menu1();
+	//Carga inicial de menus
+	initLoads();	
 }
 
 CCegui::~CCegui(void)
@@ -50,17 +49,55 @@ bool CCegui::quit(const CEGUI::EventArgs &e)
     return true;
 }
 
-void CCegui::menu1()
+void CCegui::initLoads()
 {
-	CEGUI::WindowManager &wmgr = CEGUI::WindowManager::getSingleton();
-	CEGUI::Window *sheet = wmgr.createWindow("DefaultWindow", "CEGUIDemo/Sheet");
-	CEGUI::Window *quit = wmgr.createWindow("TaharezLook/Button", "CEGUIDemo/QuitButton");
-	quit->setText("Quit");
-	quit->setSize(CEGUI::USize(CEGUI::UDim(0.15, 0), CEGUI::UDim(0.05, 0)));
-	sheet->addChild(quit);
-	CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(sheet);
-	quit->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&CCegui::quit, this));
+	//Menu principal
+    CEGUI::SchemeManager::getSingleton().createFromFile("GameMenu.scheme");
+    CEGUI::SchemeManager::getSingleton().createFromFile("Generic.scheme");
+	CEGUI::FontManager::getSingleton().createFromFile("DejaVuSans-12.font");
+    CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("GameMenuImages/MouseCursor");
+    CEGUI::Font& defaultFont = CEGUI::FontManager::getSingleton().createFromFile("Jura-13.font");
+    CEGUI::System::getSingleton().getDefaultGUIContext().setDefaultFont(&defaultFont);
+
+	//Menu 1 + Menu 2
+	CEGUI::SchemeManager::getSingleton().createFromFile("TaharezLook.scheme");
+	CEGUI::SchemeManager::getSingleton().createFromFile("AlfiskoSkin.scheme");
+
+	//Cargar ventanas
+	loadWindows();
 }
 
+void CCegui::loadWindows()
+{
+	//Window manager + root window
+	CEGUI::WindowManager &wmgr = CEGUI::WindowManager::getSingleton();
+	CEGUI::Window *wRoot = wmgr.createWindow("DefaultWindow", "Window1");
+	CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(wRoot);
+	
+	//Menu principal
+	GameMenu* gameMenu = new GameMenu();
+
+	//Menu 1
+	CEGUI::Window *quit = wmgr.createWindow("TaharezLook/Button", "QuitButton1");
+	quit->setText("Quit");
+	quit->setSize(CEGUI::USize(CEGUI::UDim(0.15, 0), CEGUI::UDim(0.05, 0)));
+	wRoot->addChild(quit);
+	quit->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&CCegui::quit, this));
+
+	//Menu 2
+	CEGUI::Window *quit2 = wmgr.createWindow("AlfiskoSkin/Button", "QuitButton2");
+	quit2->setText("Quit2");
+	quit2->setSize(CEGUI::USize(CEGUI::UDim(0.30, 0), CEGUI::UDim(0.10, 0)));
+	quit2->setPosition(CEGUI::UVector2( CEGUI::UDim( 0.50f, 0 ), CEGUI::UDim( 0.50f, 0 ) ));
+	wRoot->addChild(quit2);
+	quit2->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&CCegui::quit, this));
+
+	//Por defecto, ventanas desactivadas
+	size_t numChild = wRoot->getChildCount();
+	for (int i = 0; i < numChild; i++)
+	{
+		wRoot->getChildAtIdx(i)->hide();
+	}
+}
 
 //CEGUI::OgreRenderer::bootstrapSystem().setDisplaySize(CEGUI::Sizef(width, height));

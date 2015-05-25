@@ -7,6 +7,7 @@
 #include "../include/SceneObject.h"
 #include "../include/PhysicsManager.h"
 #include "../include/CCegui.h"
+#include "../include/GameMenu.h"
 
 KeyboardMouse::KeyboardMouse(void)
 {
@@ -34,40 +35,43 @@ bool KeyboardMouse::keyPressed( const OIS::KeyEvent &arg )
 	context.injectKeyDown((CEGUI::Key::Scan)arg.key);
 	context.injectChar((CEGUI::Key::Scan)arg.text);
 
-	switch (arg.key)
+	if(gPlayer != 0)
 	{
-		case OIS::KC_ESCAPE:
-			gShutDown = true;
-			break;
-		case OIS::KC_A:
-			if (gPlayer->m_direction.x == 0)
-				gPlayer->m_direction.x = -1;
-			break;
-		case OIS::KC_D:
-			if (gPlayer->m_direction.x == 0)
-				gPlayer->m_direction.x = 1;
-			break;
-		case OIS::KC_S:
-			if (gPlayer->m_run == false)
-			{
-				gPlayer->m_crouchDown = true;
-				gPlayer->m_moveX = gPlayer->m_moveX / 2;
-			}
-			break;
-		case OIS::KC_LSHIFT:
-			if (gPlayer->m_crouchDown == false)
-			{
-				gPlayer->m_run = true;
-				gPlayer->m_moveX = gPlayer->m_moveX * 2;
-			}
-			break;
-		case OIS::KC_SPACE:
-			if (gPlayer->m_jumpCount < gPlayer->m_maxNumJump)
-			{
-				gPlayer->m_jump = true;
-				gPlayer->m_direction.y = 1;
-			}
-			break;
+		switch (arg.key)
+		{
+			case OIS::KC_ESCAPE:
+				gShutDown = true;
+				break;
+			case OIS::KC_A:
+				if (gPlayer->m_direction.x == 0)
+					gPlayer->m_direction.x = -1;
+				break;
+			case OIS::KC_D:
+				if (gPlayer->m_direction.x == 0)
+					gPlayer->m_direction.x = 1;
+				break;
+			case OIS::KC_S:
+				if (gPlayer->m_run == false)
+				{
+					gPlayer->m_crouchDown = true;
+					gPlayer->m_moveX = gPlayer->m_moveX / 2;
+				}
+				break;
+			case OIS::KC_LSHIFT:
+				if (gPlayer->m_crouchDown == false)
+				{
+					gPlayer->m_run = true;
+					gPlayer->m_moveX = gPlayer->m_moveX * 2;
+				}
+				break;
+			case OIS::KC_SPACE:
+				if (gPlayer->m_jumpCount < gPlayer->m_maxNumJump)
+				{
+					gPlayer->m_jump = true;
+					gPlayer->m_direction.y = 1;
+				}
+				break;
+		}
 	}
 
     return true;
@@ -78,29 +82,32 @@ bool KeyboardMouse::keyReleased(const OIS::KeyEvent &arg)
 	//Injectar eventos de teclado en CEGUI
 	CEGUI::System::getSingleton().getDefaultGUIContext().injectKeyUp((CEGUI::Key::Scan)arg.key);
 
-	switch (arg.key)
+	if(gPlayer != 0)
 	{
-		case OIS::KC_A:
-			if (gPlayer->m_direction.x == -1)
-				gPlayer->m_direction.x = 0;
-			break;
-		case OIS::KC_D:
-			if (gPlayer->m_direction.x == 1)
-				gPlayer->m_direction.x = 0;
-			break;
-		case OIS::KC_S:
-			if (gPlayer->m_crouchDown == true)
-			{
-				gPlayer->m_crouchDown = false;
-				gPlayer->m_moveX = gPlayer->m_moveX * 2;
-			}
-		case OIS::KC_LSHIFT:
-			if (gPlayer->m_run == true)
-			{
-				gPlayer->m_run = false;
-				gPlayer->m_moveX = gPlayer->m_moveX / 2;
-			}
-			break;
+		switch (arg.key)
+		{
+			case OIS::KC_A:
+				if (gPlayer->m_direction.x == -1)
+					gPlayer->m_direction.x = 0;
+				break;
+			case OIS::KC_D:
+				if (gPlayer->m_direction.x == 1)
+					gPlayer->m_direction.x = 0;
+				break;
+			case OIS::KC_S:
+				if (gPlayer->m_crouchDown == true)
+				{
+					gPlayer->m_crouchDown = false;
+					gPlayer->m_moveX = gPlayer->m_moveX * 2;
+				}
+			case OIS::KC_LSHIFT:
+				if (gPlayer->m_run == true)
+				{
+					gPlayer->m_run = false;
+					gPlayer->m_moveX = gPlayer->m_moveX / 2;
+				}
+				break;
+		}
 	}
 
     return true;
