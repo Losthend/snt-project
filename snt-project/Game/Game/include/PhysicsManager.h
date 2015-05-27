@@ -14,7 +14,7 @@ public:
 	btRigidBody* createBody(const btTransform &transform, float mass, btCollisionShape &shape);
 	btCollisionShape& createBoxShape(float x, float y, float z);
 
-	SceneObject* createBoxObject(const char *name, const Ogre::Vector3 &size, const Ogre::Vector3 &pos, float mass, btCollisionShape &shape);
+	SceneObject* createBoxObject(const char *name, const Ogre::Vector3 &size, const Ogre::Vector3 &pos, float mass, int shapeType, Ogre::String meshName);
 
 //private:
 	/*

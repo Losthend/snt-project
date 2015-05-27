@@ -80,7 +80,7 @@ void PhysicsManager::update(float ticks)
 //---------------------------------------------------------------------------
 btCollisionShape& PhysicsManager::createBoxShape(float x, float y, float z)
 {
-	btCollisionShape* shape = new btBoxShape(btVector3(x/2, y/2, z/2));
+	btCollisionShape* shape = new btBoxShape(btVector3(x, y, z));
 	gCollisionShapes.push_back(shape);
 
 	return *shape;
@@ -89,23 +89,30 @@ btCollisionShape& PhysicsManager::createBoxShape(float x, float y, float z)
 //---------------------------------------------------------------------------
 //Metodo para la creacion de objetos caja entre Ogre y Bullet
 //---------------------------------------------------------------------------
-SceneObject* PhysicsManager::createBoxObject(const char *name, const Ogre::Vector3 &size, const Ogre::Vector3 &pos, float mass, btCollisionShape &shape)
+SceneObject* PhysicsManager::createBoxObject(const char *name, const Ogre::Vector3 &size, const Ogre::Vector3 &pos, float mass, int shapeType, Ogre::String meshName)
 {
 	//Creacion del SceneNode que representara el objeto en pantalla
 	Ogre::SceneNode* node1 = gSceneMgr->getRootSceneNode()->createChildSceneNode(name);
 	
+	//Creacion de la entidad, attach y scale
+	Ogre::Entity *entity = gSceneMgr->createEntity(name, meshName);
+	node1->attachObject(entity);
+	node1->setScale(size.x / 10.f, size.y / 10.f, size.z / 10.f);
+	node1->setPosition(pos.x, pos.y, pos.z);
+	node1->_updateBounds();
+
+	Ogre::AxisAlignedBox aabb = node1->_getWorldAABB();
+
+	//Shape adaptado al objeto (segun el tipo de shape)
+	//NOTA: Por el momento, por defecto, todos los shapes son del tipo BOX
+	Ogre::Vector3 nodeSize = aabb.getHalfSize();
+	btCollisionShape &shape = createBoxShape(nodeSize.x, nodeSize.y, nodeSize.z);
+
 	//Creacion del cuerpo rigido que envuelve al sceneNode
 	btRigidBody* body = gPhysics->createBody(btTransform(btQuaternion::getIdentity(), btVector3(pos.x, pos.y, pos.z)), mass, shape);
-
-	//Creacion de la entidad y attach de la misma al objeto
-	Ogre::Entity *entity = gSceneMgr->createEntity(name, "ManualObjectCube");
-	node1->attachObject(entity);
-
-	node1->setScale(size.x / 10.f, size.y / 10.f, size.z / 10.f);
 
 	SceneObject* sceneObject = new SceneObject(*node1, *body);
 
 	return sceneObject;
-
 }
 

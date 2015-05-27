@@ -14,6 +14,13 @@ Player::Player(SceneObject* sceneObject)
 
 	m_sceneObject = sceneObject;
 	m_sceneObject->mRigidBody.setAngularFactor(btVector3(0,0,0));
+
+	//Ninja hacia el eje X+, depende del rigidbody
+	btTransform transform;
+	m_sceneObject->mRigidBody.getMotionState()->getWorldTransform(transform);
+	transform.setRotation(btQuaternion(0,-1,0,1));
+	m_sceneObject->mRigidBody.setMotionState(new btDefaultMotionState(transform));
+
 	//Requiere esto ya que, tras cada iteración, si no hay movimiento lineal se bloquea el rigidbody
 	m_sceneObject->mRigidBody.setActivationState(DISABLE_DEACTIVATION);
 
