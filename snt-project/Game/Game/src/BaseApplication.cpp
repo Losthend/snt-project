@@ -64,8 +64,9 @@ bool BaseApplication::go(void)
         return false;
 
 	//-----------------------------------------------------------------------------------
-	//Generar los Manual Objects (ELIMINAR CUANDO NO SEA NECESARIO)
-	simpleCube();
+	//Generar los Manual Objects
+	cube();
+	grass();
 	//-----------------------------------------------------------------------------------
 
 	//Hacer que las variables (configuradas) del entorno sean de acceso global
@@ -199,7 +200,7 @@ void BaseApplication::createCamera(void)
     mCamera = mSceneMgr->createCamera("PlayerCam");
 
     //Posicion
-    mCamera->setPosition(Ogre::Vector3(0,0,450));
+    mCamera->setPosition(Ogre::Vector3(0,75,450));
     //Direccion y clipDistance
     mCamera->lookAt(Ogre::Vector3(0,0,0));
     mCamera->setNearClipDistance(5); 
@@ -298,84 +299,110 @@ void BaseApplication::windowClosed(Ogre::RenderWindow* rw)
 //---------------------------------------------------------------------------
 
 
-
-
-
-
-//----------------ELIMINAR CUANDO NO SEA NECESARIO---------------------
 //---------------------------------------------------------------------
-//--Genera un ManualObject denominado "ManualObjectCube" que puede
-//--ser utilizado como "mesh" al crear una nueva entidad.
+//--Genera un ManualObject denominado "ManualObjectCube" con forma de cubo
 //---------------------------------------------------------------------
-void BaseApplication::simpleCube(void)
+void BaseApplication::cube(void)
 {
 	//Se declara el objeto
-	Ogre::ManualObject* lManualObject = mSceneMgr->createManualObject("ManualObjectCube");	
+	Ogre::ManualObject lManualObject("manualObjectCube");	
 	//Se le asigna el material/textura que se desea utilizar, declarado en:
 	//C:\Ogre\OgreSDK_vc9_v1-9-0\media\materials\scripts\MaterialDePrueba.material
-	lManualObject->begin("MyMaterial1", Ogre::RenderOperation::OT_TRIANGLE_LIST);
+	lManualObject.begin("MyMaterial1", Ogre::RenderOperation::OT_TRIANGLE_LIST);
 
 	//La creación del objeto, dando vertices, coordenadas para la textura, etc.
 	float lSize = 10.0f;
 	float cp = 1.0f * lSize ;
 	float cm = -1.0f * lSize;
 
-	lManualObject->position(cm, cp, cm);
-	//lManualObject->colour(Ogre::ColourValue(0.0f,1.0f,0.0f,1.0f));
-	lManualObject->textureCoord(0.0, 1.0);
+	lManualObject.position(cm, cp, cm);
+	//lManualObject.colour(Ogre::ColourValue(0.0f,1.0f,0.0f,1.0f));
+	lManualObject.textureCoord(0.0, 1.0);
 
-	lManualObject->position(cp, cp, cm);
-	//lManualObject->colour(Ogre::ColourValue(1.0f,1.0f,0.0f,1.0f));
-	lManualObject->textureCoord(1.0, 1.0);
+	lManualObject.position(cp, cp, cm);
+	//lManualObject.colour(Ogre::ColourValue(1.0f,1.0f,0.0f,1.0f));
+	lManualObject.textureCoord(1.0, 1.0);
 
-	lManualObject->position(cp, cm, cm);
-	//lManualObject->colour(Ogre::ColourValue(1.0f,0.0f,0.0f,1.0f));
-	lManualObject->textureCoord(1.0, 0.0);
+	lManualObject.position(cp, cm, cm);
+	//lManualObject.colour(Ogre::ColourValue(1.0f,0.0f,0.0f,1.0f));
+	lManualObject.textureCoord(1.0, 0.0);
 
-	lManualObject->position(cm, cm, cm);
-	//lManualObject->colour(Ogre::ColourValue(0.0f,0.0f,0.0f,1.0f));
-	lManualObject->textureCoord(0.0, 0.0);
+	lManualObject.position(cm, cm, cm);
+	//lManualObject.colour(Ogre::ColourValue(0.0f,0.0f,0.0f,1.0f));
+	lManualObject.textureCoord(0.0, 0.0);
 
 	//-----------------------------
 
-	lManualObject->position(cm, cp, cp);
-	//lManualObject->colour(Ogre::ColourValue(0.0f,1.0f,1.0f,1.0f));
-	lManualObject->textureCoord(0.0, 1.0);
+	lManualObject.position(cm, cp, cp);
+	//lManualObject.colour(Ogre::ColourValue(0.0f,1.0f,1.0f,1.0f));
+	lManualObject.textureCoord(0.0, 1.0);
 
-	lManualObject->position(cp, cp, cp);
-	//lManualObject->colour(Ogre::ColourValue(1.0f,1.0f,1.0f,1.0f));
-	lManualObject->textureCoord(1.0, 1.0);
+	lManualObject.position(cp, cp, cp);
+	//lManualObject.colour(Ogre::ColourValue(1.0f,1.0f,1.0f,1.0f));
+	lManualObject.textureCoord(1.0, 1.0);
 
-	lManualObject->position(cp, cm, cp);
-	//lManualObject->colour(Ogre::ColourValue(1.0f,0.0f,1.0f,1.0f));
-	lManualObject->textureCoord(1.0, 0.0);
+	lManualObject.position(cp, cm, cp);
+	//lManualObject.colour(Ogre::ColourValue(1.0f,0.0f,1.0f,1.0f));
+	lManualObject.textureCoord(1.0, 0.0);
 
-	lManualObject->position(cm, cm, cp);
-	//lManualObject->colour(Ogre::ColourValue(0.0f,0.0f,1.0f,1.0f));
-	lManualObject->textureCoord(0.0, 0.0);
+	lManualObject.position(cm, cm, cp);
+	//lManualObject.colour(Ogre::ColourValue(0.0f,0.0f,1.0f,1.0f));
+	lManualObject.textureCoord(0.0, 0.0);
 
 	//-----------------------------
 
 	// face behind / front
-	lManualObject->triangle(0,1,2);
-	lManualObject->triangle(2,3,0);
-	lManualObject->triangle(4,6,5);
-	lManualObject->triangle(6,4,7);
+	lManualObject.triangle(0,1,2);
+	lManualObject.triangle(2,3,0);
+	lManualObject.triangle(4,6,5);
+	lManualObject.triangle(6,4,7);
 
 	// face top / down
-	lManualObject->triangle(0,4,5);
-	lManualObject->triangle(5,1,0);
-	lManualObject->triangle(2,6,7);
-	lManualObject->triangle(7,3,2);
+	lManualObject.triangle(0,4,5);
+	lManualObject.triangle(5,1,0);
+	lManualObject.triangle(2,6,7);
+	lManualObject.triangle(7,3,2);
 
 	// face left / right
-	lManualObject->triangle(0,7,4);
-	lManualObject->triangle(7,0,3);
-	lManualObject->triangle(1,5,6);
-	lManualObject->triangle(6,2,1);		
-
+	lManualObject.triangle(0,7,4);
+	lManualObject.triangle(7,0,3);
+	lManualObject.triangle(1,5,6);
+	lManualObject.triangle(6,2,1);		
 	//-----------------------------
+	lManualObject.end();
+	lManualObject.convertToMesh("manualObjectCube");
+}
 
-	lManualObject->end();
-	lManualObject->convertToMesh("ManualObjectCube");
+//---------------------------------------------------------------------
+//--Genera un ManualObject denominado "manualObjectGrass" con forma de cubo
+//---------------------------------------------------------------------
+void BaseApplication::grass()
+{
+	const float width = 25;
+	const float height = 30;
+	Ogre::Vector3 vec(width/2, 0, 0);
+	Ogre::ManualObject obj("manualObjectGrass");
+ 
+	Ogre::Quaternion quat;
+	quat.FromAngleAxis(Ogre::Degree(60), Ogre::Vector3::UNIT_Y);
+
+	obj.begin("Examples/GrassBlades", Ogre::RenderOperation::OT_TRIANGLE_LIST);
+ 
+	for (int i = 0; i < 3; ++i)
+	{
+		obj.position(-vec.x, height, -vec.z);
+		obj.textureCoord(0, 0);
+		obj.position(vec.x, height, vec.z);
+		obj.textureCoord(1, 0);
+		obj.position(-vec.x, 0, -vec.z);
+		obj.textureCoord(0, 1);
+		obj.position(vec.x, 0, vec.z);
+		obj.textureCoord(1, 1);
+		int offset = 4 * i;
+		obj.triangle(offset + 0, offset + 3, offset + 1);
+		obj.triangle(offset + 0, offset + 2, offset + 3);
+		vec = quat * vec;
+	}
+	obj.end();
+	obj.convertToMesh("manualObjectGrass");
 }

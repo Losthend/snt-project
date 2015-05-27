@@ -25,6 +25,8 @@
 #include <OgreWindowEventUtilities.h>
 //Libreria para crear objetos propios (cuadrados, circulos, etc)
 #include <OgreManualObject.h>
+#include <OgreMeshManager.h>
+#include <OgreStaticGeometry.h>
 #include <OgreException.h>
 //Utilidades para la configuracion de Ogre
 #include <OgreConfigFile.h>

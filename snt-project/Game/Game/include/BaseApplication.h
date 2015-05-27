@@ -28,8 +28,9 @@ private:
     virtual void windowResized(Ogre::RenderWindow* rw);
     virtual void windowClosed(Ogre::RenderWindow* rw);
 
-	//ELIMINAR el siguiente metodo cuando ya no sean necesario nuestros "cubos manuales"
-	void simpleCube(void);
+	//Objetos manuales
+	void cube(void);
+	void grass(void);
 
 	//VARIABLES
 	

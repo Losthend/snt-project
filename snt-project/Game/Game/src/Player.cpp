@@ -96,8 +96,9 @@ void Player::update()
 	//Para que los movimientos del jugador se adapten al entorno de Bullet 
 	m_sceneObject->update();
 
-	//Para que la camara siga al jugador
+	//Camara: sigue al jugador
 	Ogre::Vector3 pos = m_sceneObject->mNode.getPosition();
+	pos.y = 75 + pos.y;
 	pos.z = gCamera->getPosition().z;
 	gCamera->setPosition(pos);
 }

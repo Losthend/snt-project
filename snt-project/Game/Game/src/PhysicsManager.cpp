@@ -80,39 +80,109 @@ void PhysicsManager::update(float ticks)
 //---------------------------------------------------------------------------
 btCollisionShape& PhysicsManager::createBoxShape(float x, float y, float z)
 {
-	btCollisionShape* shape = new btBoxShape(btVector3(x, y, z));
+	btCollisionShape* shape = new btBoxShape(btVector3(x/2, y/2, z/2));
 	gCollisionShapes.push_back(shape);
 
 	return *shape;
 }
 
 //---------------------------------------------------------------------------
-//Metodo para la creacion de objetos caja entre Ogre y Bullet
+//Metodo para la creacion de objetos BOX entre Ogre y Bullet
 //---------------------------------------------------------------------------
-SceneObject* PhysicsManager::createBoxObject(const char *name, const Ogre::Vector3 &size, const Ogre::Vector3 &pos, float mass, int shapeType, Ogre::String meshName)
+SceneObject* PhysicsManager::createBoxObject(const char *name, const Ogre::Vector3 &size, const Ogre::Vector3 &pos, float mass, Ogre::String meshName)
 {
 	//Creacion del SceneNode que representara el objeto en pantalla
-	Ogre::SceneNode* node1 = gSceneMgr->getRootSceneNode()->createChildSceneNode(name);
+	Ogre::SceneNode* node = gSceneMgr->getRootSceneNode()->createChildSceneNode(name);
 	
 	//Creacion de la entidad, attach y scale
 	Ogre::Entity *entity = gSceneMgr->createEntity(name, meshName);
-	node1->attachObject(entity);
-	node1->setScale(size.x / 10.f, size.y / 10.f, size.z / 10.f);
-	node1->setPosition(pos.x, pos.y, pos.z);
-	node1->_updateBounds();
+	node->attachObject(entity);
+	node->setScale(size.x / 10.f, size.y / 10.f, size.z / 10.f);
+	node->setPosition(pos.x, pos.y, pos.z);
+	node->_updateBounds();
 
-	Ogre::AxisAlignedBox aabb = node1->_getWorldAABB();
+	Ogre::AxisAlignedBox aabb = node->_getWorldAABB();
 
-	//Shape adaptado al objeto (segun el tipo de shape)
-	//NOTA: Por el momento, por defecto, todos los shapes son del tipo BOX
-	Ogre::Vector3 nodeSize = aabb.getHalfSize();
+	//Shape adaptado al objeto
+	Ogre::Vector3 nodeSize = aabb.getSize();
 	btCollisionShape &shape = createBoxShape(nodeSize.x, nodeSize.y, nodeSize.z);
 
 	//Creacion del cuerpo rigido que envuelve al sceneNode
 	btRigidBody* body = gPhysics->createBody(btTransform(btQuaternion::getIdentity(), btVector3(pos.x, pos.y, pos.z)), mass, shape);
 
-	SceneObject* sceneObject = new SceneObject(*node1, *body);
+	SceneObject* sceneObject = new SceneObject(*node, *body);
 
 	return sceneObject;
 }
 
+
+
+//---------------------------------------------------------------------------
+//Creacion de planos/suelo entre Ogre y bullet
+//---------------------------------------------------------------------------
+SceneObject* PhysicsManager::createGroundObject(Ogre::String name, Ogre::Vector3 pos, Ogre::Vector3 size, bool grass)
+{
+	//Plano
+	Ogre::Plane plane(Ogre::Vector3::UNIT_Y, 0);
+	Ogre::MeshPtr meshPtr = Ogre::MeshManager::getSingleton().createPlane(name, 
+																		  Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, 
+																		  plane, size.x, size.z, 
+																		  20, 20, true, 1, 5, 5, Ogre::Vector3::UNIT_Z);
+	//Entidad 
+	Ogre::Entity *entity = gSceneMgr->createEntity(name, name);
+	entity->setMaterialName("Examples/GrassFloor");
+	//Nodo
+	Ogre::SceneNode *node = gSceneMgr->getRootSceneNode()->createChildSceneNode(name);
+	node->attachObject(entity);
+	node->setPosition(pos.x, pos.y, pos.z);
+	node->_updateBounds();
+ 
+	//Hierba
+	if(grass)
+		createGroundGrass(size, pos);
+
+	float mass = 0;
+
+	btCollisionShape &shape = createBoxShape(size.x, size.y, size.z);
+
+	btRigidBody* body = gPhysics->createBody(btTransform(btQuaternion::getIdentity(), btVector3(pos.x, pos.y, pos.z)), mass, shape);
+
+	SceneObject* sceneObject = new SceneObject(*node, *body);
+
+	return sceneObject;
+}
+
+
+//---------------------------------------------------------------------------
+//Añade hierba al suelo
+//---------------------------------------------------------------------------
+void PhysicsManager::createGroundGrass(Ogre::Vector3 vSize, Ogre::Vector3 vPos)
+{
+	Ogre::Entity* grass = gSceneMgr->createEntity("manualObjectGrass");
+	Ogre::StaticGeometry* sg = gSceneMgr->createStaticGeometry("GrassArea");
+
+	int amount = 10;
+
+	sg->setRegionDimensions(Ogre::Vector3(vSize.x, vSize.y, vSize.z));
+	sg->setOrigin(Ogre::Vector3(vSize.x, vSize.y, vSize.z));
+
+	for (int x = -vSize.x/2; x < vSize.x/2; x += (vSize.x / amount))
+	{
+		for (int z = -vSize.z/2; z < vSize.z/2; z += (vSize.z / amount))
+		{
+			Ogre::Real offsetX = -vSize.x / (float)amount / 2;
+			Ogre::Real offsetZ = -vSize.z / (float)amount / 2;
+			Ogre::Vector3 pos(
+				x + Ogre::Math::RangeRandom(-offsetX, offsetX),
+				vPos.y,
+				z + Ogre::Math::RangeRandom(-offsetZ, offsetZ));
+			Ogre::Vector3 scale(1, Ogre::Math::RangeRandom(0.9, 1.1), 1);
+			Ogre::Quaternion quat;
+			quat.FromAngleAxis(
+				Ogre::Degree(Ogre::Math::RangeRandom(0, 359)),
+				Ogre::Vector3::UNIT_Y);
+			sg->addEntity(grass, pos, quat, scale);
+		}
+	}
+	sg->build();
+}

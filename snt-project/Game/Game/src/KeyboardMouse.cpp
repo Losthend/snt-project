@@ -180,13 +180,16 @@ bool KeyboardMouse::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID 
 		mRaySceneQuery->setRay(ray);
 		mRaySceneQuery->setSortByDistance(true);
 		Ogre::RaySceneQueryResult& result = mRaySceneQuery->execute();
-		Ogre::RaySceneQueryResult::iterator i = result.begin();
+		Ogre::RaySceneQueryResult::iterator itr = result.begin();
 
 		//Busqueda del objeto
-		if(i != result.end())
+		while(itr != result.end() && obj == 0)
+		{
 			for(int x = 0; x < gObjects.size(); x++)
-				if(i->movable->getParentNode()->getName() == gObjects[x]->m_sceneObject->mNode.getName())
+				if(itr->movable->getParentNode()->getName() == gObjects[x]->m_sceneObject->mNode.getName())
 					obj = gObjects[x];
+			itr++;
+		}
 
 		//Comprobacion del objeto
 		if(obj!=0 && obj->m_objType == 2)
