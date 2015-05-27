@@ -11,6 +11,9 @@
 //Para la creacion de SceneObjects
 #include "../include/SceneObject.h"
 
+#include "OgreMeshManager.h"
+#include "OgreStaticGeometry.h"
+
 //---------------------------------------------------------------------------
 //Constructor del juego (Game)
 //---------------------------------------------------------------------------
@@ -40,28 +43,20 @@ void GameApplication::createScene(void)
 	//Creacion de objetos
 	
 	//SceneObjects: necesarios para el control ejercido por Bullet
-	SceneObject* sceneObj1 = gPhysics->createBoxObject("cube1", Ogre::Vector3(10, 10, 10), Ogre::Vector3(-50, 100, 0), 1, 1, "ManualObjectCube");
-	SceneObject* sceneObj2 = gPhysics->createBoxObject("cube2", Ogre::Vector3(10, 10, 10), Ogre::Vector3(-50, 80, 0), 1, 1, "ManualObjectCube");
-    SceneObject* sceneObj3 = gPhysics->createBoxObject("cube3", Ogre::Vector3(10, 10, 10), Ogre::Vector3(50, 120, 0), 1, 1, "ManualObjectCube");
-    SceneObject* sceneObj4 = gPhysics->createBoxObject("cube4", Ogre::Vector3(10, 10, 10), Ogre::Vector3(50, 150, 0), 1, 1, "ManualObjectCube");
+	SceneObject* sceneObj1 = gPhysics->createBoxObject("cube1", Ogre::Vector3(30, 30, 30), Ogre::Vector3(-50, 100, 0), 1, 1, "Barrel.mesh");
+	SceneObject* sceneObj2 = gPhysics->createBoxObject("cube2", Ogre::Vector3(30, 30, 30), Ogre::Vector3(-50, 80, 0), 1, 1, "Barrel.mesh");
+    SceneObject* sceneObj3 = gPhysics->createBoxObject("cube3", Ogre::Vector3(30, 30, 30), Ogre::Vector3(50, 120, 0), 1, 1, "Barrel.mesh");
+    SceneObject* sceneObj4 = gPhysics->createBoxObject("cube4", Ogre::Vector3(30, 30, 30), Ogre::Vector3(50, 150, 0), 1, 1, "Barrel.mesh");
     SceneObject* sceneObj5 = gPhysics->createBoxObject("plane", Ogre::Vector3(40, 3, 10), Ogre::Vector3(60, 110, 0), 1, 1, "ManualObjectCube");
 	SceneObject* sceneObj6 = gPhysics->createBoxObject("floor", Ogre::Vector3(800, 1, 100), Ogre::Vector3(0, -50, 0), 0, 1, "ManualObjectCube");
 
-	//Objets: necesarios para nuestras propias definiciones de propiedades de objeto
-	Object* obj1 = new Object(2, sceneObj1);
-	Object* obj2 = new Object(2, sceneObj2);
-	Object* obj3 = new Object(2, sceneObj3);
-	Object* obj4 = new Object(2, sceneObj4);
-	Object* obj5 = new Object(2, sceneObj5);
-	Object* obj6 = new Object(1, sceneObj6);
-
 	//Almacenamiento del objeto completo en gObjects (vector global)
-	gObjects.push_back(obj1);
-	gObjects.push_back(obj2);
-	gObjects.push_back(obj3);
-	gObjects.push_back(obj4);
-	gObjects.push_back(obj5);
-	gObjects.push_back(obj6);
+	gObjects.push_back(new Object(2, sceneObj1));
+	gObjects.push_back(new Object(2, sceneObj2));
+	gObjects.push_back(new Object(2, sceneObj3));
+	gObjects.push_back(new Object(2, sceneObj4));
+	gObjects.push_back(new Object(2, sceneObj5));
+	gObjects.push_back(new Object(1, sceneObj6));
 	
 	//Configuraciones finales 
 
