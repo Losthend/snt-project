@@ -48,7 +48,7 @@ void GameApplication::createScene(void)
     SceneObject* sceneObj3 = gPhysics->createBoxObject("cube3", Ogre::Vector3(50, 50, 50), Ogre::Vector3(50, 120, 0), 1, "Barrel.mesh");
     SceneObject* sceneObj4 = gPhysics->createBoxObject("cube4", Ogre::Vector3(50, 50, 50), Ogre::Vector3(50, 150, 0), 1, "Barrel.mesh");
     SceneObject* sceneObj5 = gPhysics->createBoxObject("plane", Ogre::Vector3(50, 3, 20), Ogre::Vector3(60, 110, 0), 1, "manualObjectCube");
-	SceneObject* sceneObj6 = gPhysics->createGroundObject("ground", Ogre::Vector3(0, -50, 0), Ogre::Vector3(1500, 5, 1500), false);
+	SceneObject* sceneObj6 = gPhysics->createGroundObject("ground", Ogre::Vector3(1500, 5, 1500), Ogre::Vector3(0, -50, 0),  false);
 
 	//Almacenamiento del objeto completo en gObjects (vector global)
 	gObjects.push_back(new Object(2, sceneObj1));

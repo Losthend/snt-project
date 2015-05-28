@@ -120,7 +120,7 @@ SceneObject* PhysicsManager::createBoxObject(const char *name, const Ogre::Vecto
 //---------------------------------------------------------------------------
 //Creacion de planos/suelo entre Ogre y bullet
 //---------------------------------------------------------------------------
-SceneObject* PhysicsManager::createGroundObject(Ogre::String name, Ogre::Vector3 pos, Ogre::Vector3 size, bool grass)
+SceneObject* PhysicsManager::createGroundObject(Ogre::String name, Ogre::Vector3 size, Ogre::Vector3 pos, bool grass)
 {
 	//Plano
 	Ogre::Plane plane(Ogre::Vector3::UNIT_Y, 0);

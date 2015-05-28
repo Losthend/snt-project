@@ -18,6 +18,8 @@ public:
 	void Player::catchAttack();
 	Ogre::Real RayCastingPlayerMouse();
 	void animationManager();
+	void fallManager();
+	Object* rayFromPoint(Ogre::Vector3 origin, Ogre::Vector3 direction);
 
 	//VARIABLES
 
@@ -29,6 +31,7 @@ public:
 	Ogre::Real			m_moveX;
 	Ogre::Real			m_moveY;
 	//Variables de salto
+	bool				m_fall;
 	bool				m_jump;
 	Ogre::Real			m_jumpCount;
 	Ogre::Real			m_maxNumJump;

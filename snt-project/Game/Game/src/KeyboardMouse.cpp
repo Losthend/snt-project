@@ -68,6 +68,7 @@ bool KeyboardMouse::keyPressed( const OIS::KeyEvent &arg )
 				if (gPlayer->m_jumpCount < gPlayer->m_maxNumJump)
 				{
 					gPlayer->m_jump = true;
+					gPlayer->m_fall = true;
 					gPlayer->m_direction.y = 1;
 				}
 				break;

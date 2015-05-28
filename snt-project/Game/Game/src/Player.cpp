@@ -24,6 +24,7 @@ Player::Player(SceneObject* sceneObject)
 	//Requiere esto ya que, tras cada iteración, si no hay movimiento lineal se bloquea el rigidbody
 	m_sceneObject->mRigidBody.setActivationState(DISABLE_DEACTIVATION);
 
+	m_fall = false;
 	m_jump = false;
 	m_jumpCount = 0;
 	m_maxNumJump = 2;
@@ -35,7 +36,7 @@ Player::Player(SceneObject* sceneObject)
 	m_moveX = 2;
 	m_moveY = 20;
 
-	m_sceneObject->mNode.showBoundingBox(true);
+	//m_sceneObject->mNode.showBoundingBox(true);
 
 	m_catchObj = 0;
 	m_tkDistance = 10000;
@@ -60,29 +61,23 @@ void Player::update()
 		catchActions();
 
 	//-------------------------------------------------------------------
-	//PRE-VARIABLES
-	//---------------------------------------------------------------------
-	//Obtenemos la velocidad lineal del rigidbody
-	btVector3 linearVelocity = m_sceneObject->mRigidBody.getLinearVelocity();
-	btScalar velX = linearVelocity.x();
-	btScalar velY = linearVelocity.y();
-
-	//-------------------------------------------------------------------
 	//SALTOS (Movimiento en eje +Y)
 	//---------------------------------------------------------------------
 
-	//Alcanzado el numero maximo de saltos, se permitira saltar cuando lleges dejes de caer/saltar
-	if (m_jumpCount >= m_maxNumJump && velY < 0.001 && velY > -0.001)
-		m_jumpCount = 0;
+	//Controlar la caida para saber cuando acaba
+	if(m_fall)
+		fallManager();
+	else
+		m_jumpCount = 0;		
 
 	//Se permite saltar un numero limitado de veces (m_jumpCount) controlado en KeyboardMouse
-	if (m_jump == true)
+	if (m_jump)
 	{
 		//Aplicamos el salto (DEPENDE DE LA MASA)
 		m_sceneObject->mRigidBody.applyCentralImpulse(btVector3(0, m_direction.y*m_moveY, 0));
 		//Acumulamos los saltos
 		m_jumpCount += 1;
-		//Reset de los valores (obliga a pulsar de nuevo la tecla SPACE para saltar)
+		//Reset de los valores (obliga a pulsar de nuevo la tecla SPACE para saltar de nuevo)
 		m_jump = false;
 		m_direction.y = 0;
 	}
@@ -173,46 +168,130 @@ void Player::catchAttack()
 void Player::animationManager()
 {
 	//Attack1 Attack2 Attack3 Backflip Block Climb Crouch Death1 Death2 HighJump Idle1 Idle2 Idle3 Jump JumpNoHeight Kick SideKick Spin Stealth Walk 
-	
-	if (m_direction.x != 0)
+	Ogre::Real time;
+	Ogre::Real maxTime;
+
+	//***********************************************************************
+	mAnimationState = m_sceneObject->mEntity.getAnimationState("Jump");
+	time = mAnimationState->getTimePosition();
+	maxTime = mAnimationState->getLength();
+	//SALTAR
+	if (m_jumpCount > 0 && time < (maxTime*0.75))
 	{
-
+		mAnimationState->setLoop(false);
+		mAnimationState->setEnabled(true);
+		mAnimationState->addTime(FPS);
 	}
-
-	if (m_jump)
+	//CAER
+	if(!m_fall && time >= maxTime)
+		mAnimationState->setTimePosition(0);
+	else if (!m_fall && time > 0)
 	{
-		//m_jumpCount;
+		mAnimationState->setLoop(false);
+		mAnimationState->setEnabled(true);
+		mAnimationState->addTime(FPS);
 	}
-
-	//Agacharse
+	//***********************************************************************
+	//AGACHARSE
 	if (m_crouchDown)
 	{
 		mAnimationState = m_sceneObject->mEntity.getAnimationState("Crouch");
-		if(mAnimationState->getTimePosition() < (mAnimationState->getLength()/2))
+		time = mAnimationState->getTimePosition();
+		maxTime = mAnimationState->getLength();
+		if(time < (maxTime/2))
 		{
 			mAnimationState->setLoop(false);
 			mAnimationState->setEnabled(true);
 			mAnimationState->addTime(FPS);
 		}
 	}
-	//Levantarse
+	//LEVANTARSE
 	if (m_crouchUp)
 	{
 		mAnimationState = m_sceneObject->mEntity.getAnimationState("Crouch");
-		if (mAnimationState->getTimePosition() >= mAnimationState->getLength())
+		time = mAnimationState->getTimePosition();
+		maxTime = mAnimationState->getLength();
+		//Si la animacion se encuentra en el estado inicial o en el final, habrá terminado y se reinicia
+		if ( time == 0 || (time >= maxTime) )
 		{
 			mAnimationState->setTimePosition(0);
 			m_crouchUp = false;
 		}
-		else if(mAnimationState->getTimePosition() > (mAnimationState->getLength()/2))
+		//Si la animacion no ha terminado el recorrido, deshacerla
+		if (time < (maxTime/2))
+		{
+			mAnimationState->setLoop(false);
+			mAnimationState->setEnabled(true);
+			mAnimationState->setTimePosition(time-FPS);
+		}
+		//Si la animación ha terminado el recorrido, continuar la animacion
+		else if(time > (maxTime/2))
 		{
 			mAnimationState->setLoop(false);
 			mAnimationState->setEnabled(true);
 			mAnimationState->addTime(FPS);
 		}
 	}
+	//***********************************************************************
 }
 
+//------------------------------------------------------------
+//Controla la caida posterior al salto
+//------------------------------------------------------------
+void Player::fallManager()
+{
+	Ogre::Vector3 nearLeft = m_sceneObject->mNode._getWorldAABB().getCorner(Ogre::AxisAlignedBox::NEAR_LEFT_BOTTOM);
+	Ogre::Vector3 nearRight = m_sceneObject->mNode._getWorldAABB().getCorner(Ogre::AxisAlignedBox::NEAR_RIGHT_BOTTOM);
+	Ogre::Vector3 center = (nearRight + nearLeft ) / 2;
+
+	//Comprobamos si durante la caida colisionará con algun objeto
+	Object* obj1 = rayFromPoint(nearLeft, Ogre::Vector3::NEGATIVE_UNIT_Y);
+	Object* obj2 = rayFromPoint(nearRight, Ogre::Vector3::NEGATIVE_UNIT_Y);
+	Object* obj3 = rayFromPoint(center, Ogre::Vector3::NEGATIVE_UNIT_Y);
+
+	//Obtenemos las distancias
+	Ogre::Real dist1 = 5;
+	Ogre::Real dist2 = 5;
+	Ogre::Real dist3 = 5;
+
+	if(obj1 != 0)
+		dist1 = obj1->m_sceneObject->mNode._getWorldAABB().squaredDistance(nearLeft);
+	if(obj2 != 0)
+		dist2 = obj2->m_sceneObject->mNode._getWorldAABB().squaredDistance(nearRight);
+	if(obj3 != 0)
+		dist3 = obj3->m_sceneObject->mNode._getWorldAABB().squaredDistance(center);
+
+	//Comprobamos la distancia entre el objeto y el punto, finalizando la caida cuando sea correcto
+	Ogre::Real minDist = std::min(dist1, std::min(dist2, dist3));
+	if(minDist < 5)
+		m_fall = false;
+}
+
+//------------------------------------------------------------
+//Devuelve el primer objeto detectado por el rayo
+//-----------------------------------------------------------
+Object* Player::rayFromPoint(Ogre::Vector3 origin, Ogre::Vector3 direction)
+{
+	Object* obj = 0;
+
+	Ogre::Ray ray(Ogre::Vector3(origin.x, origin.y, origin.z), direction);
+
+	Ogre::RaySceneQuery* mRaySceneQuery = gSceneMgr->createRayQuery(ray); 
+	mRaySceneQuery->setRay(ray);
+	mRaySceneQuery->setSortByDistance(true, 1);
+
+	Ogre::RaySceneQueryResult& result = mRaySceneQuery->execute();
+	Ogre::RaySceneQueryResult::iterator itr = result.begin();
+
+	//OPTIMIZABLE con inCameraFrustrumObjects
+
+	if(itr != result.end())
+		for(int x = 0; x < gObjects.size(); x++)
+			if(itr->movable->getParentNode()->getName() == gObjects[x]->m_sceneObject->mNode.getName())
+				obj = gObjects[x];
+
+	return obj;
+}
 
 /*
 Ogre::String mValue = "Frase";

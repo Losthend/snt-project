@@ -15,7 +15,7 @@ public:
 	btCollisionShape& createBoxShape(float x, float y, float z);
 
 	SceneObject* createBoxObject(const char *name, const Ogre::Vector3 &size, const Ogre::Vector3 &pos, float mass, Ogre::String meshName);
-	SceneObject* createGroundObject(Ogre::String name, Ogre::Vector3 pos, Ogre::Vector3 size, bool grass);
+	SceneObject* createGroundObject(Ogre::String name, Ogre::Vector3 size, Ogre::Vector3 pos, bool grass);
 	void createGroundGrass(Ogre::Vector3 vSize, Ogre::Vector3 vPos);
 
 private:
