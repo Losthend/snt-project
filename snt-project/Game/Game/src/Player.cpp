@@ -29,10 +29,13 @@ Player::Player(SceneObject* sceneObject)
 	m_maxNumJump = 2;
 
 	m_crouchDown = false;
+	m_crouchUp = false;
 	m_run = false;
 
 	m_moveX = 2;
 	m_moveY = 20;
+
+	m_sceneObject->mNode.showBoundingBox(true);
 
 	m_catchObj = 0;
 	m_tkDistance = 10000;
@@ -93,8 +96,11 @@ void Player::update()
 	//-------------------------------------------------------------------
 	//UPDATES
 	//-------------------------------------------------------------------
-	//Para que los movimientos del jugador se adapten al entorno de Bullet 
+	//Movimientos en Bullet 
 	m_sceneObject->update();
+
+	//Animacion
+	animationManager();
 
 	//Camara: sigue al jugador
 	Ogre::Vector3 pos = m_sceneObject->mNode.getPosition();
@@ -145,7 +151,7 @@ void Player::catchActions()
 }
 
 //------------------------------------------------------------
-//Lanzar objetos agarrados
+//Permite lanzar objetos agarrados
 //------------------------------------------------------------
 void Player::catchAttack()
 {
@@ -158,6 +164,53 @@ void Player::catchAttack()
 	m_catchObj->m_sceneObject->mRigidBody.applyCentralImpulse(btVector3(x, y, 0));
 	m_catchObj->m_sceneObject->mRigidBody.setGravity(btVector3(0,-9.81f,0));
 	m_catchObj = 0;
+}
+
+
+//------------------------------------------------------------
+//Gestiona las animaciones
+//------------------------------------------------------------
+void Player::animationManager()
+{
+	//Attack1 Attack2 Attack3 Backflip Block Climb Crouch Death1 Death2 HighJump Idle1 Idle2 Idle3 Jump JumpNoHeight Kick SideKick Spin Stealth Walk 
+	
+	if (m_direction.x != 0)
+	{
+
+	}
+
+	if (m_jump)
+	{
+		//m_jumpCount;
+	}
+
+	//Agacharse
+	if (m_crouchDown)
+	{
+		mAnimationState = m_sceneObject->mEntity.getAnimationState("Crouch");
+		if(mAnimationState->getTimePosition() < (mAnimationState->getLength()/2))
+		{
+			mAnimationState->setLoop(false);
+			mAnimationState->setEnabled(true);
+			mAnimationState->addTime(FPS);
+		}
+	}
+	//Levantarse
+	if (m_crouchUp)
+	{
+		mAnimationState = m_sceneObject->mEntity.getAnimationState("Crouch");
+		if (mAnimationState->getTimePosition() >= mAnimationState->getLength())
+		{
+			mAnimationState->setTimePosition(0);
+			m_crouchUp = false;
+		}
+		else if(mAnimationState->getTimePosition() > (mAnimationState->getLength()/2))
+		{
+			mAnimationState->setLoop(false);
+			mAnimationState->setEnabled(true);
+			mAnimationState->addTime(FPS);
+		}
+	}
 }
 
 

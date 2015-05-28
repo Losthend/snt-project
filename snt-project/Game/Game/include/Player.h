@@ -17,6 +17,7 @@ public:
 	void catchActions();
 	void Player::catchAttack();
 	Ogre::Real RayCastingPlayerMouse();
+	void animationManager();
 
 	//VARIABLES
 
@@ -33,7 +34,10 @@ public:
 	Ogre::Real			m_maxNumJump;
 	//Agacharse y correr
 	bool				m_crouchDown;
+	bool				m_crouchUp;
 	bool				m_run;
+	//Animaciones
+	Ogre::AnimationState* mAnimationState;
 	//Telequinesis
 	Object* m_catchObj;
 	Ogre::Real m_tkDistance;

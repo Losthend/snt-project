@@ -110,7 +110,7 @@ SceneObject* PhysicsManager::createBoxObject(const char *name, const Ogre::Vecto
 	//Creacion del cuerpo rigido que envuelve al sceneNode
 	btRigidBody* body = gPhysics->createBody(btTransform(btQuaternion::getIdentity(), btVector3(pos.x, pos.y, pos.z)), mass, shape);
 
-	SceneObject* sceneObject = new SceneObject(*node, *body);
+	SceneObject* sceneObject = new SceneObject(*entity, *node, *body);
 
 	return sceneObject;
 }
@@ -147,7 +147,7 @@ SceneObject* PhysicsManager::createGroundObject(Ogre::String name, Ogre::Vector3
 
 	btRigidBody* body = gPhysics->createBody(btTransform(btQuaternion::getIdentity(), btVector3(pos.x, pos.y, pos.z)), mass, shape);
 
-	SceneObject* sceneObject = new SceneObject(*node, *body);
+	SceneObject* sceneObject = new SceneObject(*entity, *node, *body);
 
 	return sceneObject;
 }

@@ -5,11 +5,12 @@ class SceneObject
 {
 
 public:
-    SceneObject(Ogre::SceneNode &node, btRigidBody &body);
+    SceneObject(Ogre::Entity &entity, Ogre::SceneNode &node, btRigidBody &body);
     virtual ~SceneObject(void);
 	void update();
 
 public:
+	Ogre::Entity &mEntity;
 	Ogre::SceneNode &mNode;
 	btRigidBody &mRigidBody;
 

@@ -3,15 +3,12 @@
 
 class RenderActions : public Ogre::FrameListener, public Ogre::WindowEventListener
 {
-
 public:
     RenderActions(void);
     virtual ~RenderActions(void);
 	
 private:
 	virtual bool frameRenderingQueued(const Ogre::FrameEvent& evt);
-	bool isAppInit;
-
 };
 
 //---------------------------------------------------------------------------

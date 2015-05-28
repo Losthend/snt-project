@@ -23,6 +23,7 @@ extern OIS::Mouse*				gMouse;
 extern OIS::Keyboard*			gKeyboard;
 
 extern bool						gShutDown;
+extern bool						canUpdate;
 
 extern PhysicsManager*			gPhysics;
 extern CCegui*					gCCegui;

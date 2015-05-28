@@ -98,6 +98,7 @@ bool KeyboardMouse::keyReleased(const OIS::KeyEvent &arg)
 				if (gPlayer->m_crouchDown == true)
 				{
 					gPlayer->m_crouchDown = false;
+					gPlayer->m_crouchUp = true;
 					gPlayer->m_moveX = gPlayer->m_moveX * 2;
 				}
 			case OIS::KC_LSHIFT:

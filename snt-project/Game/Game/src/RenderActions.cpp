@@ -24,8 +24,8 @@ RenderActions::RenderActions(void)
 	//Necesario para que la funcion frameRenderingQueued sea llamada 
 	gRoot->addFrameListener(this);
 
-	//Por defecto la app no se ha activado
-	isAppInit = false;
+	//Por defecto, no se permite realizar update de objetos
+	canUpdate = false;
 }
 
 //------------------------------------------------------------------
@@ -59,8 +59,16 @@ bool RenderActions::frameRenderingQueued(const Ogre::FrameEvent& evt)
 	 if(gShutDown)
         return false;
 
+    //Realiza la captura de eventos del teclado y del raton
+    gKeyboard->capture();
+    gMouse->capture();
+
+	//Es necesario inyectar "timestamps" al sistema de CEGUI
+    CEGUI::System::getSingleton().injectTimePulse(evt.timeSinceLastFrame);
+
+
 	//Crearemos el juego en el momento que el boton "start" del menu sea pulsado
-	if (!isAppInit && gCCegui->gameMenu->d_startButtonClicked)
+	if (!canUpdate && gCCegui->gameMenu->d_startButtonClicked)
 	{
 		//Creamos el juego (personaje y escenario)
 		GameApplication* gameApp = new GameApplication();
@@ -71,17 +79,10 @@ bool RenderActions::frameRenderingQueued(const Ogre::FrameEvent& evt)
 		menu1->show();
 		menu1->activate();		
 		//La aplicacion (juego) se ha iniciado
-		isAppInit = true;
+		canUpdate = true;
 	}
-
-    //Realiza la captura de eventos del teclado y del raton
-    gKeyboard->capture();
-    gMouse->capture();
-
-	//Es necesario inyectar "timestamps" al sistema de CEGUI
-    CEGUI::System::getSingleton().injectTimePulse(evt.timeSinceLastFrame);
 	
-	if(isAppInit && gPlayer != 0)
+	if(canUpdate && gPlayer != 0)
 	{
 		//Control de fisica y colisiones bullet: Objeto y jugador
 		gPhysics->update(0.07);
