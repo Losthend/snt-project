@@ -17,6 +17,7 @@ public:
 	CEGUI::OgreRenderer* mRenderer;
 
 	GameMenu* gameMenu;
+	CEGUI::Window* menu1;
 };
 
 //---------------------------------------------------------------------------

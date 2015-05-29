@@ -33,13 +33,10 @@ class GameMenu
 public:
 	GameMenu(void);
 	virtual ~GameMenu(void);
-
     // method to initialse the samples windows and events.
     virtual bool initialise();
-
     // method to perform any required cleanup operations.
     virtual void deinitialise();
-
     virtual void onEnteringSample();
 
 //protected:
@@ -74,7 +71,6 @@ public:
     CEGUI::Window* d_root;
 
     bool d_mouseIsHoveringNavi;
-    bool d_startButtonClicked;
 
     CEGUI::AnimationInstance* d_topBarAnimInst;
     CEGUI::AnimationInstance* d_botBarAnimInst;

@@ -17,7 +17,7 @@ CCegui::CCegui(void)
 	CEGUI::WidgetLookManager::setDefaultResourceGroup("LookNFeel");
 	CEGUI::WindowManager::setDefaultResourceGroup("Layouts");
 
-	//Carga inicial de menus
+	//Carga inicial de los menus
 	initLoads();	
 }
 
@@ -49,6 +49,9 @@ bool CCegui::quit(const CEGUI::EventArgs &e)
     return true;
 }
 
+//-----------------------------------------------------------------
+//Carga inicial de los recursos necesarios para que funcionen los menus (loadWindows, ventanas)
+//-----------------------------------------------------------------
 void CCegui::initLoads()
 {
 	//Menu principal
@@ -66,26 +69,29 @@ void CCegui::initLoads()
 	loadWindows();
 }
 
+//-----------------------------------------------------------------
+//Se crean las ventanas, ocultas, para que esten disponibles posteriormente desde el root
+//-----------------------------------------------------------------
 void CCegui::loadWindows()
 {
-	//Window manager + root window
 	CEGUI::WindowManager &wmgr = CEGUI::WindowManager::getSingleton();
-	CEGUI::Window *wRoot = wmgr.createWindow("DefaultWindow", "Window1");
+	//Creación de "root window"
+	CEGUI::Window *wRoot = wmgr.createWindow("DefaultWindow", "MainWindow");
 	CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(wRoot);
 	
 	//Menu principal
 	gameMenu = new GameMenu();
 
 	//Menu 1
-	CEGUI::Window *quit = wmgr.createWindow("TaharezLook/Button", "QuitButton1");
-	quit->setText("Quit");
-	quit->setSize(CEGUI::USize(CEGUI::UDim(0.15, 0), CEGUI::UDim(0.05, 0)));
-	wRoot->addChild(quit);
-	quit->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&CCegui::quit, this));
+	menu1 = wmgr.createWindow("TaharezLook/Button", "MainWindow/Menu1");
+	menu1->setText("Quit");
+	menu1->setSize(CEGUI::USize(CEGUI::UDim(float(0.15), 0), CEGUI::UDim(float(0.05), 0)));
+	wRoot->addChild(menu1);
+	menu1->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&CCegui::quit, this));
 
-	//Por defecto, ventanas desactivadas
+	//Por defecto, todas las ventanas ocultas
 	size_t numChild = wRoot->getChildCount();
-	for (int i = 1; i < numChild; i++)
+	for (unsigned i = 0; i < numChild; i++)
 	{
 		wRoot->getChildAtIdx(i)->hide();
 	}

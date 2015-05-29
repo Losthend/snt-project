@@ -156,7 +156,7 @@ bool KeyboardMouse::mouseMoved(const OIS::MouseEvent &arg)
 	}
 
 	//Inyectar el movimiento del raton a CEGUI segun OIS
-	CEGUI::System::getSingleton().getDefaultGUIContext().injectMousePosition(arg.state.X.abs, arg.state.Y.abs);
+	CEGUI::System::getSingleton().getDefaultGUIContext().injectMousePosition(float(arg.state.X.abs), float(arg.state.Y.abs));
 	
 	//Rueda de scroll
 	//if (arg.state.Z.rel)
@@ -187,7 +187,7 @@ bool KeyboardMouse::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID 
 		//Busqueda del objeto
 		while(itr != result.end() && obj == 0)
 		{
-			for(int x = 0; x < gObjects.size(); x++)
+			for(unsigned x = 0; x < gObjects.size(); x++)
 				if(itr->movable->getParentNode()->getName() == gObjects[x]->m_sceneObject->mNode.getName())
 					obj = gObjects[x];
 			itr++;

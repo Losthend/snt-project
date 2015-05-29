@@ -18,8 +18,9 @@ OIS::Mouse*				gMouse;
 OIS::Keyboard*			gKeyboard;
 
 bool					gShutDown;
-bool					canUpdate;
+bool					gCanUpdate;
 
 PhysicsManager*			gPhysics;
 CCegui*					gCCegui;
+GameApplication*		gGameApp;
 

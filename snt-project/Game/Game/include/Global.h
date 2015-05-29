@@ -6,6 +6,7 @@ class Object;
 class SceneObject;
 class PhysicsManager;
 class CCegui;
+class GameApplication;
 
 //Jugador y Objetos del entorno de acceso global
 extern Player* gPlayer;
@@ -23,7 +24,8 @@ extern OIS::Mouse*				gMouse;
 extern OIS::Keyboard*			gKeyboard;
 
 extern bool						gShutDown;
-extern bool						canUpdate;
+extern bool						gCanUpdate;
 
 extern PhysicsManager*			gPhysics;
 extern CCegui*					gCCegui;
+extern GameApplication*			gGameApp;

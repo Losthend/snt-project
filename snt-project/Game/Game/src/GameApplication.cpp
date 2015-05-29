@@ -19,12 +19,8 @@
 //---------------------------------------------------------------------------
 GameApplication::GameApplication(void)
 {
-	//Variable global del PhysicsManager para el control de fisicas y colisiones de Bullet
-	mPhysics = new PhysicsManager();
-	gPhysics = mPhysics;
-
-	//Tambien el "mundo"
-	createScene();
+	//PhysicsManager: control de fisicas y colisiones de Bullet
+	gPhysics = new PhysicsManager();
 }
 //---------------------------------------------------------------------------
 GameApplication::~GameApplication(void)
@@ -36,11 +32,15 @@ GameApplication::~GameApplication(void)
 //---------------------------------------------------------------------------
 void GameApplication::createScene(void)
 {
-	//Creacion del personaje
-	SceneObject* player = gPhysics->createBoxObject("Player", Ogre::Vector3(3, 3, 3), Ogre::Vector3(0, 100, 0), 1, "ninja.mesh");
-	gPlayer = new Player(player);
+	//JUGADOR 
 
-	//Creacion de objetos
+	if(gPlayer == 0)
+	{
+		SceneObject* player = gPhysics->createBoxObject("Player", Ogre::Vector3(3, 3, 3), Ogre::Vector3(0, 100, 0), 1, "ninja.mesh");
+		gPlayer = new Player(player);
+	}
+
+	//ESCENARIO
 	
 	//SceneObjects: necesarios para el control ejercido por Bullet
 	SceneObject* sceneObj1 = gPhysics->createBoxObject("cube1", Ogre::Vector3(50, 50, 50), Ogre::Vector3(-50, 100, 0), 1, "Barrel.mesh");
@@ -58,7 +58,7 @@ void GameApplication::createScene(void)
 	gObjects.push_back(new Object(2, sceneObj5));
 	gObjects.push_back(new Object(1, sceneObj6));
 	
-	//Configuraciones finales 
+	//CONFIGURACIONES
 
 	//Posicionamos la camara en la posicion que nos interesa (donde esta el jugador)
 	Ogre::Vector3 playerPos = gPlayer->m_sceneObject->mNode.getPosition();

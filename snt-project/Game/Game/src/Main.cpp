@@ -27,10 +27,10 @@ extern "C" {
 
 		if (setupOK){
 
-			//Controlador de teclado y raton + CEGUI
+			//Controlador de teclado/raton + CEGUI
 			KeyboardMouse* keyboardMouse = new KeyboardMouse();
 
-			//Listeners y acciones de renderizado para los frame
+			//Listeners + acciones de renderizado + Fisicas
 			RenderActions* renderAct = new RenderActions();
 
 			//Momento de ejecucion del primer frame

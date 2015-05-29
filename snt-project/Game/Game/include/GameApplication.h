@@ -11,12 +11,8 @@ public:
     GameApplication(void);
     virtual ~GameApplication(void);
 
-	//Otros metodos
+	//Escenarios disponibles
     void createScene(void);
-
-	//Objeto de la clase de fisicas
-	PhysicsManager* mPhysics;
-
 };
 
 //---------------------------------------------------------------------------

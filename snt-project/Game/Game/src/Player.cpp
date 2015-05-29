@@ -180,7 +180,7 @@ void Player::animationManager()
 	{
 		mAnimationState->setLoop(false);
 		mAnimationState->setEnabled(true);
-		mAnimationState->addTime(FPS);
+		mAnimationState->addTime(Ogre::Real(FPS));
 	}
 	//CAER
 	if(!m_fall && time >= maxTime)
@@ -189,7 +189,7 @@ void Player::animationManager()
 	{
 		mAnimationState->setLoop(false);
 		mAnimationState->setEnabled(true);
-		mAnimationState->addTime(FPS);
+		mAnimationState->addTime(Ogre::Real(FPS));
 	}
 	//***********************************************************************
 	//AGACHARSE
@@ -202,7 +202,7 @@ void Player::animationManager()
 		{
 			mAnimationState->setLoop(false);
 			mAnimationState->setEnabled(true);
-			mAnimationState->addTime(FPS);
+			mAnimationState->addTime(Ogre::Real(FPS));
 		}
 	}
 	//LEVANTARSE
@@ -222,14 +222,14 @@ void Player::animationManager()
 		{
 			mAnimationState->setLoop(false);
 			mAnimationState->setEnabled(true);
-			mAnimationState->setTimePosition(time-FPS);
+			mAnimationState->setTimePosition(Ogre::Real(time-FPS));
 		}
 		//Si la animación ha terminado el recorrido, continuar la animacion
 		else if(time > (maxTime/2))
 		{
 			mAnimationState->setLoop(false);
 			mAnimationState->setEnabled(true);
-			mAnimationState->addTime(FPS);
+			mAnimationState->addTime(Ogre::Real(FPS));
 		}
 	}
 	//***********************************************************************
@@ -283,10 +283,10 @@ Object* Player::rayFromPoint(Ogre::Vector3 origin, Ogre::Vector3 direction)
 	Ogre::RaySceneQueryResult& result = mRaySceneQuery->execute();
 	Ogre::RaySceneQueryResult::iterator itr = result.begin();
 
-	//OPTIMIZABLE con inCameraFrustrumObjects
+	//OPTIMIZABLE con inCameraFrustrumObjects para no buscar por todos los objetos
 
 	if(itr != result.end())
-		for(int x = 0; x < gObjects.size(); x++)
+		for(unsigned x = 0; x < gObjects.size(); x++)
 			if(itr->movable->getParentNode()->getName() == gObjects[x]->m_sceneObject->mNode.getName())
 				obj = gObjects[x];
 

@@ -166,9 +166,9 @@ void PhysicsManager::createGroundGrass(Ogre::Vector3 vSize, Ogre::Vector3 vPos)
 	sg->setRegionDimensions(Ogre::Vector3(vSize.x, vSize.y, vSize.z));
 	sg->setOrigin(Ogre::Vector3(vSize.x, vSize.y, vSize.z));
 
-	for (int x = -vSize.x/2; x < vSize.x/2; x += (vSize.x / amount))
+	for (Ogre::Real x = -vSize.x/2; x < vSize.x/2; x += (vSize.x / amount))
 	{
-		for (int z = -vSize.z/2; z < vSize.z/2; z += (vSize.z / amount))
+		for (Ogre::Real z = -vSize.z/2; z < vSize.z/2; z += (vSize.z / amount))
 		{
 			Ogre::Real offsetX = -vSize.x / (float)amount / 2;
 			Ogre::Real offsetZ = -vSize.z / (float)amount / 2;
@@ -176,7 +176,7 @@ void PhysicsManager::createGroundGrass(Ogre::Vector3 vSize, Ogre::Vector3 vPos)
 				x + Ogre::Math::RangeRandom(-offsetX, offsetX),
 				vPos.y,
 				z + Ogre::Math::RangeRandom(-offsetZ, offsetZ));
-			Ogre::Vector3 scale(1, Ogre::Math::RangeRandom(0.9, 1.1), 1);
+			Ogre::Vector3 scale(1, Ogre::Math::RangeRandom(Ogre::Real(0.9), Ogre::Real(1.1)), 1);
 			Ogre::Quaternion quat;
 			quat.FromAngleAxis(
 				Ogre::Degree(Ogre::Math::RangeRandom(0, 359)),

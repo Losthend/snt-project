@@ -27,6 +27,9 @@ author:     Lukas E Meindl
 #include "../include/stdafx.h"
 
 #include "../include/GameMenu.h"
+#include "../include/Global.h"
+#include "../include/GameApplication.h"
+#include "../include/CCegui.h"
 
 #define M_PI 3.14159265358979323846
 #define _USE_MATH_DEFINES
@@ -45,6 +48,7 @@ bool GameMenu::initialise()
     CEGUI::WindowManager& winMgr = CEGUI::WindowManager::getSingleton();
 
     d_root = winMgr.loadLayoutFromFile("GameMenu.layout");
+	d_root->setName("MainWindow/GameMenu");
 	CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow()->addChild(d_root);
 
     setupWindows();
@@ -52,8 +56,6 @@ bool GameMenu::initialise()
     setupAnimations();
 
     d_mouseIsHoveringNavi = false;
-
-	onEnteringSample();
 
     return true;
 }
@@ -63,120 +65,18 @@ void GameMenu::deinitialise()
 {
 }
 
-void GameMenu::setupAnimations()
-{
-    CEGUI::AnimationManager& animMgr = CEGUI::AnimationManager::getSingleton();
-    animMgr.loadAnimationsFromXML("GameMenu.anims");
-
-    CEGUI::Animation* startButtAnim = animMgr.getAnimation("StartButtonPulsating");
-    CEGUI::AnimationInstance* startButtAnimInstance = animMgr.instantiateAnimation(startButtAnim);
-    CEGUI::Window* startButtWindow = d_root->getChild("InnerPartContainer/InsideStartClickArea/StartButtonImage");
-    startButtAnimInstance->setTargetWindow(startButtWindow);
-    startButtAnimInstance->start();
-
-    CEGUI::Animation* insideImg1Anim = animMgr.getAnimation("InsideImage1Pulsating");
-    CEGUI::AnimationInstance* insideImg1AnimInst = animMgr.instantiateAnimation(insideImg1Anim);
-    CEGUI::Window* insideImg1 = d_root->getChild("InnerPartContainer/InsideImage1");
-    insideImg1AnimInst->setTargetWindow(insideImg1);
-    insideImg1AnimInst->start();
-
-    CEGUI::Animation* topBarAnim = animMgr.getAnimation("TopBarMoveInAnimation");
-    d_topBarAnimInst = animMgr.instantiateAnimation(topBarAnim);
-    CEGUI::Window* topBarWindow = d_root->getChild("TopBar");
-    d_topBarAnimInst->setTargetWindow(topBarWindow);
-
-    CEGUI::Animation* botBarAnim = animMgr.getAnimation("BotBarMoveInAnimation");
-    d_botBarAnimInst = animMgr.instantiateAnimation(botBarAnim);
-    CEGUI::Window* botBarWindow = d_root->getChild("BotBar");
-    d_botBarAnimInst->setTargetWindow(botBarWindow);
-
-    CEGUI::Animation* insideBlendInAnim = animMgr.getAnimation("InsideBlendIn");
-    d_insideBlendInAnimInst = animMgr.instantiateAnimation(insideBlendInAnim);
-    CEGUI::Window* innerPartContainer = d_root->getChild("InnerPartContainer");
-    d_insideBlendInAnimInst->setTargetWindow(innerPartContainer);
-
-    CEGUI::Animation* insideImage3RotateIn = animMgr.getAnimation("InsideImage3RotateIn");
-    d_insideImage3RotateInInst = animMgr.instantiateAnimation(insideImage3RotateIn);
-    CEGUI::Window* insideImage3 = d_root->getChild("InnerPartContainer/OuterRingsContainer/InsideImage3");
-    d_insideImage3RotateInInst->setTargetWindow(insideImage3);
-
-    CEGUI::Animation* insideImage4RotateIn = animMgr.getAnimation("InsideImage4RotateIn");
-    d_insideImage4RotateInInst = animMgr.instantiateAnimation(insideImage4RotateIn);
-    CEGUI::Window* insideImage4 = d_root->getChild("InnerPartContainer/OuterRingsContainer/InsideImage4");
-    d_insideImage4RotateInInst->setTargetWindow(insideImage4);
-
-    CEGUI::Animation* insideImageRingsContainerSizeIn = animMgr.getAnimation("RingsContainerSizeIn");
-    d_insideImageRingsContainerSizeInInst = animMgr.instantiateAnimation(insideImageRingsContainerSizeIn);
-    CEGUI::Window* insideImageContainer = d_root->getChild("InnerPartContainer/OuterRingsContainer");
-    d_insideImageRingsContainerSizeInInst->setTargetWindow(insideImageContainer);
-
-    CEGUI::Animation* buttonFadeInAnim = animMgr.getAnimation("ButtonFadeIn");
-    d_buttonFadeInAnimInst1 = animMgr.instantiateAnimation(buttonFadeInAnim);
-    CEGUI::Window* window = d_root->getChild("InnerButtonsContainer/ButtonOptions");
-    d_buttonFadeInAnimInst1->setTargetWindow(window);
-    d_buttonFadeInAnimInst2 = animMgr.instantiateAnimation(buttonFadeInAnim);
-
-    window = d_root->getChild("InnerButtonsContainer/ButtonLoad");
-    d_buttonFadeInAnimInst2->setTargetWindow(window);
-    d_buttonFadeInAnimInst3 = animMgr.instantiateAnimation(buttonFadeInAnim);
-
-    window = d_root->getChild("InnerButtonsContainer/ButtonQuit");
-	d_buttonFadeInAnimInst3->setTargetWindow(window);
-
-    CEGUI::Animation* naviBotMoveInAnim = animMgr.getAnimation("NaviBotCenterMoveIn");
-    d_naviBotMoveInInst = animMgr.instantiateAnimation(naviBotMoveInAnim);
-    window = d_root->getChild("BotNavigationContainer/NaviCenterContainer");
-    d_naviBotMoveInInst->setTargetWindow(window);
-
-    CEGUI::Animation* blendInAnim = animMgr.getAnimation("BlendIn");
-    d_startButtonBlendInAnimInst = animMgr.instantiateAnimation(blendInAnim);
-    d_startButtonBlendInAnimInst->setTargetWindow(d_startButtonClickArea);
-
-    CEGUI::Animation* partialBlendOutAnim = animMgr.getAnimation("PartialBlendOut");
-
-    window = d_root->getChild("BotNavigationContainer");
-    d_naviPartialBlendOutInst = animMgr.instantiateAnimation(partialBlendOutAnim);
-    d_naviPartialBlendOutInst->setTargetWindow(window);
-    d_naviBlendInInst = animMgr.instantiateAnimation(blendInAnim);
-    d_naviBlendInInst->setTargetWindow(window);
-    window = d_root->getChild("InnerButtonsContainer");
-    d_centerButtonsPartialBlendOutInst = animMgr.instantiateAnimation(partialBlendOutAnim);
-    d_centerButtonsPartialBlendOutInst->setTargetWindow(window);
-    d_centerButtonsBlendInInst = animMgr.instantiateAnimation(blendInAnim);
-    d_centerButtonsBlendInInst->setTargetWindow(window);
-
-
-    window = d_root->getChild("BotNavigationContainer/NaviCenterContainer/NavigationLabel");
-    d_navigationLabelPartialBlendOutInst = animMgr.instantiateAnimation(partialBlendOutAnim);
-    d_navigationLabelPartialBlendOutInst->setTargetWindow(window);
-    d_navigationLabelBlendInAnimInst = animMgr.instantiateAnimation(blendInAnim);
-    d_navigationLabelBlendInAnimInst->setTargetWindow(window);
-
-
-    CEGUI::Animation* travelRotateInAnim = animMgr.getAnimation("TravelRotateIn");
-    CEGUI::AnimationInstance* travelRotateInInst = animMgr.instantiateAnimation(travelRotateInAnim);
-    travelRotateInInst->setTargetWindow(d_navigationTravelIcon);
-    CEGUI::Animation* travelRotateOutAnim = animMgr.getAnimation("TravelRotateOut");
-    CEGUI::AnimationInstance* travelRotateOutInst = animMgr.instantiateAnimation(travelRotateOutAnim);
-    travelRotateOutInst->setTargetWindow(d_navigationTravelIcon);
-
-    CEGUI::Animation* loopRotateRightAnim = animMgr.getAnimation("LoopRotateRight");
-    CEGUI::Animation* stopRotateAnim = animMgr.getAnimation("StopRotate");
-    CEGUI::AnimationInstance* loopRotateRightAnimInst = animMgr.instantiateAnimation(loopRotateRightAnim);
-    loopRotateRightAnimInst->setTargetWindow(d_navigationSelectionIcon);
-    CEGUI::AnimationInstance* loopRotateLeftAnimInst = animMgr.instantiateAnimation(stopRotateAnim);
-    loopRotateLeftAnimInst->setTargetWindow(d_navigationSelectionIcon);
-
-    setupPopupLinesAnimations();
-
-    setupSelectionIconAnimations();
-}
-
+//-----------------------------------------------------------------
+//Acciones a realizar al entrar en el menu
+//-----------------------------------------------------------------
 void GameMenu::onEnteringSample()
 {
     d_navigationTravelIcon->setEnabled(false);
 
-    d_startButtonClicked = false;
+	//**********************************************************************************
+	//ELIMINAR O COMENTAR (permite saltarse el menu al empezar el juego)
+	CEGUI::EventArgs simulated = CEGUI::EventArgs();
+	handleInnerPartStartClickAreaClick(simulated);
+	//**********************************************************************************
 
     d_botNaviContainer->setAlpha(1.0f);
 
@@ -197,12 +97,25 @@ void GameMenu::onEnteringSample()
     makeAllSelectionIconsInvisible();
 }
 
+
+//-----------------------------------------------------------------
+//Acciones a realizar al pulsar en el boton "start"
+//-----------------------------------------------------------------
 bool GameMenu::handleInnerPartStartClickAreaClick(const CEGUI::EventArgs& args)
 {
     d_startButtonBlendInAnimInst->pause();
     d_startButtonClickArea->setVisible(false);
 
-    d_startButtonClicked = true;
+	//INICIO DEL JUEGO
+	//Se crea el escenario
+	gGameApp->createScene();
+	//Ocultamos el menu principal
+	d_root->hide();
+	//Cargamos los menus basicos 
+	gCCegui->menu1->show();
+	gCCegui->menu1->activate();
+	//La aplicacion (juego) se ha iniciado
+	gCanUpdate = true;
 
     return false;
 }
@@ -368,6 +281,115 @@ void GameMenu::stopStartPopupLinesAnimations()
 
 }
 
+//-----------------------------------------------------------------
+//Configuracion de las animaciones
+//-----------------------------------------------------------------
+void GameMenu::setupAnimations()
+{
+    CEGUI::AnimationManager& animMgr = CEGUI::AnimationManager::getSingleton();
+    animMgr.loadAnimationsFromXML("GameMenu.anims");
+
+    CEGUI::Animation* startButtAnim = animMgr.getAnimation("StartButtonPulsating");
+    CEGUI::AnimationInstance* startButtAnimInstance = animMgr.instantiateAnimation(startButtAnim);
+    CEGUI::Window* startButtWindow = d_root->getChild("InnerPartContainer/InsideStartClickArea/StartButtonImage");
+    startButtAnimInstance->setTargetWindow(startButtWindow);
+    startButtAnimInstance->start();
+
+    CEGUI::Animation* insideImg1Anim = animMgr.getAnimation("InsideImage1Pulsating");
+    CEGUI::AnimationInstance* insideImg1AnimInst = animMgr.instantiateAnimation(insideImg1Anim);
+    CEGUI::Window* insideImg1 = d_root->getChild("InnerPartContainer/InsideImage1");
+    insideImg1AnimInst->setTargetWindow(insideImg1);
+    insideImg1AnimInst->start();
+
+    CEGUI::Animation* topBarAnim = animMgr.getAnimation("TopBarMoveInAnimation");
+    d_topBarAnimInst = animMgr.instantiateAnimation(topBarAnim);
+    CEGUI::Window* topBarWindow = d_root->getChild("TopBar");
+    d_topBarAnimInst->setTargetWindow(topBarWindow);
+
+    CEGUI::Animation* botBarAnim = animMgr.getAnimation("BotBarMoveInAnimation");
+    d_botBarAnimInst = animMgr.instantiateAnimation(botBarAnim);
+    CEGUI::Window* botBarWindow = d_root->getChild("BotBar");
+    d_botBarAnimInst->setTargetWindow(botBarWindow);
+
+    CEGUI::Animation* insideBlendInAnim = animMgr.getAnimation("InsideBlendIn");
+    d_insideBlendInAnimInst = animMgr.instantiateAnimation(insideBlendInAnim);
+    CEGUI::Window* innerPartContainer = d_root->getChild("InnerPartContainer");
+    d_insideBlendInAnimInst->setTargetWindow(innerPartContainer);
+
+    CEGUI::Animation* insideImage3RotateIn = animMgr.getAnimation("InsideImage3RotateIn");
+    d_insideImage3RotateInInst = animMgr.instantiateAnimation(insideImage3RotateIn);
+    CEGUI::Window* insideImage3 = d_root->getChild("InnerPartContainer/OuterRingsContainer/InsideImage3");
+    d_insideImage3RotateInInst->setTargetWindow(insideImage3);
+
+    CEGUI::Animation* insideImage4RotateIn = animMgr.getAnimation("InsideImage4RotateIn");
+    d_insideImage4RotateInInst = animMgr.instantiateAnimation(insideImage4RotateIn);
+    CEGUI::Window* insideImage4 = d_root->getChild("InnerPartContainer/OuterRingsContainer/InsideImage4");
+    d_insideImage4RotateInInst->setTargetWindow(insideImage4);
+
+    CEGUI::Animation* insideImageRingsContainerSizeIn = animMgr.getAnimation("RingsContainerSizeIn");
+    d_insideImageRingsContainerSizeInInst = animMgr.instantiateAnimation(insideImageRingsContainerSizeIn);
+    CEGUI::Window* insideImageContainer = d_root->getChild("InnerPartContainer/OuterRingsContainer");
+    d_insideImageRingsContainerSizeInInst->setTargetWindow(insideImageContainer);
+
+    CEGUI::Animation* buttonFadeInAnim = animMgr.getAnimation("ButtonFadeIn");
+    d_buttonFadeInAnimInst1 = animMgr.instantiateAnimation(buttonFadeInAnim);
+    CEGUI::Window* window = d_root->getChild("InnerButtonsContainer/ButtonOptions");
+    d_buttonFadeInAnimInst1->setTargetWindow(window);
+    d_buttonFadeInAnimInst2 = animMgr.instantiateAnimation(buttonFadeInAnim);
+
+    window = d_root->getChild("InnerButtonsContainer/ButtonLoad");
+    d_buttonFadeInAnimInst2->setTargetWindow(window);
+    d_buttonFadeInAnimInst3 = animMgr.instantiateAnimation(buttonFadeInAnim);
+
+    window = d_root->getChild("InnerButtonsContainer/ButtonQuit");
+	d_buttonFadeInAnimInst3->setTargetWindow(window);
+
+    CEGUI::Animation* naviBotMoveInAnim = animMgr.getAnimation("NaviBotCenterMoveIn");
+    d_naviBotMoveInInst = animMgr.instantiateAnimation(naviBotMoveInAnim);
+    window = d_root->getChild("BotNavigationContainer/NaviCenterContainer");
+    d_naviBotMoveInInst->setTargetWindow(window);
+
+    CEGUI::Animation* blendInAnim = animMgr.getAnimation("BlendIn");
+    d_startButtonBlendInAnimInst = animMgr.instantiateAnimation(blendInAnim);
+    d_startButtonBlendInAnimInst->setTargetWindow(d_startButtonClickArea);
+
+    CEGUI::Animation* partialBlendOutAnim = animMgr.getAnimation("PartialBlendOut");
+
+    window = d_root->getChild("BotNavigationContainer");
+    d_naviPartialBlendOutInst = animMgr.instantiateAnimation(partialBlendOutAnim);
+    d_naviPartialBlendOutInst->setTargetWindow(window);
+    d_naviBlendInInst = animMgr.instantiateAnimation(blendInAnim);
+    d_naviBlendInInst->setTargetWindow(window);
+    window = d_root->getChild("InnerButtonsContainer");
+    d_centerButtonsPartialBlendOutInst = animMgr.instantiateAnimation(partialBlendOutAnim);
+    d_centerButtonsPartialBlendOutInst->setTargetWindow(window);
+    d_centerButtonsBlendInInst = animMgr.instantiateAnimation(blendInAnim);
+    d_centerButtonsBlendInInst->setTargetWindow(window);
+
+    window = d_root->getChild("BotNavigationContainer/NaviCenterContainer/NavigationLabel");
+    d_navigationLabelPartialBlendOutInst = animMgr.instantiateAnimation(partialBlendOutAnim);
+    d_navigationLabelPartialBlendOutInst->setTargetWindow(window);
+    d_navigationLabelBlendInAnimInst = animMgr.instantiateAnimation(blendInAnim);
+    d_navigationLabelBlendInAnimInst->setTargetWindow(window);
+
+    CEGUI::Animation* travelRotateInAnim = animMgr.getAnimation("TravelRotateIn");
+    CEGUI::AnimationInstance* travelRotateInInst = animMgr.instantiateAnimation(travelRotateInAnim);
+    travelRotateInInst->setTargetWindow(d_navigationTravelIcon);
+    CEGUI::Animation* travelRotateOutAnim = animMgr.getAnimation("TravelRotateOut");
+    CEGUI::AnimationInstance* travelRotateOutInst = animMgr.instantiateAnimation(travelRotateOutAnim);
+    travelRotateOutInst->setTargetWindow(d_navigationTravelIcon);
+
+    CEGUI::Animation* loopRotateRightAnim = animMgr.getAnimation("LoopRotateRight");
+    CEGUI::Animation* stopRotateAnim = animMgr.getAnimation("StopRotate");
+    CEGUI::AnimationInstance* loopRotateRightAnimInst = animMgr.instantiateAnimation(loopRotateRightAnim);
+    loopRotateRightAnimInst->setTargetWindow(d_navigationSelectionIcon);
+    CEGUI::AnimationInstance* loopRotateLeftAnimInst = animMgr.instantiateAnimation(stopRotateAnim);
+    loopRotateLeftAnimInst->setTargetWindow(d_navigationSelectionIcon);
+
+    setupPopupLinesAnimations();
+
+    setupSelectionIconAnimations();
+}
 
 void GameMenu::setupWindows()
 {

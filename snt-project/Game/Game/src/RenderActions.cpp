@@ -24,8 +24,11 @@ RenderActions::RenderActions(void)
 	//Necesario para que la funcion frameRenderingQueued sea llamada 
 	gRoot->addFrameListener(this);
 
+	//Iniciamos las fisicas, dando acceso tambien a la creacion de escenarios
+	gGameApp = new GameApplication();
+
 	//Por defecto, no se permite realizar update de objetos
-	canUpdate = false;
+	gCanUpdate = false;
 }
 
 //------------------------------------------------------------------
@@ -59,33 +62,26 @@ bool RenderActions::frameRenderingQueued(const Ogre::FrameEvent& evt)
 	 if(gShutDown)
         return false;
 
+	//Si no se puede realizar update y el menu principal no se esta mostrando
+	if( !gCanUpdate && !(gCCegui->gameMenu->d_root->isActive()) )
+	{
+		//Mostrar el menu principal
+		gCCegui->gameMenu->d_root->show();
+		gCCegui->gameMenu->d_root->activate();
+		gCCegui->gameMenu->onEnteringSample();
+	}
+
     //Realiza la captura de eventos del teclado y del raton
     gKeyboard->capture();
     gMouse->capture();
 
 	//Es necesario inyectar "timestamps" al sistema de CEGUI
     CEGUI::System::getSingleton().injectTimePulse(evt.timeSinceLastFrame);
-
-
-	//Crearemos el juego en el momento que el boton "start" del menu sea pulsado
-	if (!canUpdate && gCCegui->gameMenu->d_startButtonClicked)
-	{
-		//Creamos el juego (personaje y escenario)
-		GameApplication* gameApp = new GameApplication();
-		//Cerramos (eliminamos) el menu
-		CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow()->removeChild(gCCegui->gameMenu->d_root);
-		//Cargamos los menus basicos
-		CEGUI::Window* menu1 = CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow()->getChild("QuitButton1");
-		menu1->show();
-		menu1->activate();		
-		//La aplicacion (juego) se ha iniciado
-		canUpdate = true;
-	}
 	
-	if(canUpdate && gPlayer != 0)
+	if(gCanUpdate && gPlayer != 0)
 	{
 		//Control de fisica y colisiones bullet: Objeto y jugador
-		gPhysics->update(0.07);
+		gPhysics->update(float(0.07));
 		for(int i = 0, len = gObjects.size(); i < len; i++)
 			gObjects[i]->m_sceneObject->update();
 		gPlayer->update();
