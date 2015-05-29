@@ -20,6 +20,7 @@ Player::Player(SceneObject* sceneObject)
 	m_sceneObject->mRigidBody.getMotionState()->getWorldTransform(transform);
 	transform.setRotation(btQuaternion(0,-1,0,1));
 	m_sceneObject->mRigidBody.setMotionState(new btDefaultMotionState(transform));
+	m_lookAt = true;
 
 	//Requiere esto ya que, tras cada iteración, si no hay movimiento lineal se bloquea el rigidbody
 	m_sceneObject->mRigidBody.setActivationState(DISABLE_DEACTIVATION);
@@ -97,8 +98,8 @@ void Player::update()
 	//Animacion
 	animationManager();
 
-	//Camara: sigue al jugador
-	Ogre::Vector3 pos = m_sceneObject->mNode.getPosition();
+	//Camara: centrada en el jugador
+	Ogre::Vector3 pos = m_sceneObject->mNode._getWorldAABB().getCenter();
 	pos.y = 75 + pos.y;
 	pos.z = gCamera->getPosition().z;
 	gCamera->setPosition(pos);
@@ -131,13 +132,8 @@ void Player::catchActions()
 	//Control de distancia
 	Ogre::Real distance = m_sceneObject->mNode._getWorldAABB().squaredDistance(m_catchObj->m_sceneObject->mNode.getPosition());
 
-	//Si estamos a una distancia aceptable
-	if (distance < m_tkDistance)
-	{
-		//Movemos el objeto segun el raton
-		m_catchObj->update();
-	}
-	else
+	//Si estamos a una distancia mayor
+	if (distance >= m_tkDistance)
 	{
 		//Devuelve el efecto de la gravedad al objeto y suelta el objeto
 		m_catchObj->m_sceneObject->mRigidBody.setGravity(btVector3(0,-9.81f,0));
@@ -168,72 +164,133 @@ void Player::catchAttack()
 void Player::animationManager()
 {
 	//Attack1 Attack2 Attack3 Backflip Block Climb Crouch Death1 Death2 HighJump Idle1 Idle2 Idle3 Jump JumpNoHeight Kick SideKick Spin Stealth Walk 
-	Ogre::Real time;
-	Ogre::Real maxTime;
+	
+	Ogre::AnimationState* mAnimWalk = m_sceneObject->mEntity.getAnimationState("Walk");
+	Ogre::AnimationState* mAnimJump = m_sceneObject->mEntity.getAnimationState("Jump");
+	Ogre::AnimationState* mAnimCrouch = m_sceneObject->mEntity.getAnimationState("Crouch");
 
-	//***********************************************************************
-	mAnimationState = m_sceneObject->mEntity.getAnimationState("Jump");
-	time = mAnimationState->getTimePosition();
-	maxTime = mAnimationState->getLength();
-	//SALTAR
-	if (m_jumpCount > 0 && time < (maxTime*0.75))
-	{
-		mAnimationState->setLoop(false);
-		mAnimationState->setEnabled(true);
-		mAnimationState->addTime(Ogre::Real(FPS));
-	}
-	//CAER
-	if(!m_fall && time >= maxTime)
-		mAnimationState->setTimePosition(0);
-	else if (!m_fall && time > 0)
-	{
-		mAnimationState->setLoop(false);
-		mAnimationState->setEnabled(true);
-		mAnimationState->addTime(Ogre::Real(FPS));
-	}
-	//***********************************************************************
-	//AGACHARSE
-	if (m_crouchDown)
-	{
-		mAnimationState = m_sceneObject->mEntity.getAnimationState("Crouch");
-		time = mAnimationState->getTimePosition();
-		maxTime = mAnimationState->getLength();
-		if(time < (maxTime/2))
-		{
-			mAnimationState->setLoop(false);
-			mAnimationState->setEnabled(true);
-			mAnimationState->addTime(Ogre::Real(FPS));
-		}
-	}
-	//LEVANTARSE
-	if (m_crouchUp)
-	{
-		mAnimationState = m_sceneObject->mEntity.getAnimationState("Crouch");
-		time = mAnimationState->getTimePosition();
-		maxTime = mAnimationState->getLength();
-		//Si la animacion se encuentra en el estado inicial o en el final, habrá terminado y se reinicia
-		if ( time == 0 || (time >= maxTime) )
-		{
-			mAnimationState->setTimePosition(0);
-			m_crouchUp = false;
-		}
-		//Si la animacion no ha terminado el recorrido, deshacerla
-		if (time < (maxTime/2))
-		{
-			mAnimationState->setLoop(false);
-			mAnimationState->setEnabled(true);
-			mAnimationState->setTimePosition(Ogre::Real(time-FPS));
-		}
-		//Si la animación ha terminado el recorrido, continuar la animacion
-		else if(time > (maxTime/2))
-		{
-			mAnimationState->setLoop(false);
-			mAnimationState->setEnabled(true);
-			mAnimationState->addTime(Ogre::Real(FPS));
-		}
-	}
-	//***********************************************************************
+	if(m_direction.x != 0) 
+		animWalk(mAnimWalk);
+	else
+		mAnimWalk->setEnabled(false);
+
+	if(m_jumpCount > 0)
+		animJump(mAnimJump);
+
+	if(!m_fall)
+		animFall(mAnimJump);
+
+	if(m_crouchDown)
+		animCrouchDown(mAnimCrouch);
+
+	if(m_crouchUp)
+		animCrouchUp(mAnimCrouch);
+	
 }
+
+void Player::animWalk(Ogre::AnimationState* mAnimWalk)
+{
+	bool rotate = false;
+
+	//Comprobamos si el jugador mira en la direccion adecuada
+	btTransform transform;
+	m_sceneObject->mRigidBody.getMotionState()->getWorldTransform(transform);
+	btScalar rotationY = transform.getRotation().y();
+
+	//Si va hacia la derecha y esta mirando a la izquierda (m_lookAt=FALSE), o viceversa, hay que rotar
+	if(m_direction.x == 1 && !m_lookAt || m_direction.x == -1 && m_lookAt)
+		rotate = true;
+
+	if (rotate)
+	{
+		transform.setRotation(btQuaternion(0,-m_direction.x,0,1));
+		m_sceneObject->mRigidBody.setMotionState(new btDefaultMotionState(transform));
+		m_lookAt = !m_lookAt;
+	}
+	else
+	{
+		mAnimWalk->setLoop(true);
+		mAnimWalk->setEnabled(true);
+		if(!m_run)
+			mAnimWalk->addTime(Ogre::Real(FPS)*2);
+		else
+			mAnimWalk->addTime(Ogre::Real(FPS)*3);
+	}
+}
+
+
+void Player::animJump(Ogre::AnimationState* mAnimJump)
+{
+	Ogre::Real time = mAnimJump->getTimePosition();;
+	Ogre::Real maxTime = mAnimJump->getLength();
+	//SALTAR
+	if (time < (maxTime*0.75))
+	{
+		mAnimJump->setLoop(false);
+		mAnimJump->setEnabled(true);
+		mAnimJump->addTime(Ogre::Real(FPS));
+	}
+}
+
+void Player::animFall(Ogre::AnimationState* mAnimJump)
+{
+	Ogre::Real time = mAnimJump->getTimePosition();
+	Ogre::Real maxTime = mAnimJump->getLength();
+	if(time >= maxTime)
+	{
+		mAnimJump->setTimePosition(0);
+		mAnimJump->setEnabled(false);
+	}
+	else if (time > 0)
+	{
+		mAnimJump->setLoop(false);
+		mAnimJump->setEnabled(true);
+		mAnimJump->addTime(Ogre::Real(FPS));
+	}
+}
+
+void Player::animCrouchDown(Ogre::AnimationState* mAnimCrouch)
+{
+	Ogre::Real time = mAnimCrouch->getTimePosition();;
+	Ogre::Real maxTime = mAnimCrouch->getLength();
+	//AGACHARSE
+	if(time < (maxTime/2))
+	{
+		mAnimCrouch->setLoop(false);
+		mAnimCrouch->setEnabled(true);
+		mAnimCrouch->addTime(Ogre::Real(FPS));
+	}
+}
+
+void Player::animCrouchUp(Ogre::AnimationState* mAnimCrouch)
+{
+	Ogre::Real time = mAnimCrouch->getTimePosition();
+	Ogre::Real maxTime = mAnimCrouch->getLength();
+	//Si la animacion se encuentra en el estado inicial o en el final, habrá terminado y se reinicia
+	if ( time == 0 || (time >= maxTime) )
+	{
+		mAnimCrouch->setTimePosition(0);
+		mAnimCrouch->setEnabled(false);
+		m_crouchUp = false;
+	}
+	//Si la animacion no ha terminado el recorrido, deshacerla
+	else if (time < (maxTime/2))
+	{
+		mAnimCrouch->setLoop(false);
+		mAnimCrouch->setEnabled(true);
+		mAnimCrouch->setTimePosition(Ogre::Real(time-FPS));
+	}
+	//Si la animación ha terminado el recorrido, continuar la animacion
+	else if(time > (maxTime/2))
+	{
+		mAnimCrouch->setLoop(false);
+		mAnimCrouch->setEnabled(true);
+		mAnimCrouch->addTime(Ogre::Real(FPS));
+	}
+}
+
+
+
 
 //------------------------------------------------------------
 //Controla la caida posterior al salto
@@ -250,9 +307,7 @@ void Player::fallManager()
 	Object* obj3 = rayFromPoint(center, Ogre::Vector3::NEGATIVE_UNIT_Y);
 
 	//Obtenemos las distancias
-	Ogre::Real dist1 = 5;
-	Ogre::Real dist2 = 5;
-	Ogre::Real dist3 = 5;
+	Ogre::Real dist1, dist2, dist3 = 6;
 
 	if(obj1 != 0)
 		dist1 = obj1->m_sceneObject->mNode._getWorldAABB().squaredDistance(nearLeft);
@@ -263,7 +318,7 @@ void Player::fallManager()
 
 	//Comprobamos la distancia entre el objeto y el punto, finalizando la caida cuando sea correcto
 	Ogre::Real minDist = std::min(dist1, std::min(dist2, dist3));
-	if(minDist < 5)
+	if(minDist < 6)
 		m_fall = false;
 }
 

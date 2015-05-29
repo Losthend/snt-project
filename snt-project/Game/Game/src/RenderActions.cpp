@@ -83,7 +83,7 @@ bool RenderActions::frameRenderingQueued(const Ogre::FrameEvent& evt)
 		//Control de fisica y colisiones bullet: Objeto y jugador
 		gPhysics->update(float(0.07));
 		for(int i = 0, len = gObjects.size(); i < len; i++)
-			gObjects[i]->m_sceneObject->update();
+			gObjects[i]->update();
 		gPlayer->update();
 	}
 	//Finalizacion del frame

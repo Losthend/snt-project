@@ -48,8 +48,9 @@ Object::~Object(void)
 //---------------------------------------------------------------------------
 void Object::update()
 {
+
 	//Objetos Tipo 2: pueden agarrarse
-	if (m_objType == 2)
+	if (gPlayer->m_catchObj != 0 && m_objType == 2 && (gPlayer->m_catchObj->m_sceneObject->mNode.getName() == m_sceneObject->mNode.getName()))
 	{
 		//Raycasting para obtener las coordenadas del raton
 		OIS::MouseState ms = gMouse->getMouseState();
@@ -83,4 +84,8 @@ void Object::update()
 		//Movimiento
 		m_sceneObject->mRigidBody.translate(btVector3(x, y, 0));
 	}
+
+	//Update en Bullet
+	m_sceneObject->update();
+
 }

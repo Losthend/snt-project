@@ -18,6 +18,11 @@ public:
 	void Player::catchAttack();
 	Ogre::Real RayCastingPlayerMouse();
 	void animationManager();
+	void animWalk(Ogre::AnimationState* mAnimWalk);
+	void animJump(Ogre::AnimationState* mAnimJump);
+	void animFall(Ogre::AnimationState* mAnimJump);
+	void animCrouchDown(Ogre::AnimationState* mAnimCrouch);
+	void animCrouchUp(Ogre::AnimationState* mAnimCrouch);
 	void fallManager();
 	Object* rayFromPoint(Ogre::Vector3 origin, Ogre::Vector3 direction);
 
@@ -39,8 +44,8 @@ public:
 	bool				m_crouchDown;
 	bool				m_crouchUp;
 	bool				m_run;
-	//Animaciones
-	Ogre::AnimationState* mAnimationState;
+	//Direccion: TRUE:derecha(x+) / FALSE:izquierda(x-)
+	bool				m_lookAt;
 	//Telequinesis
 	Object* m_catchObj;
 	Ogre::Real m_tkDistance;
