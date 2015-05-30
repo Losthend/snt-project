@@ -27,15 +27,14 @@ Player::Player(SceneObject* sceneObject)
 
 	m_fall = false;
 	m_jump = false;
-	m_jumpCount = 0;
-	m_maxNumJump = 2;
+	m_inJump = false;
 
 	m_crouchDown = false;
 	m_crouchUp = false;
 	m_run = false;
 
 	m_moveX = 2;
-	m_moveY = 20;
+	m_moveY = 30;
 
 	//m_sceneObject->mNode.showBoundingBox(true);
 
@@ -65,22 +64,11 @@ void Player::update()
 	//SALTOS (Movimiento en eje +Y)
 	//---------------------------------------------------------------------
 
-	//Controlar la caida para saber cuando acaba
-	if(m_fall)
-		fallManager();
-	else
-		m_jumpCount = 0;		
-
-	//Se permite saltar un numero limitado de veces (m_jumpCount) controlado en KeyboardMouse
-	if (m_jump)
+	//Si tienes que saltar, no estas cayendo y no estas saltando, saltas
+	if (m_jump && !m_fall && !m_inJump)
 	{
-		//Aplicamos el salto (DEPENDE DE LA MASA)
-		m_sceneObject->mRigidBody.applyCentralImpulse(btVector3(0, m_direction.y*m_moveY, 0));
-		//Acumulamos los saltos
-		m_jumpCount += 1;
-		//Reset de los valores (obliga a pulsar de nuevo la tecla SPACE para saltar de nuevo)
-		m_jump = false;
-		m_direction.y = 0;
+		m_sceneObject->mRigidBody.applyCentralImpulse(btVector3(0, m_moveY, 0));
+		m_inJump = true;
 	}
 
 	//-------------------------------------------------------------------
@@ -164,25 +152,33 @@ void Player::catchAttack()
 void Player::animationManager()
 {
 	//Attack1 Attack2 Attack3 Backflip Block Climb Crouch Death1 Death2 HighJump Idle1 Idle2 Idle3 Jump JumpNoHeight Kick SideKick Spin Stealth Walk 
-	
 	Ogre::AnimationState* mAnimWalk = m_sceneObject->mEntity.getAnimationState("Walk");
 	Ogre::AnimationState* mAnimJump = m_sceneObject->mEntity.getAnimationState("Jump");
 	Ogre::AnimationState* mAnimCrouch = m_sceneObject->mEntity.getAnimationState("Crouch");
 
-	if(m_direction.x != 0) 
+	//CAMINAR/CORRER (solo si no estas ni saltando ni cayendo)
+	if(m_direction.x != 0 && !m_jump && !m_fall) 
 		animWalk(mAnimWalk);
 	else
 		mAnimWalk->setEnabled(false);
-
-	if(m_jumpCount > 0)
-		animJump(mAnimJump);
-
-	if(!m_fall)
-		animFall(mAnimJump);
-
+	//SALTAR
+	if(m_jump)
+	{
+		if (animJump(mAnimJump))
+		{
+			m_jump = false;
+			m_fall = true;
+		}
+	}
+	//CAER
+	if(m_fall && fallManager() && animFall(mAnimJump))
+	{
+		m_fall = false;
+		m_inJump = false;
+	}
+	//AGACHARSE
 	if(m_crouchDown)
 		animCrouchDown(mAnimCrouch);
-
 	if(m_crouchUp)
 		animCrouchUp(mAnimCrouch);
 	
@@ -219,9 +215,9 @@ void Player::animWalk(Ogre::AnimationState* mAnimWalk)
 }
 
 
-void Player::animJump(Ogre::AnimationState* mAnimJump)
+bool Player::animJump(Ogre::AnimationState* mAnimJump)
 {
-	Ogre::Real time = mAnimJump->getTimePosition();;
+	Ogre::Real time = mAnimJump->getTimePosition();
 	Ogre::Real maxTime = mAnimJump->getLength();
 	//SALTAR
 	if (time < (maxTime*0.75))
@@ -229,10 +225,13 @@ void Player::animJump(Ogre::AnimationState* mAnimJump)
 		mAnimJump->setLoop(false);
 		mAnimJump->setEnabled(true);
 		mAnimJump->addTime(Ogre::Real(FPS));
+		return false;
 	}
+	else
+		return true;
 }
 
-void Player::animFall(Ogre::AnimationState* mAnimJump)
+bool Player::animFall(Ogre::AnimationState* mAnimJump)
 {
 	Ogre::Real time = mAnimJump->getTimePosition();
 	Ogre::Real maxTime = mAnimJump->getLength();
@@ -240,12 +239,14 @@ void Player::animFall(Ogre::AnimationState* mAnimJump)
 	{
 		mAnimJump->setTimePosition(0);
 		mAnimJump->setEnabled(false);
+		return true;
 	}
-	else if (time > 0)
+	else
 	{
 		mAnimJump->setLoop(false);
 		mAnimJump->setEnabled(true);
 		mAnimJump->addTime(Ogre::Real(FPS));
+		return false;
 	}
 }
 
@@ -295,10 +296,16 @@ void Player::animCrouchUp(Ogre::AnimationState* mAnimCrouch)
 //------------------------------------------------------------
 //Controla la caida posterior al salto
 //------------------------------------------------------------
-void Player::fallManager()
+bool Player::fallManager()
 {
+	//Esquinas
 	Ogre::Vector3 nearLeft = m_sceneObject->mNode._getWorldAABB().getCorner(Ogre::AxisAlignedBox::NEAR_LEFT_BOTTOM);
 	Ogre::Vector3 nearRight = m_sceneObject->mNode._getWorldAABB().getCorner(Ogre::AxisAlignedBox::NEAR_RIGHT_BOTTOM);
+	//5% desde la esquina hacia el interior descartado
+	Ogre::Real sizeX = m_sceneObject->mNode._getWorldAABB().getSize().x;
+	nearLeft.x = nearLeft.x + sizeX*0.05;
+	nearRight.x = nearRight.x - sizeX*0.05;
+	//Punto central
 	Ogre::Vector3 center = (nearRight + nearLeft ) / 2;
 
 	//Comprobamos si durante la caida colisionará con algun objeto
@@ -307,7 +314,7 @@ void Player::fallManager()
 	Object* obj3 = rayFromPoint(center, Ogre::Vector3::NEGATIVE_UNIT_Y);
 
 	//Obtenemos las distancias
-	Ogre::Real dist1, dist2, dist3 = 6;
+	Ogre::Real dist1, dist2, dist3 = 11;
 
 	if(obj1 != 0)
 		dist1 = obj1->m_sceneObject->mNode._getWorldAABB().squaredDistance(nearLeft);
@@ -318,8 +325,10 @@ void Player::fallManager()
 
 	//Comprobamos la distancia entre el objeto y el punto, finalizando la caida cuando sea correcto
 	Ogre::Real minDist = std::min(dist1, std::min(dist2, dist3));
-	if(minDist < 6)
-		m_fall = false;
+	if(minDist < 10)
+		return true;
+	else
+		return false;
 }
 
 //------------------------------------------------------------

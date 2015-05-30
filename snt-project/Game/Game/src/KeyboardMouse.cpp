@@ -65,12 +65,8 @@ bool KeyboardMouse::keyPressed( const OIS::KeyEvent &arg )
 				}
 				break;
 			case OIS::KC_SPACE:
-				if (gPlayer->m_jumpCount < gPlayer->m_maxNumJump)
-				{
+				if (!(gPlayer->m_jump) && !(gPlayer->m_fall))
 					gPlayer->m_jump = true;
-					gPlayer->m_fall = true;
-					gPlayer->m_direction.y = 1;
-				}
 				break;
 		}
 	}
@@ -193,21 +189,15 @@ bool KeyboardMouse::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID 
 			itr++;
 		}
 
-		//Comprobacion del objeto
+		//Comprobacion del objeto e intento de agarrar
 		if(obj!=0 && obj->m_objType == 2)
-		{
-			//Intenta agarrar el objeto
 			gPlayer->catchSolution(obj);
-		}
 	}
 
+	//Ataque: lanzar objeto agarrado
 	if (gPlayer != 0 && id == OIS::MB_Left)
-	{
 		if (gPlayer->m_catchObj != 0)
-		{
 			gPlayer->catchAttack();
-		}
-	}
 
 	return true;
 }

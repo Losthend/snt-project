@@ -19,11 +19,11 @@ public:
 	Ogre::Real RayCastingPlayerMouse();
 	void animationManager();
 	void animWalk(Ogre::AnimationState* mAnimWalk);
-	void animJump(Ogre::AnimationState* mAnimJump);
-	void animFall(Ogre::AnimationState* mAnimJump);
+	bool animJump(Ogre::AnimationState* mAnimJump);
+	bool animFall(Ogre::AnimationState* mAnimJump);
 	void animCrouchDown(Ogre::AnimationState* mAnimCrouch);
 	void animCrouchUp(Ogre::AnimationState* mAnimCrouch);
-	void fallManager();
+	bool fallManager();
 	Object* rayFromPoint(Ogre::Vector3 origin, Ogre::Vector3 direction);
 
 	//VARIABLES
@@ -38,8 +38,7 @@ public:
 	//Variables de salto
 	bool				m_fall;
 	bool				m_jump;
-	Ogre::Real			m_jumpCount;
-	Ogre::Real			m_maxNumJump;
+	bool				m_inJump;
 	//Agacharse y correr
 	bool				m_crouchDown;
 	bool				m_crouchUp;

@@ -32,31 +32,47 @@ GameApplication::~GameApplication(void)
 //---------------------------------------------------------------------------
 void GameApplication::createScene(void)
 {
+	//****************************************************
 	//JUGADOR 
-
+	//****************************************************
 	if(gPlayer == 0)
 	{
 		SceneObject* player = gPhysics->createBoxObject("Player", Ogre::Vector3(3, 3, 3), Ogre::Vector3(0, 100, 0), 1, "ninja.mesh");
 		gPlayer = new Player(player);
 	}
 
-	//ESCENARIO
-	
-	//SceneObjects: necesarios para el control ejercido por Bullet
-	SceneObject* sceneObj1 = gPhysics->createBoxObject("cube1", Ogre::Vector3(50, 50, 50), Ogre::Vector3(-50, 100, 0), 1, "Barrel.mesh");
-	SceneObject* sceneObj2 = gPhysics->createBoxObject("cube2", Ogre::Vector3(50, 50, 50), Ogre::Vector3(-50, 80, 0), 1, "Barrel.mesh");
-    SceneObject* sceneObj3 = gPhysics->createBoxObject("cube3", Ogre::Vector3(50, 50, 50), Ogre::Vector3(50, 120, 0), 1, "Barrel.mesh");
-    SceneObject* sceneObj4 = gPhysics->createBoxObject("cube4", Ogre::Vector3(50, 50, 50), Ogre::Vector3(50, 150, 0), 1, "Barrel.mesh");
-    SceneObject* sceneObj5 = gPhysics->createBoxObject("plane", Ogre::Vector3(50, 3, 20), Ogre::Vector3(60, 110, 0), 1, "manualObjectCube");
-	SceneObject* sceneObj6 = gPhysics->createGroundObject("ground", Ogre::Vector3(1500, 5, 1500), Ogre::Vector3(0, -50, 0),  false);
+	//****************************************************
+	//ESCENARIO: SceneObjects (Bullet) + gObjects (personal)
+	//****************************************************
+	SceneObject* sceneObj;
 
-	//Almacenamiento del objeto completo en gObjects (vector global)
-	gObjects.push_back(new Object(2, sceneObj1));
-	gObjects.push_back(new Object(2, sceneObj2));
-	gObjects.push_back(new Object(2, sceneObj3));
-	gObjects.push_back(new Object(2, sceneObj4));
-	gObjects.push_back(new Object(2, sceneObj5));
-	gObjects.push_back(new Object(1, sceneObj6));
+	//Suelo (1)
+	sceneObj = gPhysics->createGroundObject("ground", Ogre::Vector3(1500, 5, 1500), Ogre::Vector3(0, -50, 0),  false);
+	gObjects.push_back(new Object(1, sceneObj));
+
+	//Objetos (2)
+	sceneObj = gPhysics->createBoxObject("cube1", Ogre::Vector3(50, 50, 50), Ogre::Vector3(-50, 80, 0), 1, "Barrel.mesh");
+	gObjects.push_back(new Object(2, sceneObj));
+    sceneObj = gPhysics->createBoxObject("cube2", Ogre::Vector3(50, 50, 50), Ogre::Vector3(50, 120, 0), 1, "Barrel.mesh");
+	gObjects.push_back(new Object(2, sceneObj));
+    sceneObj = gPhysics->createBoxObject("cube3", Ogre::Vector3(50, 50, 50), Ogre::Vector3(50, 150, 0), 1, "Barrel.mesh");
+	gObjects.push_back(new Object(2, sceneObj));
+    sceneObj = gPhysics->createBoxObject("cube4", Ogre::Vector3(50, 50, 50), Ogre::Vector3(-50, 100, 0), 1, "Barrel.mesh");
+	gObjects.push_back(new Object(2, sceneObj));
+	sceneObj = gPhysics->createBoxObject("plane1", Ogre::Vector3(50, 3, 20), Ogre::Vector3(60, 110, 0), 1, "manualObjectCube");
+	gObjects.push_back(new Object(2, sceneObj));
+
+	//Decoracion (1)
+	sceneObj = gPhysics->createBoxObject("house1", Ogre::Vector3(3, 3, 3), Ogre::Vector3(-500, 125, 0), 0, "tudorhouse.mesh");
+	gObjects.push_back(new Object(1, sceneObj));
+	
+	 //Trampas (3)
+	//sceneObj = gPhysics->createBoxObject("jaiqua1", Ogre::Vector3(10, 10, 10), Ogre::Vector3(-100, -50, 0), 1, "spine.mesh");
+	//gObjects.push_back(new Object(1, sceneObj));
+
+	//Enemigos (4)
+	//sceneObj = gPhysics->createBoxObject("penguin1", Ogre::Vector3(10, 10, 10), Ogre::Vector3(-100, -50, 0), 1, "penguin.mesh");
+	//gObjects.push_back(new Object(1, sceneObj));
 	
 	//CONFIGURACIONES
 
