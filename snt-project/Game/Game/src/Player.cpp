@@ -61,6 +61,12 @@ void Player::update()
 		catchActions();
 
 	//-------------------------------------------------------------------
+	//CAIDA
+	//--------------------------------------------------------------------
+	if(!m_fall && !fallManager())
+		m_fall = true;
+
+	//-------------------------------------------------------------------
 	//SALTOS (Movimiento en eje +Y)
 	//---------------------------------------------------------------------
 
@@ -170,7 +176,17 @@ void Player::animationManager()
 			m_fall = true;
 		}
 	}
-	//CAER
+	//CAER (principio)
+	if(m_fall && !fallManager())
+	{
+		Ogre::Real time = mAnimJump->getTimePosition();
+		if (time == 0)
+		{
+			mAnimJump->setTimePosition(mAnimJump->getLength()*0.9);
+			mAnimJump->setEnabled(true);
+		}
+	}
+	//CAER (final)
 	if(m_fall && fallManager() && animFall(mAnimJump))
 	{
 		m_fall = false;
@@ -235,6 +251,7 @@ bool Player::animFall(Ogre::AnimationState* mAnimJump)
 {
 	Ogre::Real time = mAnimJump->getTimePosition();
 	Ogre::Real maxTime = mAnimJump->getLength();
+
 	if(time >= maxTime)
 	{
 		mAnimJump->setTimePosition(0);

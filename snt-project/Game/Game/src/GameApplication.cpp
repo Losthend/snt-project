@@ -47,7 +47,7 @@ void GameApplication::createScene(void)
 	SceneObject* sceneObj;
 
 	//Suelo (1)
-	sceneObj = gPhysics->createGroundObject("ground", Ogre::Vector3(1500, 5, 1500), Ogre::Vector3(0, -50, 0),  false);
+	sceneObj = gPhysics->createGroundObject("ground", Ogre::Vector3(1500, 5, 1500), Ogre::Vector3(0, -50, 0),  false, "Examples/GrassFloor");
 	gObjects.push_back(new Object(1, sceneObj));
 
 	//Objetos (2)
@@ -59,7 +59,7 @@ void GameApplication::createScene(void)
 	gObjects.push_back(new Object(2, sceneObj));
     sceneObj = gPhysics->createBoxObject("cube4", Ogre::Vector3(50, 50, 50), Ogre::Vector3(-50, 100, 0), 1, "Barrel.mesh");
 	gObjects.push_back(new Object(2, sceneObj));
-	sceneObj = gPhysics->createBoxObject("plane1", Ogre::Vector3(50, 3, 20), Ogre::Vector3(60, 110, 0), 1, "manualObjectCube");
+	sceneObj = gPhysics->createBoxObject("plane1", Ogre::Vector3(100, 100, 100), Ogre::Vector3(60, 110, 0), 1, "WoodPallet.mesh");
 	gObjects.push_back(new Object(2, sceneObj));
 
 	//Decoracion (1)
@@ -84,5 +84,7 @@ void GameApplication::createScene(void)
 	gSceneMgr->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));
 	Ogre::Light* light = gSceneMgr->createLight("MainLight");
 	light->setPosition(20,80,50);
-	//gSceneMgr->setSkyBox(true, "Examples/SpaceSkyBox");
+	gSceneMgr->setSkyBox(true, "Examples/MorningSkyBox");
+	// Examples/MorningSkyBox 
+	// Examples/StormySkyBox
 }

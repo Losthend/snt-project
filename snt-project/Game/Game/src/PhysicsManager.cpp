@@ -120,7 +120,7 @@ SceneObject* PhysicsManager::createBoxObject(const char *name, const Ogre::Vecto
 //---------------------------------------------------------------------------
 //Creacion de planos/suelo entre Ogre y bullet
 //---------------------------------------------------------------------------
-SceneObject* PhysicsManager::createGroundObject(Ogre::String name, Ogre::Vector3 size, Ogre::Vector3 pos, bool grass)
+SceneObject* PhysicsManager::createGroundObject(Ogre::String name, Ogre::Vector3 size, Ogre::Vector3 pos, bool grass, Ogre::String material)
 {
 	//Plano
 	Ogre::Plane plane(Ogre::Vector3::UNIT_Y, 0);
@@ -130,7 +130,7 @@ SceneObject* PhysicsManager::createGroundObject(Ogre::String name, Ogre::Vector3
 																		  20, 20, true, 1, 5, 5, Ogre::Vector3::UNIT_Z);
 	//Entidad 
 	Ogre::Entity *entity = gSceneMgr->createEntity(name, name);
-	entity->setMaterialName("Examples/GrassFloor");
+	entity->setMaterialName(material);
 	//Nodo
 	Ogre::SceneNode *node = gSceneMgr->getRootSceneNode()->createChildSceneNode(name);
 	node->attachObject(entity);

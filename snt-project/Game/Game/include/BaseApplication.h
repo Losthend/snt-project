@@ -29,7 +29,6 @@ private:
     virtual void windowClosed(Ogre::RenderWindow* rw);
 
 	//Objetos manuales
-	void cube(void);
 	void grass(void);
 
 	//VARIABLES
