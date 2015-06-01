@@ -47,8 +47,11 @@ void GameApplication::createScene(void)
 	SceneObject* sceneObj;
 
 	//Suelo (1)
-	sceneObj = gPhysics->createGroundObject("ground", Ogre::Vector3(1500, 5, 1500), Ogre::Vector3(0, -50, 0),  false, "Examples/GrassFloor");
+	sceneObj = gPhysics->createGroundObject("ground", Ogre::Vector3(1500, 5, 1500), Ogre::Vector3(0, -50, 0), "Examples/GrassFloor");
 	gObjects.push_back(new Object(1, sceneObj));
+	
+	//Hierba (null)
+	createGroundGrass(Ogre::Vector3(100,100,100), Ogre::Vector3(0,-50,0), 10);
 
 	//Objetos (2)
 	sceneObj = gPhysics->createBoxObject("cube1", Ogre::Vector3(50, 50, 50), Ogre::Vector3(-50, 80, 0), 1, "Barrel.mesh");
@@ -71,7 +74,7 @@ void GameApplication::createScene(void)
 	//gObjects.push_back(new Object(1, sceneObj));
 
 	//Enemigos (4)
-	//sceneObj = gPhysics->createBoxObject("penguin1", Ogre::Vector3(10, 10, 10), Ogre::Vector3(-100, -50, 0), 1, "penguin.mesh");
+	//sceneObj = gPhysics->createBoxObject("penguin1", Ogre::Vector3(10, 10, 10), Ogre::Vector3(-100, -50, 0), 1, "robot.mesh");
 	//gObjects.push_back(new Object(1, sceneObj));
 	
 	//CONFIGURACIONES
@@ -87,4 +90,37 @@ void GameApplication::createScene(void)
 	gSceneMgr->setSkyBox(true, "Examples/MorningSkyBox");
 	// Examples/MorningSkyBox 
 	// Examples/StormySkyBox
+}
+
+
+//---------------------------------------------------------------------------
+//Añade hierba en la posicion especificada a partir de una posicion origen
+//---------------------------------------------------------------------------
+void GameApplication::createGroundGrass(Ogre::Vector3 vSize, Ogre::Vector3 vPos, int amount)
+{
+	Ogre::Entity* grass = gSceneMgr->createEntity("grass","manualObjectGrass");
+	Ogre::StaticGeometry* sg = gSceneMgr->createStaticGeometry("GrassArea");
+
+	sg->setRegionDimensions(Ogre::Vector3(vSize.x, vSize.y, vSize.z));
+	sg->setOrigin(Ogre::Vector3(vSize.x, vSize.y, vSize.z));
+
+	for (Ogre::Real x = -vSize.x/2; x < vSize.x/2; x += (vSize.x / amount))
+	{
+		for (Ogre::Real z = -vSize.z/2; z < vSize.z/2; z += (vSize.z / amount))
+		{
+			Ogre::Real offsetX = -vSize.x / (float)amount / 2;
+			Ogre::Real offsetZ = -vSize.z / (float)amount / 2;
+			Ogre::Vector3 pos(
+				x + Ogre::Math::RangeRandom(-offsetX, offsetX),
+				vPos.y,
+				z + Ogre::Math::RangeRandom(-offsetZ, offsetZ));
+			Ogre::Vector3 scale(1, Ogre::Math::RangeRandom(Ogre::Real(0.9), Ogre::Real(1.1)), 1);
+			Ogre::Quaternion quat;
+			quat.FromAngleAxis(
+				Ogre::Degree(Ogre::Math::RangeRandom(0, 359)),
+				Ogre::Vector3::UNIT_Y);
+			sg->addEntity(grass, pos, quat, scale);
+		}
+	}
+	sg->build();
 }

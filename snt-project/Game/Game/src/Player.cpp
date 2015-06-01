@@ -331,7 +331,9 @@ bool Player::fallManager()
 	Object* obj3 = rayFromPoint(center, Ogre::Vector3::NEGATIVE_UNIT_Y);
 
 	//Obtenemos las distancias
-	Ogre::Real dist1, dist2, dist3 = 11;
+	Ogre::Real dist1 = 10;
+	Ogre::Real dist2 = 10;
+	Ogre::Real dist3 = 10;
 
 	if(obj1 != 0)
 		dist1 = obj1->m_sceneObject->mNode._getWorldAABB().squaredDistance(nearLeft);
@@ -359,17 +361,20 @@ Object* Player::rayFromPoint(Ogre::Vector3 origin, Ogre::Vector3 direction)
 
 	Ogre::RaySceneQuery* mRaySceneQuery = gSceneMgr->createRayQuery(ray); 
 	mRaySceneQuery->setRay(ray);
-	mRaySceneQuery->setSortByDistance(true, 1);
+	mRaySceneQuery->setSortByDistance(true);
 
 	Ogre::RaySceneQueryResult& result = mRaySceneQuery->execute();
 	Ogre::RaySceneQueryResult::iterator itr = result.begin();
 
 	//OPTIMIZABLE con inCameraFrustrumObjects para no buscar por todos los objetos
 
-	if(itr != result.end())
+	while(itr != result.end() && obj == 0)
+	{
 		for(unsigned x = 0; x < gObjects.size(); x++)
 			if(itr->movable->getParentNode()->getName() == gObjects[x]->m_sceneObject->mNode.getName())
 				obj = gObjects[x];
+		itr++;
+	}
 
 	return obj;
 }

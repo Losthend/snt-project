@@ -120,7 +120,7 @@ SceneObject* PhysicsManager::createBoxObject(const char *name, const Ogre::Vecto
 //---------------------------------------------------------------------------
 //Creacion de planos/suelo entre Ogre y bullet
 //---------------------------------------------------------------------------
-SceneObject* PhysicsManager::createGroundObject(Ogre::String name, Ogre::Vector3 size, Ogre::Vector3 pos, bool grass, Ogre::String material)
+SceneObject* PhysicsManager::createGroundObject(Ogre::String name, Ogre::Vector3 size, Ogre::Vector3 pos, Ogre::String material)
 {
 	//Plano
 	Ogre::Plane plane(Ogre::Vector3::UNIT_Y, 0);
@@ -136,53 +136,12 @@ SceneObject* PhysicsManager::createGroundObject(Ogre::String name, Ogre::Vector3
 	node->attachObject(entity);
 	node->setPosition(pos.x, pos.y, pos.z);
 	node->_updateBounds();
- 
-	//Hierba
-	if(grass)
-		createGroundGrass(size, pos);
-
-	float mass = 0;
 
 	btCollisionShape &shape = createBoxShape(size.x, size.y, size.z);
 
-	btRigidBody* body = gPhysics->createBody(btTransform(btQuaternion::getIdentity(), btVector3(pos.x, pos.y, pos.z)), mass, shape);
+	btRigidBody* body = gPhysics->createBody(btTransform(btQuaternion::getIdentity(), btVector3(pos.x, pos.y, pos.z)), 0, shape);
 
 	SceneObject* sceneObject = new SceneObject(*entity, *node, *body);
 
 	return sceneObject;
-}
-
-
-//---------------------------------------------------------------------------
-//Añade hierba al suelo
-//---------------------------------------------------------------------------
-void PhysicsManager::createGroundGrass(Ogre::Vector3 vSize, Ogre::Vector3 vPos)
-{
-	Ogre::Entity* grass = gSceneMgr->createEntity("manualObjectGrass");
-	Ogre::StaticGeometry* sg = gSceneMgr->createStaticGeometry("GrassArea");
-
-	int amount = 10;
-
-	sg->setRegionDimensions(Ogre::Vector3(vSize.x, vSize.y, vSize.z));
-	sg->setOrigin(Ogre::Vector3(vSize.x, vSize.y, vSize.z));
-
-	for (Ogre::Real x = -vSize.x/2; x < vSize.x/2; x += (vSize.x / amount))
-	{
-		for (Ogre::Real z = -vSize.z/2; z < vSize.z/2; z += (vSize.z / amount))
-		{
-			Ogre::Real offsetX = -vSize.x / (float)amount / 2;
-			Ogre::Real offsetZ = -vSize.z / (float)amount / 2;
-			Ogre::Vector3 pos(
-				x + Ogre::Math::RangeRandom(-offsetX, offsetX),
-				vPos.y,
-				z + Ogre::Math::RangeRandom(-offsetZ, offsetZ));
-			Ogre::Vector3 scale(1, Ogre::Math::RangeRandom(Ogre::Real(0.9), Ogre::Real(1.1)), 1);
-			Ogre::Quaternion quat;
-			quat.FromAngleAxis(
-				Ogre::Degree(Ogre::Math::RangeRandom(0, 359)),
-				Ogre::Vector3::UNIT_Y);
-			sg->addEntity(grass, pos, quat, scale);
-		}
-	}
-	sg->build();
 }

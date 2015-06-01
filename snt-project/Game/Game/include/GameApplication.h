@@ -7,12 +7,11 @@ class PhysicsManager;
 class GameApplication
 {
 public:
-	//Constructor/destructor
     GameApplication(void);
     virtual ~GameApplication(void);
 
-	//Escenarios disponibles
     void createScene(void);
+	void createGroundGrass(Ogre::Vector3 vSize, Ogre::Vector3 vPos, int amount);
 };
 
 //---------------------------------------------------------------------------
