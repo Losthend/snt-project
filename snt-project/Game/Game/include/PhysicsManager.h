@@ -10,12 +10,22 @@ public:
     virtual ~PhysicsManager(void);
 	void update(float ticks);
 
-	btRigidBody* createBody(const btTransform &transform, float mass, btCollisionShape &shape);
-	btCollisionShape& createBoxShape(float x, float y, float z);
+	btRigidBody* createBody(const btTransform &transform, float mass, btCollisionShape* shape);
+	btCollisionShape* createBoxShape(float x, float y, float z);
+	SceneObject* createConvexHullShape(const char *name, const Ogre::Real &size, const Ogre::Vector3 &pos, float mass, Ogre::String meshName);
 
 	SceneObject* createBoxObject(const char *name, const Ogre::Vector3 &size, const Ogre::Vector3 &pos, float mass, Ogre::String meshName);
 	SceneObject* createGroundObject(Ogre::String name, Ogre::Vector3 size, Ogre::Vector3 pos, Ogre::Vector2 repeat, Ogre::String material);
 	void magicGenerator(Ogre::Vector3 pos);
+
+	void getMeshInformation(const Ogre::Entity* const ent,
+                        size_t &vertex_count,
+                        Ogre::Vector3* &vertices,
+                        size_t &index_count,
+                        unsigned long* &indices,
+                        const Ogre::Vector3 &position,
+                        const Ogre::Quaternion &orient,
+                        const Ogre::Vector3 &scale);
 
 	int m_magicCount;
 	//mWorld: simulara un mundo fisico con objetos en movimiento. 

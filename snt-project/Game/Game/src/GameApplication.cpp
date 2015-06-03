@@ -34,7 +34,7 @@ void GameApplication::createScene(void)
 	//****************************************************
 	if(gPlayer == 0)
 	{
-		SceneObject* player = gPhysics->createBoxObject("Player", Ogre::Vector3(3, 3, 3), Ogre::Vector3(0, 100, 0), 1, "ninja.mesh");
+		SceneObject* player = gPhysics->createConvexHullShape("Player", Ogre::Real(0.3), Ogre::Vector3(0, 200, 0), 1, "ninja.mesh");
 		gPlayer = new Player(player);
 	}
 
@@ -53,13 +53,13 @@ void GameApplication::createScene(void)
 	//createGroundGrass(Ogre::Vector3(100,100,100), Ogre::Vector3(0,-50,0), 10);
 
 	//Objetos (2)
-	sceneObj = gPhysics->createBoxObject("Cube1", Ogre::Vector3(50, 50, 50), Ogre::Vector3(-50, 80, 0), 1, "Barrel.mesh");
+	sceneObj = gPhysics->createBoxObject("Cube1", Ogre::Vector3(50, 50, 50), Ogre::Vector3(-50, 80, 0), 100, "Barrel.mesh");
 	gObjects.push_back(new Object(2, sceneObj));
     sceneObj = gPhysics->createBoxObject("Cube2", Ogre::Vector3(50, 50, 50), Ogre::Vector3(50, 120, 0), 1, "Barrel.mesh");
 	gObjects.push_back(new Object(2, sceneObj));
     sceneObj = gPhysics->createBoxObject("Cube3", Ogre::Vector3(50, 50, 50), Ogre::Vector3(50, 150, 0), 1, "Barrel.mesh");
 	gObjects.push_back(new Object(2, sceneObj));
-    sceneObj = gPhysics->createBoxObject("Cube4", Ogre::Vector3(50, 50, 50), Ogre::Vector3(-50, 100, 0), 1, "Barrel.mesh");
+    sceneObj = gPhysics->createBoxObject("Cube4", Ogre::Vector3(50, 50, 50), Ogre::Vector3(-50, 100, 0), 100, "Barrel.mesh");
 	gObjects.push_back(new Object(2, sceneObj));
 	sceneObj = gPhysics->createBoxObject("Plane1", Ogre::Vector3(100, 100, 100), Ogre::Vector3(60, 110, 0), 1, "WoodPallet.mesh");
 	gObjects.push_back(new Object(2, sceneObj));

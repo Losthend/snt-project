@@ -28,10 +28,19 @@ Object::Object(int objType, SceneObject* sceneObject)
 	FPS = getframeLength();
 
 	m_objType = objType;
-
-	m_moveX = 1;
-	m_moveY = 2;
-
+	
+	switch (m_objType)
+	{
+	case 3:
+		m_moveX = 1;
+		m_moveY = 2;
+		break;
+	default:
+		m_moveX = 3;
+		m_moveY = 2;
+		break;
+	}
+	
 	m_direction = Ogre::Vector3::ZERO;
 
 	m_lookAt = true;
