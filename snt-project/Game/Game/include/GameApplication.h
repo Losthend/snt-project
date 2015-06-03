@@ -12,6 +12,7 @@ public:
 
     void createScene(void);
 	void createGroundGrass(Ogre::Vector3 vSize, Ogre::Vector3 vPos, int amount);
+	void createFont(Ogre::String name, Ogre::Vector3 size, Ogre::Vector3 pos);
 };
 
 //---------------------------------------------------------------------------

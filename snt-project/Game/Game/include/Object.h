@@ -7,14 +7,11 @@ class Object
 {
 
 public:
-	
-	//FUNCIONES
-
     Object(int objType, SceneObject* sceneObject);
     virtual ~Object(void);
 	void update();
-	
-	//VARIABLES
+	void type2();
+	void type3();
 
 	//SceneObject: Node + btRigidBody
 	SceneObject*		m_sceneObject;
@@ -28,6 +25,7 @@ public:
 	Ogre::Real			m_speed;
 	//Vector de movimiento/direccion
 	Ogre::Vector3		m_direction;
+	bool				m_lookAt;
 
 };
 

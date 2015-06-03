@@ -68,6 +68,12 @@ bool KeyboardMouse::keyPressed( const OIS::KeyEvent &arg )
 				if (!(gPlayer->m_jump) && !(gPlayer->m_fall))
 					gPlayer->m_jump = true;
 				break;
+			case OIS::KC_C:
+				OIS::MouseState ms = gMouse->getMouseState();
+				Ogre::Ray ray = gCamera->getCameraToViewportRay(ms.X.abs/(float)gWindow->getWidth(),ms.Y.abs/(float)gWindow->getHeight()); 
+				Ogre::Vector3 mouseCoord = ray.getPoint(gCamera->getPosition().z);
+				gPhysics->magicGenerator(mouseCoord);
+				break;
 		}
 	}
 
@@ -184,14 +190,17 @@ bool KeyboardMouse::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID 
 		while(itr != result.end() && obj == 0)
 		{
 			for(unsigned x = 0; x < gObjects.size(); x++)
-				if(itr->movable->getParentNode()->getName() == gObjects[x]->m_sceneObject->mNode.getName())
+				if(itr->movable->getParentNode()->getName() == gObjects[x]->m_sceneObject->mNode->getName())
 					obj = gObjects[x];
 			itr++;
 		}
 
-		//Comprobacion del objeto e intento de agarrar
+		//Comprobacion del objeto / agarre
 		if(obj!=0 && obj->m_objType == 2)
-			gPlayer->catchSolution(obj);
+		{
+			gPlayer->m_catchObj = obj;
+			gPlayer->m_catchObj->m_sceneObject->mRigidBody->setGravity(btVector3(0,0,0));
+		}
 	}
 
 	//Ataque: lanzar objeto agarrado
@@ -210,7 +219,7 @@ bool KeyboardMouse::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID
 	if (gPlayer != 0 && id == OIS::MB_Right && gPlayer->m_catchObj != 0)
 	{
 		//Devuelve el efecto de la gravedad al objeto
-		gPlayer->m_catchObj->m_sceneObject->mRigidBody.setGravity(btVector3(0,-9.81f,0));
+		gPlayer->m_catchObj->m_sceneObject->mRigidBody->setGravity(btVector3(0,-9.81f,0));
 		//Suelta el objeto
 		gPlayer->m_catchObj = 0;
 	}

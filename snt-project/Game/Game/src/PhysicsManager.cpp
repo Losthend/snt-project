@@ -2,6 +2,7 @@
 #include "../include/PhysicsManager.h"
 #include "../include/Global.h"
 #include "../include/SceneObject.h"
+#include "../include/Object.h"
 
 //---------------------------------------------------------------------------
 //Constructor
@@ -11,6 +12,7 @@ PhysicsManager::PhysicsManager()
 	mCollisionDispatcher = new btCollisionDispatcher(&mCollisionConfig);
 	mWorld = new btDiscreteDynamicsWorld(mCollisionDispatcher, &mBroadphase, &mConstraintSolver, &mCollisionConfig);
 	mWorld->setGravity(btVector3(0,-9.81f,0));
+	m_magicCount = 0;
 }
 
 //---------------------------------------------------------------------------
@@ -110,7 +112,7 @@ SceneObject* PhysicsManager::createBoxObject(const char *name, const Ogre::Vecto
 	//Creacion del cuerpo rigido que envuelve al sceneNode
 	btRigidBody* body = gPhysics->createBody(btTransform(btQuaternion::getIdentity(), btVector3(pos.x, pos.y, pos.z)), mass, shape);
 
-	SceneObject* sceneObject = new SceneObject(*entity, *node, *body);
+	SceneObject* sceneObject = new SceneObject(entity, node, body);
 
 	return sceneObject;
 }
@@ -120,14 +122,14 @@ SceneObject* PhysicsManager::createBoxObject(const char *name, const Ogre::Vecto
 //---------------------------------------------------------------------------
 //Creacion de planos/suelo entre Ogre y bullet
 //---------------------------------------------------------------------------
-SceneObject* PhysicsManager::createGroundObject(Ogre::String name, Ogre::Vector3 size, Ogre::Vector3 pos, Ogre::String material)
+SceneObject* PhysicsManager::createGroundObject(Ogre::String name, Ogre::Vector3 size, Ogre::Vector3 pos, Ogre::Vector2 repeat, Ogre::String material)
 {
 	//Plano
 	Ogre::Plane plane(Ogre::Vector3::UNIT_Y, 0);
 	Ogre::MeshPtr meshPtr = Ogre::MeshManager::getSingleton().createPlane(name, 
 																		  Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, 
 																		  plane, size.x, size.z, 
-																		  20, 20, true, 1, 5, 5, Ogre::Vector3::UNIT_Z);
+																		  20, 20, true, 1, repeat.x, repeat.y, Ogre::Vector3::UNIT_Z);
 	//Entidad 
 	Ogre::Entity *entity = gSceneMgr->createEntity(name, name);
 	entity->setMaterialName(material);
@@ -141,7 +143,60 @@ SceneObject* PhysicsManager::createGroundObject(Ogre::String name, Ogre::Vector3
 
 	btRigidBody* body = gPhysics->createBody(btTransform(btQuaternion::getIdentity(), btVector3(pos.x, pos.y, pos.z)), 0, shape);
 
-	SceneObject* sceneObject = new SceneObject(*entity, *node, *body);
+	SceneObject* sceneObject = new SceneObject(entity, node, body);
 
 	return sceneObject;
+}
+
+void PhysicsManager::magicGenerator(Ogre::Vector3 pos)
+{
+	Ogre::String id;
+	id = Ogre::StringConverter::toString(m_magicCount).c_str();
+
+	if(m_magicCount>9)
+	{
+		bool chickenDelete = false;
+		for(unsigned x = 0; x < gObjects.size() && !chickenDelete; x++)
+		{
+			for (unsigned y = 9; y > 0 && !chickenDelete; y--)
+			{
+				id = Ogre::StringConverter::toString(y).c_str();
+				if(gObjects[x]->m_sceneObject->mNode->getName() == "magic"+id)
+				{
+					gObjects[x]->~Object();
+					m_magicCount--;
+					chickenDelete = true;
+				}
+			}
+		}
+	}
+
+	m_magicCount++;
+
+	Ogre::Entity *entity = gSceneMgr->createEntity("magic"+id, "chicken.mesh");
+
+	//Nodo
+	Ogre::SceneNode *node = gSceneMgr->getRootSceneNode()->createChildSceneNode("magic"+id);
+	node->attachObject(entity);
+	node->setScale(2, 2, 2);
+	node->setPosition(pos.x, pos.y, 0);
+	node->_updateBounds();
+
+	Ogre::Vector3 size = node->_getWorldAABB().getSize();
+	btCollisionShape &shape = createBoxShape(size.x, size.y, size.z);
+
+	btRigidBody* body = gPhysics->createBody(btTransform(btQuaternion::getIdentity(), btVector3(pos.x, pos.y, pos.z)), 1, shape);
+
+	SceneObject* sceneObject = new SceneObject(entity, node, body);
+
+	//Mirar inicialmente hacia el eje X+
+	btTransform transform;
+	sceneObject->mRigidBody->getMotionState()->getWorldTransform(transform);
+	transform.setRotation(btQuaternion(0,1,0,1));
+	sceneObject->mRigidBody->setMotionState(new btDefaultMotionState(transform));
+
+	Object* obj = new Object(3, sceneObject);
+	obj->m_direction.x = 1;
+	gObjects.push_back(obj);
+
 }

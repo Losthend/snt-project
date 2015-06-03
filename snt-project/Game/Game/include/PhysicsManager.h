@@ -10,14 +10,14 @@ public:
     virtual ~PhysicsManager(void);
 	void update(float ticks);
 
-	//Otros metodos
 	btRigidBody* createBody(const btTransform &transform, float mass, btCollisionShape &shape);
 	btCollisionShape& createBoxShape(float x, float y, float z);
 
 	SceneObject* createBoxObject(const char *name, const Ogre::Vector3 &size, const Ogre::Vector3 &pos, float mass, Ogre::String meshName);
-	SceneObject* createGroundObject(Ogre::String name, Ogre::Vector3 size, Ogre::Vector3 pos, Ogre::String material);
+	SceneObject* createGroundObject(Ogre::String name, Ogre::Vector3 size, Ogre::Vector3 pos, Ogre::Vector2 repeat, Ogre::String material);
+	void magicGenerator(Ogre::Vector3 pos);
 
-private:
+	int m_magicCount;
 	//mWorld: simulara un mundo fisico con objetos en movimiento. 
 	btDiscreteDynamicsWorld *mWorld;
 	//mCollisionDispatcher: decide como tratar las colisiones, gestion de los objetos que colisionan, etc.

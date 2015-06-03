@@ -6,6 +6,7 @@
 #include "../include/Global.h"
 #include "../include/FrameRate.h"
 #include "../include/SceneObject.h"
+#include "../include/PhysicsManager.h"
 
 /* 
 	Objeto de:
@@ -21,7 +22,7 @@ Object::Object(int objType, SceneObject* sceneObject)
 {
 	m_sceneObject = sceneObject;
 	
-	m_sceneObject->mRigidBody.setActivationState(DISABLE_DEACTIVATION);
+	m_sceneObject->mRigidBody->setActivationState(DISABLE_DEACTIVATION);
 
 	FPS = getframeLength();
 
@@ -33,6 +34,8 @@ Object::Object(int objType, SceneObject* sceneObject)
 	m_speed = 20;
 
 	m_direction = Ogre::Vector3::ZERO;
+
+	m_lookAt = true;
 }
 
 //---------------------------------------------------------------------------
@@ -40,7 +43,16 @@ Object::Object(int objType, SceneObject* sceneObject)
 //---------------------------------------------------------------------------
 Object::~Object(void)
 {
-	
+	for(unsigned x = 0; x < gObjects.size(); x++)
+		if(gObjects[x]->m_sceneObject->mNode->getName() == m_sceneObject->mNode->getName())
+			gObjects.erase(gObjects.begin()+x);
+
+	gSceneMgr->destroyEntity(m_sceneObject->mEntity->getName());
+
+	gSceneMgr->destroySceneNode(m_sceneObject->mNode->getName());
+
+	gPhysics->mWorld->removeRigidBody(m_sceneObject->mRigidBody);
+
 }
 
 //---------------------------------------------------------------------------
@@ -49,43 +61,91 @@ Object::~Object(void)
 void Object::update()
 {
 
-	//Objetos Tipo 2: pueden agarrarse
-	if (gPlayer->m_catchObj != 0 && m_objType == 2 && (gPlayer->m_catchObj->m_sceneObject->mNode.getName() == m_sceneObject->mNode.getName()))
-	{
-		//Raycasting para obtener las coordenadas del raton
-		OIS::MouseState ms = gMouse->getMouseState();
-		Ogre::Ray ray = gCamera->getCameraToViewportRay(ms.X.abs/(float)gWindow->getWidth(),ms.Y.abs/(float)gWindow->getHeight()); 
+	//Objetos Tipo 2: solo si este objeto es de tipo 2, el jugador esta agarrando un objeto y dicho objeto es el mismo que este 
+	if (m_objType == 2 && gPlayer->m_catchObj != 0 && (gPlayer->m_catchObj->m_sceneObject->mNode->getName() == m_sceneObject->mNode->getName()))
+		type2();
 
-		//Coordenadas del raton
-		Ogre::Vector3 mouseCoord = ray.getPoint(gCamera->getPosition().z);
-
-		//Coordenadas del objeto a mover
-		Ogre::Vector3 objCoord = m_sceneObject->mNode.getPosition();
-
-		//Direccion del impulso
-		Ogre::Real x = 0;
-		Ogre::Real y = 0;
-
-		//Margen minimo de acercamiento "mouse/obj"
-		Ogre::Real minNear = 5;
-
-		//Control X
-		if(mouseCoord.x-minNear > objCoord.x)
-			x = m_moveX;
-		else if (mouseCoord.x+minNear < objCoord.x)
-			x = -m_moveX;
-
-		//Control Y
-		if(mouseCoord.y-minNear > objCoord.y)
-			y = m_moveY;
-		else if (mouseCoord.y+minNear < objCoord.y)
-			y = -m_moveY;
-
-		//Movimiento
-		m_sceneObject->mRigidBody.translate(btVector3(x, y, 0));
-	}
+	//Objetos tipo 3: Gallinas
+	if (m_objType == 3)
+		type3();
 
 	//Update en Bullet
 	m_sceneObject->update();
 
+}
+
+//---------------------------------------------------------------------------
+//Objeto de tipo 2: Telequineticos
+//---------------------------------------------------------------------------
+void Object::type2()
+{
+	//Raycasting para obtener las coordenadas del raton
+	OIS::MouseState ms = gMouse->getMouseState();
+	Ogre::Ray ray = gCamera->getCameraToViewportRay(ms.X.abs/(float)gWindow->getWidth(),ms.Y.abs/(float)gWindow->getHeight()); 
+
+	//Coordenadas del raton
+	Ogre::Vector3 mouseCoord = ray.getPoint(gCamera->getPosition().z);
+
+	//Coordenadas del objeto a mover
+	Ogre::Vector3 objCoord = m_sceneObject->mNode->getPosition();
+
+	//Direccion del impulso
+	Ogre::Real x = 0;
+	Ogre::Real y = 0;
+
+	//Margen minimo de acercamiento "mouse/obj"
+	Ogre::Real minNear = 5;
+
+	//Control X
+	if(mouseCoord.x-minNear > objCoord.x)
+		x = m_moveX;
+	else if (mouseCoord.x+minNear < objCoord.x)
+		x = -m_moveX;
+
+	//Control Y
+	if(mouseCoord.y-minNear > objCoord.y)
+		y = m_moveY;
+	else if (mouseCoord.y+minNear < objCoord.y)
+		y = -m_moveY;
+
+	//Movimiento
+	m_sceneObject->mRigidBody->translate(btVector3(x, y, 0));
+}
+
+//---------------------------------------------------------------------------
+//Objeto de tipo 3: Gallinas
+//---------------------------------------------------------------------------
+void Object::type3()
+{
+	//_@Crow _@Drink _@Peck _@Peck2 _@ScratchL _@ScratchR _@Sit _Run _Stand _Walk
+
+	//gPhysics->mWorld->contactPairTest(m_sceneObject->mRigidBody, gPlayer->m_sceneObject->mRigidBody, &gPhysics);
+
+	//if (result->m_collision)
+	//	m_direction.x = -m_direction.x;
+
+	bool rotate = false;
+	btTransform transform;
+	m_sceneObject->mRigidBody->getMotionState()->getWorldTransform(transform);
+
+	Ogre::AnimationState* mAnimWalk = m_sceneObject->mEntity->getAnimationState("_Run");
+
+	if(m_direction.x == 1 && !m_lookAt || m_direction.x == -1 && m_lookAt)
+		rotate = true;
+
+	if (rotate)
+	{
+		transform.setRotation(btQuaternion(0,-m_direction.x,0,1));
+		m_sceneObject->mRigidBody->setMotionState(new btDefaultMotionState(transform));
+		m_lookAt = !m_lookAt;
+	}
+	else
+	{
+		mAnimWalk->setLoop(true);
+		mAnimWalk->setEnabled(true);
+		mAnimWalk->addTime(Ogre::Real(FPS));
+	}
+
+	//Mover la gallina
+	m_sceneObject->mRigidBody->translate(btVector3(m_direction.x*m_moveX, 0, 0));
 }

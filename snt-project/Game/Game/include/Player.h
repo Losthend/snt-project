@@ -13,16 +13,17 @@ public:
     Player(SceneObject* sceneObject);
     virtual ~Player(void);
 	void update();
-	void catchSolution(Object* obj);
-	void catchActions();
+
 	void Player::catchAttack();
 	Ogre::Real RayCastingPlayerMouse();
+
 	void animationManager();
 	void animWalk(Ogre::AnimationState* mAnimWalk);
 	bool animJump(Ogre::AnimationState* mAnimJump);
 	bool animFall(Ogre::AnimationState* mAnimJump);
 	void animCrouchDown(Ogre::AnimationState* mAnimCrouch);
 	void animCrouchUp(Ogre::AnimationState* mAnimCrouch);
+
 	bool fallManager();
 	Object* rayFromPoint(Ogre::Vector3 origin, Ogre::Vector3 direction);
 

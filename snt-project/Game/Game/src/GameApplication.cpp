@@ -11,9 +11,6 @@
 //Para la creacion de SceneObjects
 #include "../include/SceneObject.h"
 
-#include "OgreMeshManager.h"
-#include "OgreStaticGeometry.h"
-
 //---------------------------------------------------------------------------
 //Constructor del juego (Game)
 //---------------------------------------------------------------------------
@@ -47,28 +44,30 @@ void GameApplication::createScene(void)
 	SceneObject* sceneObj;
 
 	//Suelo (1)
-	sceneObj = gPhysics->createGroundObject("ground", Ogre::Vector3(1500, 5, 1500), Ogre::Vector3(0, -50, 0), "Examples/GrassFloor");
+	sceneObj = gPhysics->createGroundObject("Ground", Ogre::Vector3(4000, 5, 1000), Ogre::Vector3(0, 0, 0), Ogre::Vector2(10,1), "Examples/GrassFloor");
 	gObjects.push_back(new Object(1, sceneObj));
+
+	//createFont("Font1", Ogre::Vector3(1500,770,0), Ogre::Vector3(0,0,-1000));
 	
 	//Hierba (null)
-	createGroundGrass(Ogre::Vector3(100,100,100), Ogre::Vector3(0,-50,0), 10);
+	//createGroundGrass(Ogre::Vector3(100,100,100), Ogre::Vector3(0,-50,0), 10);
 
 	//Objetos (2)
-	sceneObj = gPhysics->createBoxObject("cube1", Ogre::Vector3(50, 50, 50), Ogre::Vector3(-50, 80, 0), 1, "Barrel.mesh");
+	sceneObj = gPhysics->createBoxObject("Cube1", Ogre::Vector3(50, 50, 50), Ogre::Vector3(-50, 80, 0), 1, "Barrel.mesh");
 	gObjects.push_back(new Object(2, sceneObj));
-    sceneObj = gPhysics->createBoxObject("cube2", Ogre::Vector3(50, 50, 50), Ogre::Vector3(50, 120, 0), 1, "Barrel.mesh");
+    sceneObj = gPhysics->createBoxObject("Cube2", Ogre::Vector3(50, 50, 50), Ogre::Vector3(50, 120, 0), 1, "Barrel.mesh");
 	gObjects.push_back(new Object(2, sceneObj));
-    sceneObj = gPhysics->createBoxObject("cube3", Ogre::Vector3(50, 50, 50), Ogre::Vector3(50, 150, 0), 1, "Barrel.mesh");
+    sceneObj = gPhysics->createBoxObject("Cube3", Ogre::Vector3(50, 50, 50), Ogre::Vector3(50, 150, 0), 1, "Barrel.mesh");
 	gObjects.push_back(new Object(2, sceneObj));
-    sceneObj = gPhysics->createBoxObject("cube4", Ogre::Vector3(50, 50, 50), Ogre::Vector3(-50, 100, 0), 1, "Barrel.mesh");
+    sceneObj = gPhysics->createBoxObject("Cube4", Ogre::Vector3(50, 50, 50), Ogre::Vector3(-50, 100, 0), 1, "Barrel.mesh");
 	gObjects.push_back(new Object(2, sceneObj));
-	sceneObj = gPhysics->createBoxObject("plane1", Ogre::Vector3(100, 100, 100), Ogre::Vector3(60, 110, 0), 1, "WoodPallet.mesh");
+	sceneObj = gPhysics->createBoxObject("Plane1", Ogre::Vector3(100, 100, 100), Ogre::Vector3(60, 110, 0), 1, "WoodPallet.mesh");
 	gObjects.push_back(new Object(2, sceneObj));
 
 	//Decoracion (1)
-	sceneObj = gPhysics->createBoxObject("house1", Ogre::Vector3(3, 3, 3), Ogre::Vector3(-500, 125, 0), 0, "tudorhouse.mesh");
-	gObjects.push_back(new Object(1, sceneObj));
-	
+	//sceneObj = gPhysics->createBoxObject("house1", Ogre::Vector3(3, 3, 3), Ogre::Vector3(-500, 125, 0), 0, "tudorhouse.mesh");
+	//gObjects.push_back(new Object(1, sceneObj));
+
 	 //Trampas (3)
 	//sceneObj = gPhysics->createBoxObject("jaiqua1", Ogre::Vector3(10, 10, 10), Ogre::Vector3(-100, -50, 0), 1, "spine.mesh");
 	//gObjects.push_back(new Object(1, sceneObj));
@@ -80,21 +79,43 @@ void GameApplication::createScene(void)
 	//CONFIGURACIONES
 
 	//Posicionamos la camara en la posicion que nos interesa (donde esta el jugador)
-	Ogre::Vector3 playerPos = gPlayer->m_sceneObject->mNode.getPosition();
+	Ogre::Vector3 playerPos = gPlayer->m_sceneObject->mNode->getPosition();
 	gCamera->setPosition(playerPos.x, playerPos.y, 450.0);
 
-	//Luz ambiente y fondo
+	//Luz ambiente
 	gSceneMgr->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));
 	Ogre::Light* light = gSceneMgr->createLight("MainLight");
 	light->setPosition(20,80,50);
+
+	//Fondo
 	gSceneMgr->setSkyBox(true, "Examples/MorningSkyBox");
 	// Examples/MorningSkyBox 
 	// Examples/StormySkyBox
 }
 
+//---------------------------------------------------------------------------
+//Crea planos verticales (fondos) con el material indicado
+//---------------------------------------------------------------------------
+void GameApplication::createFont(Ogre::String name, Ogre::Vector3 size, Ogre::Vector3 pos)
+{
+
+	//Plano
+	Ogre::Plane plane(Ogre::Vector3::UNIT_Z, 0);
+	Ogre::MeshPtr meshPtr = Ogre::MeshManager::getSingleton().createPlane(name, 
+																		  Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, 
+																		  plane, size.x, size.y, 
+																		  20, 20, true, 1, 1, 1, Ogre::Vector3::UNIT_Y);
+	//Entidad 
+	Ogre::Entity *entity = gSceneMgr->createEntity(name);
+	entity->setMaterialName("MyMaterial/"+name);
+	//Nodo
+	Ogre::SceneNode *node = gSceneMgr->getRootSceneNode()->createChildSceneNode(name);
+	node->attachObject(entity);
+	node->setPosition(pos.x, pos.y, pos.z);
+}
 
 //---------------------------------------------------------------------------
-//Añade hierba en la posicion especificada a partir de una posicion origen
+//Añade hierba en en area a partir de una posicion origen y una cantidad
 //---------------------------------------------------------------------------
 void GameApplication::createGroundGrass(Ogre::Vector3 vSize, Ogre::Vector3 vPos, int amount)
 {

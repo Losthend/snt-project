@@ -1,0 +1,46 @@
+material MyMaterial/Ground1
+{
+	technique
+        {
+                pass
+                {
+                        texture_unit
+                        {
+                                texture Rust.png
+                        }
+                }
+        }
+}
+
+material /global/creatures/chicken/redchicken
+{
+	technique
+        {
+                pass
+                {
+                        texture_unit
+                        {
+                                texture chicken/chicken.png
+                        }
+                }
+        }
+
+}
+
+material MyMaterial/Font2
+{
+	technique
+        {
+                pass
+                {
+                        scene_blend alpha_blend
+                	depth_write off
+
+                        texture_unit
+                        {
+                                texture XXX.png
+                        }
+                }
+        }
+
+}
