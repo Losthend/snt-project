@@ -48,7 +48,6 @@ public:
 	bool				m_lookAt;
 	//Telequinesis
 	Object* m_catchObj;
-	Ogre::Real m_tkDistance;
 	//Vector de movimiento/direccion
 	Ogre::Vector3		m_direction;
 

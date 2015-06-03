@@ -39,7 +39,6 @@ Player::Player(SceneObject* sceneObject)
 	//m_sceneObject->mNode.showBoundingBox(true);
 
 	m_catchObj = 0;
-	m_tkDistance = 10000;
 
 	m_direction = Ogre::Vector3::ZERO;
 }

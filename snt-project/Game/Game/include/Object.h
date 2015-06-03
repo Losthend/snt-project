@@ -22,7 +22,6 @@ public:
 	//Velocidad de movimiento
 	Ogre::Real			m_moveX;
 	Ogre::Real			m_moveY;
-	Ogre::Real			m_speed;
 	//Vector de movimiento/direccion
 	Ogre::Vector3		m_direction;
 	bool				m_lookAt;

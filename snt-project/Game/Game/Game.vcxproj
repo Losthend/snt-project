@@ -13,6 +13,7 @@
   <ItemGroup>
     <ClInclude Include="include\BaseApplication.h" />
     <ClInclude Include="include\CCegui.h" />
+    <ClInclude Include="include\CollisionManager.h" />
     <ClInclude Include="include\FrameRate.h" />
     <ClInclude Include="include\GameApplication.h" />
     <ClInclude Include="include\GameMenu.h" />
@@ -28,6 +29,7 @@
   <ItemGroup>
     <ClCompile Include="src\BaseApplication.cpp" />
     <ClCompile Include="src\CCegui.cpp" />
+    <ClCompile Include="src\CollisionManager.cpp" />
     <ClCompile Include="src\FrameRate.cpp" />
     <ClCompile Include="src\GameApplication.cpp" />
     <ClCompile Include="src\GameMenu.cpp" />

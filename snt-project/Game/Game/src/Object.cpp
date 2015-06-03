@@ -7,6 +7,7 @@
 #include "../include/FrameRate.h"
 #include "../include/SceneObject.h"
 #include "../include/PhysicsManager.h"
+#include "../include/CollisionManager.h"
 
 /* 
 	Objeto de:
@@ -28,10 +29,8 @@ Object::Object(int objType, SceneObject* sceneObject)
 
 	m_objType = objType;
 
-	m_moveX = 2;
+	m_moveX = 1;
 	m_moveY = 2;
-
-	m_speed = 20;
 
 	m_direction = Ogre::Vector3::ZERO;
 
@@ -119,32 +118,27 @@ void Object::type3()
 {
 	//_@Crow _@Drink _@Peck _@Peck2 _@ScratchL _@ScratchR _@Sit _Run _Stand _Walk
 
-	//gPhysics->mWorld->contactPairTest(m_sceneObject->mRigidBody, gPlayer->m_sceneObject->mRigidBody, &gPhysics);
-
-	//if (result->m_collision)
-	//	m_direction.x = -m_direction.x;
-
+	Ogre::AnimationState* mAnimWalk = m_sceneObject->mEntity->getAnimationState("_Run");
 	bool rotate = false;
 	btTransform transform;
+
 	m_sceneObject->mRigidBody->getMotionState()->getWorldTransform(transform);
 
-	Ogre::AnimationState* mAnimWalk = m_sceneObject->mEntity->getAnimationState("_Run");
-
-	if(m_direction.x == 1 && !m_lookAt || m_direction.x == -1 && m_lookAt)
-		rotate = true;
-
-	if (rotate)
+	//Deteccion de colision + cambio de direccion
+	CollisionManager cm = CollisionManager();
+	gPhysics->mWorld->contactPairTest(m_sceneObject->mRigidBody, gPlayer->m_sceneObject->mRigidBody, cm);
+	if (cm.m_collision)
 	{
-		transform.setRotation(btQuaternion(0,-m_direction.x,0,1));
+		m_direction.x = -m_direction.x;
+		transform.setRotation(btQuaternion(0,m_direction.x,0,1));
 		m_sceneObject->mRigidBody->setMotionState(new btDefaultMotionState(transform));
 		m_lookAt = !m_lookAt;
 	}
-	else
-	{
-		mAnimWalk->setLoop(true);
-		mAnimWalk->setEnabled(true);
-		mAnimWalk->addTime(Ogre::Real(FPS));
-	}
+	cm.~CollisionManager();
+
+	mAnimWalk->setLoop(true);
+	mAnimWalk->setEnabled(true);
+	mAnimWalk->addTime(Ogre::Real(FPS));
 
 	//Mover la gallina
 	m_sceneObject->mRigidBody->translate(btVector3(m_direction.x*m_moveX, 0, 0));
