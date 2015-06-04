@@ -81,7 +81,7 @@ void PhysicsManager::update(float ticks)
 
 
 //---------------------------------------------------------------------------
-//Metodo para la creacion de objetos BOX entre Ogre y Bullet
+//Creacion de shapes primitivos (box, circle, etc).
 //---------------------------------------------------------------------------
 SceneObject* PhysicsManager::createPrimitiveShape(Ogre::String name, Ogre::Vector3 size, Ogre::Vector3 pos, float mass, Ogre::String meshName)
 {
@@ -158,8 +158,8 @@ SceneObject* PhysicsManager::createConvexHullShape(Ogre::String name, Ogre::Real
 //---------------------------------------------------------------------------
 SceneObject* PhysicsManager::createGroundShape(Ogre::String name, Ogre::Vector3 size, Ogre::Vector3 pos, Ogre::Vector2 repeat, Ogre::String material)
 {
-	//Plano
 	Ogre::Plane plane(Ogre::Vector3::UNIT_Y, 0);
+
 	Ogre::MeshPtr meshPtr = Ogre::MeshManager::getSingleton().createPlane(name, 
 																		  Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, 
 																		  plane, size.x, size.z, 

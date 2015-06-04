@@ -1,17 +1,3 @@
-material MyMaterial/Ground1
-{
-	technique
-        {
-                pass
-                {
-                        texture_unit
-                        {
-                                texture Rust.png
-                        }
-                }
-        }
-}
-
 material /global/creatures/chicken/redchicken
 {
 	technique
@@ -27,7 +13,35 @@ material /global/creatures/chicken/redchicken
 
 }
 
-material MyMaterial/Font2
+material MyMaterial/elevator_Floor
+{
+	technique
+        {
+                pass
+                {
+                        texture_unit
+                        {
+                                texture elevator_Floor.jpg
+                        }
+                }
+        }
+}
+
+material MyMaterial/elevator_Wall
+{
+	technique
+        {
+                pass
+                {
+                        texture_unit
+                        {
+                                texture elevator_Wall.jpg
+                        }
+                }
+        }
+}
+
+material MyMaterial/elevator_Note
 {
 	technique
         {
@@ -38,7 +52,58 @@ material MyMaterial/Font2
 
                         texture_unit
                         {
-                                texture XXX.png
+                                texture elevator_Note.png
+                        }
+                }
+        }
+
+}
+
+material MyMaterial/bunker_Wall
+{
+	technique
+        {
+                pass
+                {
+			texture_unit
+                        {
+                                texture bunker_Wall.jpg
+                        }
+                }
+        }
+
+}
+
+material MyMaterial/bunker_hole1
+{
+	technique
+        {
+                pass
+                {
+                        scene_blend alpha_blend
+                	depth_write off
+
+                        texture_unit
+                        {
+                                texture bunker_hole1.png
+                        }
+                }
+        }
+
+}
+
+material MyMaterial/bunker_hole2
+{
+	technique
+        {
+                pass
+                {
+                        scene_blend alpha_blend
+                	depth_write off
+
+                        texture_unit
+                        {
+                                texture bunker_hole2.png
                         }
                 }
         }

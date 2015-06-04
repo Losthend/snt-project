@@ -51,6 +51,18 @@ Player::~Player(void)
 //---------------------------------------------------------------------------
 void Player::update()
 {
+	//-------------------------------------------------------------------
+	//GIROS
+	//--------------------------------------------------------------------
+	//Si va hacia la derecha y esta mirando a la izquierda (m_lookAt=FALSE), o viceversa, hay que rotar
+	if(m_direction.x == 1 && !m_lookAt || m_direction.x == -1 && m_lookAt)
+	{
+		btTransform transform;
+		m_sceneObject->mRigidBody->getMotionState()->getWorldTransform(transform);
+		transform.setRotation(btQuaternion(0,-m_direction.x,0,1));
+		m_sceneObject->mRigidBody->setMotionState(new btDefaultMotionState(transform));
+		m_lookAt = !m_lookAt;
+	}
 
 	//-------------------------------------------------------------------
 	//CAIDA
@@ -86,7 +98,7 @@ void Player::update()
 
 	//Camara: centrada en el jugador
 	Ogre::Vector3 pos = m_sceneObject->mNode->_getWorldAABB().getCenter();
-	pos.y = 75 + pos.y;
+	pos.y = 100 + pos.y;
 	pos.z = gCamera->getPosition().z;
 	gCamera->setPosition(pos);
 }
@@ -158,31 +170,12 @@ void Player::animationManager()
 
 void Player::animWalk(Ogre::AnimationState* mAnimWalk)
 {
-	bool rotate = false;
-
-	//Comprobamos si el jugador mira en la direccion adecuada
-	btTransform transform;
-	m_sceneObject->mRigidBody->getMotionState()->getWorldTransform(transform);
-
-	//Si va hacia la derecha y esta mirando a la izquierda (m_lookAt=FALSE), o viceversa, hay que rotar
-	if(m_direction.x == 1 && !m_lookAt || m_direction.x == -1 && m_lookAt)
-		rotate = true;
-
-	if (rotate)
-	{
-		transform.setRotation(btQuaternion(0,-m_direction.x,0,1));
-		m_sceneObject->mRigidBody->setMotionState(new btDefaultMotionState(transform));
-		m_lookAt = !m_lookAt;
-	}
+	mAnimWalk->setLoop(true);
+	mAnimWalk->setEnabled(true);
+	if(!m_run)
+		mAnimWalk->addTime(Ogre::Real(FPS)*2);
 	else
-	{
-		mAnimWalk->setLoop(true);
-		mAnimWalk->setEnabled(true);
-		if(!m_run)
-			mAnimWalk->addTime(Ogre::Real(FPS)*2);
-		else
-			mAnimWalk->addTime(Ogre::Real(FPS)*3);
-	}
+		mAnimWalk->addTime(Ogre::Real(FPS)*3);
 }
 
 
@@ -273,8 +266,8 @@ bool Player::fallManager()
 
 	//Evita que "escale" por superficies BOX (optimizable)
 	Ogre::Real sizeX = m_sceneObject->mNode->_getWorldAABB().getSize().x;
-	nearLeft.x = Ogre::Real(nearLeft.x + sizeX*0.05);
-	nearRight.x = Ogre::Real(nearRight.x - sizeX*0.05);
+	nearLeft.x = Ogre::Real(nearLeft.x + sizeX*0.065);
+	nearRight.x = Ogre::Real(nearRight.x - sizeX*0.065);
 
 	//Centro del bounding box
 	Ogre::Vector3 center = (nearRight + nearLeft ) / 2;
