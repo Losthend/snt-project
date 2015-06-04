@@ -11,7 +11,6 @@ class GameApplication;
 //Jugador y Objetos del entorno de acceso global
 extern Player* gPlayer;
 extern std::vector<Object*> gObjects;
-extern std::vector<btCollisionShape*> gCollisionShapes;
 
 //Declaramos las variables de configuracion para que puedan ser usadas como globales
 extern Ogre::Root*				gRoot;

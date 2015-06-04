@@ -4,11 +4,12 @@
 //---------------------------------------------------------------------------
 //Constructor
 //---------------------------------------------------------------------------
-SceneObject::SceneObject(Ogre::Entity *entity, Ogre::SceneNode *node, btRigidBody *body)
+SceneObject::SceneObject(Ogre::Entity *entity, Ogre::SceneNode *node, btRigidBody *body, float mass)
 {
 	mEntity = entity;
 	mNode = node;
 	mRigidBody = body;
+	mMass = mass;
 }
 
 //---------------------------------------------------------------------------

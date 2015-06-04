@@ -36,8 +36,6 @@ Player::Player(SceneObject* sceneObject)
 	m_moveX = 2;
 	m_moveY = 30;
 
-	//m_sceneObject->mNode.showBoundingBox(true);
-
 	m_catchObj = 0;
 
 	m_direction = Ogre::Vector3::ZERO;
@@ -67,7 +65,7 @@ void Player::update()
 	//Si tienes que saltar, no estas cayendo y no estas saltando, saltas
 	if (m_jump && !m_fall && !m_inJump)
 	{
-		m_sceneObject->mRigidBody->applyCentralImpulse(btVector3(0, m_moveY, 0));
+		m_sceneObject->mRigidBody->applyCentralImpulse(btVector3(0, m_moveY*m_sceneObject->mMass, 0));
 		m_inJump = true;
 	}
 
@@ -98,9 +96,9 @@ void Player::update()
 //------------------------------------------------------------
 void Player::catchAttack()
 {
-	Ogre::Vector3 direction = m_catchObj->m_sceneObject->mNode->getPosition() - m_sceneObject->mNode->getPosition();
-	
-	btScalar power = 1; //DEPENDE DE LA MASA
+	//Ogre::Vector3 direction = m_catchObj->m_sceneObject->mNode->getPosition() - m_sceneObject->mNode->getPosition();
+	Ogre::Vector3 direction = m_catchObj->m_sceneObject->mNode->_getWorldAABB().getCenter() - m_sceneObject->mNode->_getWorldAABB().getCenter();
+	btScalar power = m_catchObj->m_sceneObject->mMass;
 	btScalar x = direction.x*power;
 	btScalar y = direction.y*power;
 
@@ -269,14 +267,16 @@ void Player::animCrouchUp(Ogre::AnimationState* mAnimCrouch)
 //------------------------------------------------------------
 bool Player::fallManager()
 {
-	//Esquinas
+	//Extremos del bounding box
 	Ogre::Vector3 nearLeft = m_sceneObject->mNode->_getWorldAABB().getCorner(Ogre::AxisAlignedBox::NEAR_LEFT_BOTTOM);
 	Ogre::Vector3 nearRight = m_sceneObject->mNode->_getWorldAABB().getCorner(Ogre::AxisAlignedBox::NEAR_RIGHT_BOTTOM);
-	//5% desde la esquina hacia el interior descartado
+
+	//Evita que "escale" por superficies BOX (optimizable)
 	Ogre::Real sizeX = m_sceneObject->mNode->_getWorldAABB().getSize().x;
 	nearLeft.x = Ogre::Real(nearLeft.x + sizeX*0.05);
 	nearRight.x = Ogre::Real(nearRight.x - sizeX*0.05);
-	//Punto central
+
+	//Centro del bounding box
 	Ogre::Vector3 center = (nearRight + nearLeft ) / 2;
 
 	//Comprobamos si durante la caida colisionará con algun objeto

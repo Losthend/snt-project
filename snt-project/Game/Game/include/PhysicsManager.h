@@ -11,11 +11,11 @@ public:
 	void update(float ticks);
 
 	btRigidBody* createBody(const btTransform &transform, float mass, btCollisionShape* shape);
-	btCollisionShape* createBoxShape(float x, float y, float z);
-	SceneObject* createConvexHullShape(const char *name, const Ogre::Real &size, const Ogre::Vector3 &pos, float mass, Ogre::String meshName);
-
-	SceneObject* createBoxObject(const char *name, const Ogre::Vector3 &size, const Ogre::Vector3 &pos, float mass, Ogre::String meshName);
-	SceneObject* createGroundObject(Ogre::String name, Ogre::Vector3 size, Ogre::Vector3 pos, Ogre::Vector2 repeat, Ogre::String material);
+	
+	SceneObject* createPrimitiveShape(Ogre::String name, Ogre::Vector3 size, Ogre::Vector3 pos, float mass, Ogre::String meshName);
+	SceneObject* createConvexHullShape(Ogre::String name, Ogre::Real size, Ogre::Vector3 pos, float mass, Ogre::String meshName);	
+	SceneObject* createGroundShape(Ogre::String name, Ogre::Vector3 size, Ogre::Vector3 pos, Ogre::Vector2 repeat, Ogre::String material);
+	
 	void magicGenerator(Ogre::Vector3 pos);
 
 	void getMeshInformation(const Ogre::Entity* const ent,

@@ -83,7 +83,7 @@ void PhysicsManager::update(float ticks)
 //---------------------------------------------------------------------------
 //Metodo para la creacion de objetos BOX entre Ogre y Bullet
 //---------------------------------------------------------------------------
-SceneObject* PhysicsManager::createBoxObject(const char *name, const Ogre::Vector3 &size, const Ogre::Vector3 &pos, float mass, Ogre::String meshName)
+SceneObject* PhysicsManager::createPrimitiveShape(Ogre::String name, Ogre::Vector3 size, Ogre::Vector3 pos, float mass, Ogre::String meshName)
 {
 	//Creacion del SceneNode que representara el objeto en pantalla
 	Ogre::SceneNode* node = gSceneMgr->getRootSceneNode()->createChildSceneNode(name);
@@ -97,32 +97,20 @@ SceneObject* PhysicsManager::createBoxObject(const char *name, const Ogre::Vecto
 
 	//Shape adaptado al objeto
 	Ogre::Vector3 nodeSize = node->_getWorldAABB().getSize();
-	btCollisionShape* shape = createBoxShape(nodeSize.x, nodeSize.y, nodeSize.z);
+	btCollisionShape* shape = new btBoxShape(btVector3(nodeSize.x/2, nodeSize.y/2, nodeSize.z/2));
 
 	//Creacion del cuerpo rigido que envuelve al sceneNode
 	btRigidBody* body = gPhysics->createBody(btTransform(btQuaternion::getIdentity(), btVector3(pos.x, pos.y, pos.z)), mass, shape);
 
-	SceneObject* sceneObject = new SceneObject(entity, node, body);
+	SceneObject* sceneObject = new SceneObject(entity, node, body, mass);
 
 	return sceneObject;
 }
 
 //---------------------------------------------------------------------------
-//Creacion de BoxShape
-//---------------------------------------------------------------------------
-btCollisionShape* PhysicsManager::createBoxShape(float x, float y, float z)
-{
-	btCollisionShape* shape = new btBoxShape(btVector3(x/2, y/2, z/2));
-	gCollisionShapes.push_back(shape);
-
-	return shape;
-}
-
-
-//---------------------------------------------------------------------------
 //Creacion de ConvexHullShape (mesh)
 //---------------------------------------------------------------------------
-SceneObject* PhysicsManager::createConvexHullShape(const char *name, const Ogre::Real &size, const Ogre::Vector3 &pos, float mass, Ogre::String meshName)
+SceneObject* PhysicsManager::createConvexHullShape(Ogre::String name, Ogre::Real size, Ogre::Vector3 pos, float mass, Ogre::String meshName)
 {
 	//Creacion del SceneNode que representara el objeto en pantalla
 	Ogre::SceneNode* node = gSceneMgr->getRootSceneNode()->createChildSceneNode(name);
@@ -149,7 +137,7 @@ SceneObject* PhysicsManager::createConvexHullShape(const char *name, const Ogre:
 
 	//Creacion del btConvexHullShape
 	btConvexHullShape* shape = new btConvexHullShape();
-	for (int i = 0; i < vertex_count; i++)
+	for (unsigned int i = 0; i < vertex_count; i++)
     {
         Ogre::Vector3 v = vertices[i];
         btVector3 btv = btVector3(v.x, v.y, v.z);
@@ -159,7 +147,7 @@ SceneObject* PhysicsManager::createConvexHullShape(const char *name, const Ogre:
 	//Creacion del cuerpo rigido que envuelve al sceneNode
 	btRigidBody* body = gPhysics->createBody(btTransform(btQuaternion::getIdentity(), btVector3(pos.x, pos.y, pos.z)), mass, shape);
 
-	SceneObject* sceneObject = new SceneObject(entity, node, body);
+	SceneObject* sceneObject = new SceneObject(entity, node, body, mass);
 
 	return sceneObject;
 }
@@ -168,7 +156,7 @@ SceneObject* PhysicsManager::createConvexHullShape(const char *name, const Ogre:
 //---------------------------------------------------------------------------
 //Creacion de planos/suelo entre Ogre y bullet
 //---------------------------------------------------------------------------
-SceneObject* PhysicsManager::createGroundObject(Ogre::String name, Ogre::Vector3 size, Ogre::Vector3 pos, Ogre::Vector2 repeat, Ogre::String material)
+SceneObject* PhysicsManager::createGroundShape(Ogre::String name, Ogre::Vector3 size, Ogre::Vector3 pos, Ogre::Vector2 repeat, Ogre::String material)
 {
 	//Plano
 	Ogre::Plane plane(Ogre::Vector3::UNIT_Y, 0);
@@ -185,11 +173,11 @@ SceneObject* PhysicsManager::createGroundObject(Ogre::String name, Ogre::Vector3
 	node->setPosition(pos.x, pos.y, pos.z);
 	node->_updateBounds();
 
-	btCollisionShape* shape = createBoxShape(size.x, size.y, size.z);
+	btCollisionShape* shape = new btBoxShape(btVector3(size.x/2, size.y/2, size.z/2));
 
 	btRigidBody* body = gPhysics->createBody(btTransform(btQuaternion::getIdentity(), btVector3(pos.x, pos.y, pos.z)), 0, shape);
 
-	SceneObject* sceneObject = new SceneObject(entity, node, body);
+	SceneObject* sceneObject = new SceneObject(entity, node, body, 0);
 
 	return sceneObject;
 }
@@ -200,7 +188,7 @@ SceneObject* PhysicsManager::createGroundObject(Ogre::String name, Ogre::Vector3
 void PhysicsManager::magicGenerator(Ogre::Vector3 pos)
 {
 	Ogre::String id;
-	id = Ogre::StringConverter::toString(m_magicCount).c_str();
+	id = Ogre::StringConverter::toString(m_magicCount);
 
 	if(m_magicCount>9)
 	{
@@ -222,21 +210,8 @@ void PhysicsManager::magicGenerator(Ogre::Vector3 pos)
 
 	m_magicCount++;
 
-	Ogre::Entity *entity = gSceneMgr->createEntity("magic"+id, "chicken.mesh");
-
-	//Nodo
-	Ogre::SceneNode *node = gSceneMgr->getRootSceneNode()->createChildSceneNode("magic"+id);
-	node->attachObject(entity);
-	node->setScale(2, 2, 2);
-	node->setPosition(pos.x, pos.y, 0);
-	node->_updateBounds();
-
-	Ogre::Vector3 size = node->_getWorldAABB().getSize();
-	btCollisionShape* shape = createBoxShape(size.x, size.y, size.z);
-
-	btRigidBody* body = gPhysics->createBody(btTransform(btQuaternion::getIdentity(), btVector3(pos.x, pos.y, pos.z)), 1, shape);
-
-	SceneObject* sceneObject = new SceneObject(entity, node, body);
+	Ogre::String name = "magic"+id;
+	SceneObject* sceneObject = gPhysics->createPrimitiveShape(name, Ogre::Vector3(20, 20, 20), Ogre::Vector3(pos.x, pos.y, pos.z), 1, "chicken.mesh");
 
 	//Mirar inicialmente hacia el eje X+
 	btTransform transform;
