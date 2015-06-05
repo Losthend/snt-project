@@ -1,0 +1,14 @@
+material /global/creatures/chicken/redchicken
+{
+	technique
+        {
+                pass
+                {
+                        texture_unit
+                        {
+                                texture chicken/chicken.png
+                        }
+                }
+        }
+
+}

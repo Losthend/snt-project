@@ -1,0 +1,61 @@
+material Material/elevator_Floor
+{
+	technique
+        {
+                pass
+                {
+                        texture_unit
+                        {
+                                texture elevator_Floor.jpg
+                        }
+                }
+        }
+}
+
+material Material/elevator_Wall
+{
+	technique
+        {
+                pass
+                {
+                        texture_unit
+                        {
+                                texture elevator_Wall.jpg
+                        }
+                }
+        }
+}
+
+material Material/elevator_Note
+{
+	technique
+        {
+                pass
+                {
+                        scene_blend alpha_blend
+                	depth_write off
+
+                        texture_unit
+                        {
+                                texture elevator_Note.png
+                        }
+                }
+        }
+
+}
+
+material Material/elevator_Button
+{
+	technique
+        {
+                pass
+                {
+
+                        texture_unit
+                        {
+                                texture elevator_Button.jpg
+                        }
+                }
+        }
+
+}

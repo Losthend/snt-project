@@ -98,7 +98,7 @@ void Player::update()
 
 	//Camara: centrada en el jugador
 	Ogre::Vector3 pos = m_sceneObject->mNode->_getWorldAABB().getCenter();
-	pos.y = 100 + pos.y;
+	pos.y = 50 + pos.y;
 	pos.z = gCamera->getPosition().z;
 	gCamera->setPosition(pos);
 }

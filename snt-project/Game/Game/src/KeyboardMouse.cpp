@@ -164,6 +164,18 @@ bool KeyboardMouse::mouseMoved(const OIS::MouseEvent &arg)
 	//if (arg.state.Z.rel)
 	//	sys.getDefaultGUIContext().injectMouseWheelChange(arg.state.Z.rel / 120.0f);
 
+	if (arg.state.Z.rel != 0)
+	{
+		Ogre::Vector3 pos = gCamera->getPosition();
+		if(pos.z >= 200 && pos.z <= 450)
+			pos.z = pos.z - arg.state.Z.rel*0.05;
+		else if(pos.z < 200)
+			pos.z = 200;
+		else if(pos.z > 450)
+			pos.z = 450;
+		gCamera->setPosition(pos);
+	}
+
 	return true;
 }
 

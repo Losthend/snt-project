@@ -1,65 +1,4 @@
-material /global/creatures/chicken/redchicken
-{
-	technique
-        {
-                pass
-                {
-                        texture_unit
-                        {
-                                texture chicken/chicken.png
-                        }
-                }
-        }
-
-}
-
-material MyMaterial/elevator_Floor
-{
-	technique
-        {
-                pass
-                {
-                        texture_unit
-                        {
-                                texture elevator_Floor.jpg
-                        }
-                }
-        }
-}
-
-material MyMaterial/elevator_Wall
-{
-	technique
-        {
-                pass
-                {
-                        texture_unit
-                        {
-                                texture elevator_Wall.jpg
-                        }
-                }
-        }
-}
-
-material MyMaterial/elevator_Note
-{
-	technique
-        {
-                pass
-                {
-                        scene_blend alpha_blend
-                	depth_write off
-
-                        texture_unit
-                        {
-                                texture elevator_Note.png
-                        }
-                }
-        }
-
-}
-
-material MyMaterial/bunker_Wall
+material Material/bunker_Wall
 {
 	technique
         {
@@ -74,7 +13,7 @@ material MyMaterial/bunker_Wall
 
 }
 
-material MyMaterial/bunker_hole1
+material Material/bunker_holeRight
 {
 	technique
         {
@@ -85,14 +24,16 @@ material MyMaterial/bunker_hole1
 
                         texture_unit
                         {
-                                texture bunker_hole1.png
+                                texture bunker_holeRight.png
+				tex_border_colour 0 0 0 0
+				tex_address_mode border
                         }
                 }
         }
 
 }
 
-material MyMaterial/bunker_hole2
+material Material/bunker_holeLeft
 {
 	technique
         {
@@ -103,7 +44,49 @@ material MyMaterial/bunker_hole2
 
                         texture_unit
                         {
-                                texture bunker_hole2.png
+                                texture bunker_holeLeft.png
+				tex_border_colour 0 0 0 0
+				tex_address_mode border
+                        }
+                }
+        }
+
+}
+
+material Material/bunker_holeTop
+{
+	technique
+        {
+                pass
+                {
+                        scene_blend alpha_blend
+                	depth_write off
+
+                        texture_unit
+                        {
+                                texture bunker_holeTop.png
+				tex_border_colour 0 0 0 0
+				tex_address_mode border
+                        }
+                }
+        }
+
+}
+
+material Material/bunker_holeBottom
+{
+	technique
+        {
+                pass
+                {
+                        scene_blend alpha_blend
+                	depth_write off
+
+                        texture_unit
+                        {
+                                texture bunker_holeBottom.png
+				tex_border_colour 0 0 0 0
+				tex_address_mode border
                         }
                 }
         }
