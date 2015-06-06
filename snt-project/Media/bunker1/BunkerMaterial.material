@@ -92,3 +92,39 @@ material Material/bunker_holeBottom
         }
 
 }
+
+material Material/bunker_flag1
+{
+	technique
+        {
+                pass
+                {
+                        scene_blend alpha_blend
+                	depth_write off
+
+                        texture_unit
+                        {
+                                texture bunker_flag1.png
+                        }
+                }
+        }
+
+}
+
+material Material/bunker_flag2
+{
+	technique
+        {
+                pass
+                {
+                        scene_blend alpha_blend
+                	depth_write off
+
+                        texture_unit
+                        {
+                                texture bunker_flag2.png
+                        }
+                }
+        }
+
+}

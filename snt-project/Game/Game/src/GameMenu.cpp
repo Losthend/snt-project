@@ -108,7 +108,7 @@ bool GameMenu::handleInnerPartStartClickAreaClick(const CEGUI::EventArgs& args)
 
 	//INICIO DEL JUEGO
 	//Se crea el escenario
-	gGameApp->createScene();
+	gGameApp->createScene1();
 	//Ocultamos el menu principal
 	d_root->hide();
 	//Cargamos los menus basicos 

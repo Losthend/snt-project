@@ -1,4 +1,4 @@
-material /global/creatures/chicken/redchicken
+material /global/environment/petrified
 {
 	technique
         {
@@ -6,7 +6,7 @@ material /global/creatures/chicken/redchicken
                 {
                         texture_unit
                         {
-                                texture chicken/chicken.png
+                                texture skeleton.png
                         }
                 }
         }

@@ -13,7 +13,8 @@ PhysicsManager::PhysicsManager()
 {
 	mCollisionDispatcher = new btCollisionDispatcher(&mCollisionConfig);
 	mWorld = new btDiscreteDynamicsWorld(mCollisionDispatcher, &mBroadphase, &mConstraintSolver, &mCollisionConfig);
-	mWorld->setGravity(btVector3(0,-9.81f,0));
+	//mWorld->setGravity(btVector3(0,-9.81f,0));
+	mWorld->setGravity(btVector3(0,-300.f,0));
 	m_magicCount = 0;
 }
 
@@ -76,7 +77,7 @@ btRigidBody* PhysicsManager::createBody(const btTransform &transform, float mass
 //---------------------------------------------------------------------------
 void PhysicsManager::update(float ticks)
 {
-	mWorld->stepSimulation(ticks, 0);
+	mWorld->stepSimulation(ticks, 1);
 }
 
 
@@ -190,12 +191,12 @@ void PhysicsManager::magicGenerator(Ogre::Vector3 pos)
 	Ogre::String id;
 	id = Ogre::StringConverter::toString(m_magicCount);
 
-	if(m_magicCount>9)
+	if(m_magicCount>=3)
 	{
 		bool chickenDelete = false;
 		for(unsigned x = 0; x < gObjects.size() && !chickenDelete; x++)
 		{
-			for (unsigned y = 9; y > 0 && !chickenDelete; y--)
+			for (unsigned y = 0; y <= 3 && !chickenDelete; y++)
 			{
 				id = Ogre::StringConverter::toString(y).c_str();
 				if(gObjects[x]->m_sceneObject->mNode->getName() == "magic"+id)

@@ -34,7 +34,7 @@ Player::Player(SceneObject* sceneObject)
 	m_run = false;
 
 	m_moveX = 2;
-	m_moveY = 30;
+	m_moveY = 200;
 
 	m_catchObj = 0;
 
@@ -110,12 +110,12 @@ void Player::catchAttack()
 {
 	//Ogre::Vector3 direction = m_catchObj->m_sceneObject->mNode->getPosition() - m_sceneObject->mNode->getPosition();
 	Ogre::Vector3 direction = m_catchObj->m_sceneObject->mNode->_getWorldAABB().getCenter() - m_sceneObject->mNode->_getWorldAABB().getCenter();
-	btScalar power = m_catchObj->m_sceneObject->mMass;
+	btScalar power = 5*m_catchObj->m_sceneObject->mMass;
 	btScalar x = direction.x*power;
 	btScalar y = direction.y*power;
 
 	m_catchObj->m_sceneObject->mRigidBody->applyCentralImpulse(btVector3(x, y, 0));
-	m_catchObj->m_sceneObject->mRigidBody->setGravity(btVector3(0,-9.81f,0));
+	m_catchObj->m_sceneObject->mRigidBody->setGravity(btVector3(0,-300.f,0));
 	m_catchObj = 0;
 }
 

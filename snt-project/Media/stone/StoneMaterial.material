@@ -1,0 +1,14 @@
+material /global/environment/iron_ore
+{
+	technique
+        {
+                pass
+                {
+                        texture_unit
+                        {
+                                texture stone.jpg
+                        }
+                }
+        }
+
+}
