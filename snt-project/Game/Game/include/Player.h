@@ -3,36 +3,27 @@
 
 class SceneObject;
 class Object;
+class AnimationManager;
 
 class Player
 {
 public:
 
-	//FUNCIONES
-
     Player(SceneObject* sceneObject);
     virtual ~Player(void);
-	void update();
 
+	void update();
 	void Player::catchAttack();
 	Ogre::Real RayCastingPlayerMouse();
-
-	void animationManager();
-	void animWalk(Ogre::AnimationState* mAnimWalk);
-	bool animJump(Ogre::AnimationState* mAnimJump);
-	bool animFall(Ogre::AnimationState* mAnimJump);
-	void animCrouchDown(Ogre::AnimationState* mAnimCrouch);
-	void animCrouchUp(Ogre::AnimationState* mAnimCrouch);
-
 	bool fallManager();
 	Object* rayFromPoint(Ogre::Vector3 origin, Ogre::Vector3 direction);
 
-	//VARIABLES
-
 	//SceneObject: Node + btRigidBody
 	SceneObject*		m_sceneObject;
-	//Velocidad del juego (duracion de cada frame)
+	//Frame per second
 	double				FPS;
+	//Animaciones
+	AnimationManager*	m_animMgr;
 	//Velocidad de movimiento
 	Ogre::Real			m_moveX;
 	Ogre::Real			m_moveY;
@@ -40,10 +31,11 @@ public:
 	bool				m_fall;
 	bool				m_jump;
 	bool				m_inJump;
-	//Agacharse y correr
-	bool				m_crouchDown;
-	bool				m_crouchUp;
+	//Correr
 	bool				m_run;
+	//Espadas y ataque
+	bool				m_SwordsDrawn;
+	bool				m_attack;
 	//Direccion: TRUE:derecha(x+) / FALSE:izquierda(x-)
 	bool				m_lookAt;
 	//Telequinesis

@@ -1,15 +1,12 @@
 #include "../include/stdafx.h"
 #include "../include/GameApplication.h"
 
-//Acceso a las variables globales
 #include "../include/Global.h"
-//Acceso a Object y Player
 #include "../include/Object.h"
 #include "../include/Player.h"
-//Para el uso de fisicas
 #include "../include/PhysicsManager.h"
-//Para la creacion de SceneObjects
 #include "../include/SceneObject.h"
+#include "../include/AnimationManager.h"
 
 //---------------------------------------------------------------------------
 //Constructor del juego (Game)
@@ -34,8 +31,9 @@ void GameApplication::createScene1(void)
 	//****************************************************
 	if(gPlayer == 0)
 	{
-		SceneObject* player = gPhysics->createConvexHullShape("Player", Ogre::Real(0.3), Ogre::Vector3(0, 10, 0), 1, "ninja.mesh");
+		SceneObject* player = gPhysics->createConvexHullShape("Player", Ogre::Real(5), Ogre::Vector3(100, 10, 0), 1, "Sinbad.mesh");
 		gPlayer = new Player(player);
+		gPlayer->m_animMgr = new AnimationManager();
 	}
 
 	//****************************************************

@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\AnimationManager.h" />
     <ClInclude Include="include\BaseApplication.h" />
     <ClInclude Include="include\CCegui.h" />
     <ClInclude Include="include\CollisionManager.h" />
@@ -27,6 +28,7 @@
     <ClInclude Include="include\stdafx.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\AnimationManager.cpp" />
     <ClCompile Include="src\BaseApplication.cpp" />
     <ClCompile Include="src\CCegui.cpp" />
     <ClCompile Include="src\CollisionManager.cpp" />

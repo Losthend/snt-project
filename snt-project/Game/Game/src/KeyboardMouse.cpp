@@ -8,6 +8,7 @@
 #include "../include/PhysicsManager.h"
 #include "../include/CCegui.h"
 #include "../include/GameMenu.h"
+#include "../include/AnimationManager.h"
 
 KeyboardMouse::KeyboardMouse(void)
 {
@@ -50,19 +51,12 @@ bool KeyboardMouse::keyPressed( const OIS::KeyEvent &arg )
 				if (gPlayer->m_direction.x == 0)
 					gPlayer->m_direction.x = 1;
 				break;
-			case OIS::KC_S:
-				if (gPlayer->m_run == false)
-				{
-					gPlayer->m_crouchDown = true;
-					gPlayer->m_moveX = gPlayer->m_moveX / 2;
-				}
+			case OIS::KC_E:
+				gPlayer->m_SwordsDrawn = true;
 				break;
 			case OIS::KC_LSHIFT:
-				if (gPlayer->m_crouchDown == false)
-				{
 					gPlayer->m_run = true;
 					gPlayer->m_moveX = gPlayer->m_moveX * 2;
-				}
 				break;
 			case OIS::KC_SPACE:
 				if (!(gPlayer->m_jump) && !(gPlayer->m_fall))
@@ -97,13 +91,6 @@ bool KeyboardMouse::keyReleased(const OIS::KeyEvent &arg)
 				if (gPlayer->m_direction.x == 1)
 					gPlayer->m_direction.x = 0;
 				break;
-			case OIS::KC_S:
-				if (gPlayer->m_crouchDown == true)
-				{
-					gPlayer->m_crouchDown = false;
-					gPlayer->m_crouchUp = true;
-					gPlayer->m_moveX = gPlayer->m_moveX * 2;
-				}
 			case OIS::KC_LSHIFT:
 				if (gPlayer->m_run == true)
 				{
@@ -215,10 +202,14 @@ bool KeyboardMouse::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID 
 		}
 	}
 
-	//Ataque: lanzar objeto agarrado
+	//Ataques: lanzar objeto agarrado o golpes de espada
 	if (gPlayer != 0 && id == OIS::MB_Left)
+	{
 		if (gPlayer->m_catchObj != 0)
 			gPlayer->catchAttack();
+		else
+			gPlayer->m_attack = true;
+	}
 
 	return true;
 }
@@ -235,5 +226,9 @@ bool KeyboardMouse::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID
 		//Suelta el objeto
 		gPlayer->m_catchObj = 0;
 	}
+
+	if (gPlayer != 0 && id == OIS::MB_Left)
+			gPlayer->m_attack = false;
+
 	return true;
 }
