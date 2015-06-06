@@ -6,6 +6,7 @@
 #include "../include/Global.h"
 #include "../include/FrameRate.h"
 #include "../include/SceneObject.h"
+#include "../include/PhysicsManager.h"
 
 //---------------------------------------------------------------------------
 Player::Player(SceneObject* sceneObject)
@@ -34,7 +35,7 @@ Player::Player(SceneObject* sceneObject)
 	m_run = false;
 
 	m_moveX = 2;
-	m_moveY = 200;
+	m_moveY = 150;
 
 	m_catchObj = 0;
 
@@ -115,7 +116,7 @@ void Player::catchAttack()
 	btScalar y = direction.y*power;
 
 	m_catchObj->m_sceneObject->mRigidBody->applyCentralImpulse(btVector3(x, y, 0));
-	m_catchObj->m_sceneObject->mRigidBody->setGravity(btVector3(0,-300.f,0));
+	m_catchObj->m_sceneObject->mRigidBody->setGravity(gPhysics->mWorld->getGravity());
 	m_catchObj = 0;
 }
 

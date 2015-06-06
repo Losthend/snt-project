@@ -231,7 +231,7 @@ bool KeyboardMouse::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID
 	if (gPlayer != 0 && id == OIS::MB_Right && gPlayer->m_catchObj != 0)
 	{
 		//Devuelve el efecto de la gravedad al objeto
-		gPlayer->m_catchObj->m_sceneObject->mRigidBody->setGravity(btVector3(0,-300.f,0));
+		gPlayer->m_catchObj->m_sceneObject->mRigidBody->setGravity(gPhysics->mWorld->getGravity());
 		//Suelta el objeto
 		gPlayer->m_catchObj = 0;
 	}

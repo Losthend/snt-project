@@ -71,16 +71,23 @@ void GameApplication::createScene1(void)
 	
 
 	//SALA PRINCIPAL
-	createFont("bunkerWall1", Ogre::Vector2(900,100), Ogre::Vector3(500,50,-75), "Material/bunker_Wall", Ogre::Vector2(8,1));
+	createFont("bunkerWall1", Ogre::Vector2(900,250), Ogre::Vector3(500,125,-75), "Material/bunker_Wall", Ogre::Vector2(8,2));
 
 	sceneObj = gPhysics->createGroundShape("bunkerFloor1", Ogre::Vector3(530, 5, 150), Ogre::Vector3(315, 0, 0), Ogre::Vector2(5,1), "Material/bunker_Wall");
 	gObjects.push_back(new Object(1, sceneObj));
 	sceneObj = gPhysics->createGroundShape("bunkerFloor2", Ogre::Vector3(260, 5, 150), Ogre::Vector3(820, 0, 0), Ogre::Vector2(2,1), "Material/bunker_Wall");
 	gObjects.push_back(new Object(1, sceneObj));
 	
-	sceneObj = gPhysics->createPrimitiveShape("bunkerWall2", Ogre::Vector3(5*0.1, 100*0.1, 150*0.1), Ogre::Vector3(950, 50, 0), 0, "Cube.mesh");
+	sceneObj = gPhysics->createPrimitiveShape("bunkerWall2", Ogre::Vector3(5*0.1, 250*0.1, 150*0.1), Ogre::Vector3(950, 125, 0), 0, "Cube.mesh");
 	sceneObj->mEntity->setMaterialName("Material/bunker_Wall");
 	gObjects.push_back(new Object(1, sceneObj)); 
+	sceneObj = gPhysics->createPrimitiveShape("bunkerWall3", Ogre::Vector3(2*0.1, 150*0.1, 150*0.1), Ogre::Vector3(51, 175, 0), 0, "Cube.mesh");
+	sceneObj->mEntity->setMaterialName("Material/bunker_Wall");
+	gObjects.push_back(new Object(1, sceneObj)); 
+	sceneObj = gPhysics->createPrimitiveShape("bunkerRoof", Ogre::Vector3(900*0.1, 5*0.1, 150*0.1), Ogre::Vector3(500, 250, 0), 0, "Cube.mesh");
+	sceneObj->mEntity->setMaterialName("Material/bunker_Wall");
+	gObjects.push_back(new Object(1, sceneObj));
+
 	
 	//Agujero
 	sceneObj = gPhysics->createGroundShape("bunkerHoleRight", Ogre::Vector3(20, 5, 50), Ogre::Vector3(685, 0, 0), Ogre::Vector2(1,1), "Material/bunker_holeRight");
@@ -108,11 +115,18 @@ void GameApplication::createScene1(void)
 	gObjects.push_back(new Object(2, sceneObj)); 
 
 	//DECORACION
-	createFont("bunkerFlag1", Ogre::Vector2(50,75), Ogre::Vector3(200,50,-74), "Material/bunker_flag1", Ogre::Vector2(1,1));
-	createFont("bunkerFlag2", Ogre::Vector2(50,75), Ogre::Vector3(400,50,-74), "Material/bunker_flag2", Ogre::Vector2(1,1));
+	createFont("bunkerFlag1", Ogre::Vector2(75,150), Ogre::Vector3(200,125,-74), "Material/bunker_flag1", Ogre::Vector2(1,1));
+	createFont("bunkerFlag2", Ogre::Vector2(75,150), Ogre::Vector3(400,125,-74), "Material/bunker_flag2", Ogre::Vector2(1,1));
+	createFont("bunkerDoor2", Ogre::Vector2(50,75), Ogre::Vector3(750,35,-74), "Material/bunker_Door2", Ogre::Vector2(1,1));
+	createFont("bunker_Poster", Ogre::Vector2(40,50), Ogre::Vector3(860,50,-74), "Material/bunker_Poster", Ogre::Vector2(1,1));
+	createFont("bunker_BulletHole", Ogre::Vector2(50,50), Ogre::Vector3(80,50,-74), "Material/bunker_BulletHole", Ogre::Vector2(1,1));
+	createFont("bunker_wallHole", Ogre::Vector2(150,150), Ogre::Vector3(635,150,-74), "Material/bunker_wallHole", Ogre::Vector2(1,1));
+	
+	createObject("bunkerDoor1", Ogre::Vector3(7*0.01, 75*0.01, 50*0.01), Ogre::Vector3(950, 35, 0), "Material/bunker_Door1","Cube.mesh");
 
 	sceneObj = gPhysics->createPrimitiveShape("monsterSkeleton", Ogre::Vector3(75, 75, 75), Ogre::Vector3(75, 0, -50), 0, "monster_skeleton.mesh");
 	gObjects.push_back(new Object(1, sceneObj)); 
+
 
 	//Hierba (null)
 	//createGroundGrass(Ogre::Vector3(100,100,100), Ogre::Vector3(0,-50,0), 10);

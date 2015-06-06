@@ -128,3 +128,84 @@ material Material/bunker_flag2
         }
 
 }
+
+material Material/bunker_Door1
+{
+	technique
+        {
+                pass
+                {
+			texture_unit
+                        {
+                                texture bunker_Door1.jpg
+                        }
+                }
+        }
+
+}
+
+material Material/bunker_Door2
+{
+	technique
+        {
+                pass
+                {
+			texture_unit
+                        {
+                                texture bunker_Door2.jpg
+                        }
+                }
+        }
+
+}
+
+material Material/bunker_Poster
+{
+	technique
+        {
+                pass
+                {
+			texture_unit
+                        {
+                                texture bunker_Poster.jpg
+                        }
+                }
+        }
+
+}
+
+material Material/bunker_BulletHole
+{
+	technique
+        {
+                pass
+                {
+                        scene_blend alpha_blend
+                	depth_write off
+
+                        texture_unit
+                        {
+                                texture bunker_BulletHole.png
+                        }
+                }
+        }
+
+}
+
+material Material/bunker_wallHole
+{
+	technique
+        {
+                pass
+                {
+                        scene_blend alpha_blend
+                	depth_write off
+
+                        texture_unit
+                        {
+                                texture bunker_wallHole.png
+                        }
+                }
+        }
+
+}
