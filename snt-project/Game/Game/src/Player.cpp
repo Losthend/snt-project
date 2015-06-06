@@ -35,7 +35,7 @@ Player::Player(SceneObject* sceneObject)
 	m_run = false;
 
 	m_moveX = 2;
-	m_moveY = 150;
+	m_moveY = -gPhysics->mWorld->getGravity().y()/2;
 
 	m_catchObj = 0;
 
@@ -64,12 +64,6 @@ void Player::update()
 		m_sceneObject->mRigidBody->setMotionState(new btDefaultMotionState(transform));
 		m_lookAt = !m_lookAt;
 	}
-
-	//-------------------------------------------------------------------
-	//CAIDA
-	//--------------------------------------------------------------------
-	if(!m_fall && !fallManager())
-		m_fall = true;
 
 	//-------------------------------------------------------------------
 	//SALTOS (Movimiento en eje +Y)
@@ -127,35 +121,36 @@ void Player::catchAttack()
 void Player::animationManager()
 {
 	//Attack1 Attack2 Attack3 Backflip Block Climb Crouch Death1 Death2 HighJump Idle1 Idle2 Idle3 Jump JumpNoHeight Kick SideKick Spin Stealth Walk 
+	Ogre::AnimationState* mAnimIdle = m_sceneObject->mEntity->getAnimationState("Idle1");
 	Ogre::AnimationState* mAnimWalk = m_sceneObject->mEntity->getAnimationState("Walk");
-	Ogre::AnimationState* mAnimJump = m_sceneObject->mEntity->getAnimationState("Jump");
+	Ogre::AnimationState* mAnimJump = m_sceneObject->mEntity->getAnimationState("JumpNoHeight");
 	Ogre::AnimationState* mAnimCrouch = m_sceneObject->mEntity->getAnimationState("Crouch");
 
-	//CAMINAR/CORRER (solo si no estas ni saltando ni cayendo)
+	//QUIETO
+	if(m_direction.x == 0 && !m_jump && !m_fall && !m_crouchDown) 
+	{
+		mAnimIdle->setLoop(true);
+		mAnimIdle->setEnabled(true);
+		mAnimIdle->addTime(Ogre::Real(FPS));
+	}
+	else
+	{
+		mAnimIdle->setTimePosition(0);
+		mAnimIdle->setLoop(false);
+		mAnimIdle->setEnabled(false);
+	}
+	//CAMINAR/CORRER
 	if(m_direction.x != 0 && !m_jump && !m_fall) 
 		animWalk(mAnimWalk);
 	else
 		mAnimWalk->setEnabled(false);
 	//SALTAR
-	if(m_jump)
+	if(m_jump && animJump(mAnimJump))
 	{
-		if (animJump(mAnimJump))
-		{
-			m_jump = false;
-			m_fall = true;
-		}
+		m_jump = false;
+		m_fall = true;
 	}
-	//CAER (principio)
-	if(m_fall && !fallManager())
-	{
-		Ogre::Real time = mAnimJump->getTimePosition();
-		if (time == 0)
-		{
-			mAnimJump->setTimePosition(Ogre::Real(mAnimJump->getLength()*0.9));
-			mAnimJump->setEnabled(true);
-		}
-	}
-	//CAER (final)
+	//CAER
 	if(m_fall && fallManager() && animFall(mAnimJump))
 	{
 		m_fall = false;
@@ -185,7 +180,7 @@ bool Player::animJump(Ogre::AnimationState* mAnimJump)
 	Ogre::Real time = mAnimJump->getTimePosition();
 	Ogre::Real maxTime = mAnimJump->getLength();
 	//SALTAR
-	if (time < (maxTime*0.75))
+	if (time < (maxTime/2))
 	{
 		mAnimJump->setLoop(false);
 		mAnimJump->setEnabled(true);
@@ -200,7 +195,6 @@ bool Player::animFall(Ogre::AnimationState* mAnimJump)
 {
 	Ogre::Real time = mAnimJump->getTimePosition();
 	Ogre::Real maxTime = mAnimJump->getLength();
-
 	if(time >= maxTime)
 	{
 		mAnimJump->setTimePosition(0);
@@ -245,7 +239,7 @@ void Player::animCrouchUp(Ogre::AnimationState* mAnimCrouch)
 	{
 		mAnimCrouch->setLoop(false);
 		mAnimCrouch->setEnabled(true);
-		mAnimCrouch->setTimePosition(Ogre::Real(time-FPS));
+		mAnimCrouch->addTime(Ogre::Real(-FPS));
 	}
 	//Si la animación ha terminado el recorrido, continuar la animacion
 	else if(time > (maxTime/2))
@@ -326,6 +320,7 @@ Object* Player::rayFromPoint(Ogre::Vector3 origin, Ogre::Vector3 direction)
 
 	return obj;
 }
+
 
 /*
 Ogre::String mValue = "Frase";

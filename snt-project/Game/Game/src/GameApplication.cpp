@@ -34,7 +34,7 @@ void GameApplication::createScene1(void)
 	//****************************************************
 	if(gPlayer == 0)
 	{
-		SceneObject* player = gPhysics->createConvexHullShape("Player", Ogre::Real(0.3), Ogre::Vector3(0, 10, 0), 2, "ninja.mesh");
+		SceneObject* player = gPhysics->createConvexHullShape("Player", Ogre::Real(0.3), Ogre::Vector3(0, 10, 0), 1, "ninja.mesh");
 		gPlayer = new Player(player);
 	}
 
@@ -50,24 +50,27 @@ void GameApplication::createScene1(void)
 	sceneObj = gPhysics->createGroundShape("elevatorFloor", Ogre::Vector3(100, 5, 150), Ogre::Vector3(0, 0, 0), Ogre::Vector2(1,1), "Material/elevator_Floor");
 	gObjects.push_back(new Object(1, sceneObj));
 
-	sceneObj = gPhysics->createPrimitiveShape("elevatorWall1", Ogre::Vector3(5*0.1, 100*0.1, 150*0.1), Ogre::Vector3(-50, 50, 0), 0, "Cube.mesh");
+	sceneObj = gPhysics->createPrimitiveShape("elevatorWall1", Ogre::Vector3(Ogre::Real(5*0.1), Ogre::Real(100*0.1), Ogre::Real(150*0.1)), Ogre::Vector3(-50, 50, 0), 0, "Cube.mesh");
 	sceneObj->mEntity->setMaterialName("Material/elevator_Wall");
 	gObjects.push_back(new Object(1, sceneObj)); 
+	sceneObj = gPhysics->createPrimitiveShape("elevatorRoof", Ogre::Vector3(Ogre::Real(100*0.1), Ogre::Real(5*0.1), Ogre::Real(150*0.1)), Ogre::Vector3(0, 100, 0), 0, "Cube.mesh");
+	sceneObj->mEntity->setMaterialName("Material/elevator_Floor");
+	gObjects.push_back(new Object(1, sceneObj));
 	
 	//PUERTA ASCENSOR
-	sceneObj = gPhysics->createPrimitiveShape("elevatorDoor1", Ogre::Vector3(2*0.1, 100*0.1, 50*0.1), Ogre::Vector3(51, 50, 50), 0, "Cube.mesh");
+	sceneObj = gPhysics->createPrimitiveShape("elevatorDoor1", Ogre::Vector3(Ogre::Real(2*0.1), Ogre::Real(100*0.1), Ogre::Real(50*0.1)), Ogre::Vector3(51, 50, 50), 0, "Cube.mesh");
 	sceneObj->mEntity->setMaterialName("Material/bunker_Wall");
 	gObjects.push_back(new Object(1, sceneObj));
 
-	sceneObj = gPhysics->createPrimitiveShape("elevatorDoor2", Ogre::Vector3(2*0.1, 100*0.1, 50*0.1), Ogre::Vector3(51, 50, -50), 0, "Cube.mesh");
+	sceneObj = gPhysics->createPrimitiveShape("elevatorDoor2", Ogre::Vector3(Ogre::Real(2*0.1), Ogre::Real(100*0.1), Ogre::Real(50*0.1)), Ogre::Vector3(51, 50, -50), 0, "Cube.mesh");
 	sceneObj->mEntity->setMaterialName("Material/bunker_Wall");
 	gObjects.push_back(new Object(1, sceneObj));
 
-	sceneObj = gPhysics->createPrimitiveShape("elevatorDoor3", Ogre::Vector3(2*0.1, 20*0.1, 50*0.1), Ogre::Vector3(51, 90, 0), 0, "Cube.mesh");
+	sceneObj = gPhysics->createPrimitiveShape("elevatorDoor3", Ogre::Vector3(Ogre::Real(2*0.1), Ogre::Real(20*0.1), Ogre::Real(50*0.1)), Ogre::Vector3(51, 90, 0), 0, "Cube.mesh");
 	sceneObj->mEntity->setMaterialName("Material/bunker_Wall");
 	gObjects.push_back(new Object(1, sceneObj));
 
-	createObject("elevatorButton", Ogre::Vector3(3*0.01, 15*0.01, 15*0.01), Ogre::Vector3(51, 50, 50), "Material/elevator_Button","Cube.mesh");
+	createObject("elevatorButton", Ogre::Vector3(Ogre::Real(3*0.01), Ogre::Real(15*0.01), Ogre::Real(15*0.01)), Ogre::Vector3(51, 50, 50), "Material/elevator_Button","Cube.mesh");
 	
 
 	//SALA PRINCIPAL
@@ -81,7 +84,7 @@ void GameApplication::createScene1(void)
 	sceneObj = gPhysics->createPrimitiveShape("bunkerWall2", Ogre::Vector3(5*0.1, 250*0.1, 150*0.1), Ogre::Vector3(950, 125, 0), 0, "Cube.mesh");
 	sceneObj->mEntity->setMaterialName("Material/bunker_Wall");
 	gObjects.push_back(new Object(1, sceneObj)); 
-	sceneObj = gPhysics->createPrimitiveShape("bunkerWall3", Ogre::Vector3(2*0.1, 150*0.1, 150*0.1), Ogre::Vector3(51, 175, 0), 0, "Cube.mesh");
+	sceneObj = gPhysics->createPrimitiveShape("bunkerWall3", Ogre::Vector3(Ogre::Real(2*0.1), Ogre::Real(150*0.1), Ogre::Real(150*0.1)), Ogre::Vector3(51, 175, 0), 0, "Cube.mesh");
 	sceneObj->mEntity->setMaterialName("Material/bunker_Wall");
 	gObjects.push_back(new Object(1, sceneObj)); 
 	sceneObj = gPhysics->createPrimitiveShape("bunkerRoof", Ogre::Vector3(900*0.1, 5*0.1, 150*0.1), Ogre::Vector3(500, 250, 0), 0, "Cube.mesh");
@@ -100,18 +103,18 @@ void GameApplication::createScene1(void)
 	gObjects.push_back(new Object(1, sceneObj));	
 
 	//BLOQUEO
-	sceneObj = gPhysics->createPrimitiveShape("stone1", Ogre::Vector3(100*0.1, 5*0.1, 150*0.1), Ogre::Vector3(635, 10, 0), 100, "Cube.mesh");
+	sceneObj = gPhysics->createPrimitiveShape("stone1", Ogre::Vector3(100*0.1, 5*0.1, 150*0.1), Ogre::Vector3(635, 10, 0), 60, "Cube.mesh");
 	sceneObj->mEntity->setMaterialName("Material/bunker_Wall");
 	gObjects.push_back(new Object(2, sceneObj)); 
-	sceneObj = gPhysics->createConvexHullShape("stone2", Ogre::Real(40), Ogre::Vector3(635, 50, -50), 80, "stone.mesh");
+	sceneObj = gPhysics->createConvexHullShape("stone2", Ogre::Real(40), Ogre::Vector3(635, 50, -50), 40, "stone.mesh");
 	gObjects.push_back(new Object(2, sceneObj)); 
-	sceneObj = gPhysics->createConvexHullShape("stone3", Ogre::Real(20), Ogre::Vector3(610, 50, -25), 40, "stone.mesh");
+	sceneObj = gPhysics->createConvexHullShape("stone3", Ogre::Real(23), Ogre::Vector3(610, 50, -25), 23, "stone.mesh");
 	gObjects.push_back(new Object(2, sceneObj)); 
-	sceneObj = gPhysics->createConvexHullShape("stone5", Ogre::Real(60), Ogre::Vector3(635, 50, 0), 100, "stone.mesh");
+	sceneObj = gPhysics->createConvexHullShape("stone5", Ogre::Real(50), Ogre::Vector3(635, 50, 0), 50, "stone.mesh");
 	gObjects.push_back(new Object(2, sceneObj)); 
-	sceneObj = gPhysics->createConvexHullShape("stone6", Ogre::Real(50), Ogre::Vector3(640, 50, 25), 120, "stone.mesh");
+	sceneObj = gPhysics->createConvexHullShape("stone6", Ogre::Real(48), Ogre::Vector3(640, 50, 25), 48, "stone.mesh");
 	gObjects.push_back(new Object(2, sceneObj)); 
-	sceneObj = gPhysics->createConvexHullShape("stone7", Ogre::Real(30), Ogre::Vector3(615, 50, 50), 60, "stone.mesh");
+	sceneObj = gPhysics->createConvexHullShape("stone7", Ogre::Real(31), Ogre::Vector3(615, 50, 50), 31, "stone.mesh");
 	gObjects.push_back(new Object(2, sceneObj)); 
 
 	//DECORACION
@@ -122,7 +125,7 @@ void GameApplication::createScene1(void)
 	createFont("bunker_BulletHole", Ogre::Vector2(50,50), Ogre::Vector3(80,50,-74), "Material/bunker_BulletHole", Ogre::Vector2(1,1));
 	createFont("bunker_wallHole", Ogre::Vector2(150,150), Ogre::Vector3(635,150,-74), "Material/bunker_wallHole", Ogre::Vector2(1,1));
 	
-	createObject("bunkerDoor1", Ogre::Vector3(7*0.01, 75*0.01, 50*0.01), Ogre::Vector3(950, 35, 0), "Material/bunker_Door1","Cube.mesh");
+	createObject("bunkerDoor1", Ogre::Vector3(Ogre::Real(7*0.01), Ogre::Real(75*0.01), Ogre::Real(50*0.01)), Ogre::Vector3(950, 35, 0), "Material/bunker_Door1","Cube.mesh");
 
 	sceneObj = gPhysics->createPrimitiveShape("monsterSkeleton", Ogre::Vector3(75, 75, 75), Ogre::Vector3(75, 0, -50), 0, "monster_skeleton.mesh");
 	gObjects.push_back(new Object(1, sceneObj)); 

@@ -14,7 +14,7 @@ PhysicsManager::PhysicsManager()
 	mCollisionDispatcher = new btCollisionDispatcher(&mCollisionConfig);
 	mWorld = new btDiscreteDynamicsWorld(mCollisionDispatcher, &mBroadphase, &mConstraintSolver, &mCollisionConfig);
 	//mWorld->setGravity(btVector3(0,-9.81f,0));
-	mWorld->setGravity(btVector3(0,-200.f,0));
+	mWorld->setGravity(btVector3(0,-500.f,0));
 	m_magicCount = 0;
 }
 

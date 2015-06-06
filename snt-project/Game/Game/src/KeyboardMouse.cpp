@@ -168,7 +168,7 @@ bool KeyboardMouse::mouseMoved(const OIS::MouseEvent &arg)
 	{
 		Ogre::Vector3 pos = gCamera->getPosition();
 		if(pos.z >= 200 && pos.z <= 450)
-			pos.z = pos.z - arg.state.Z.rel*0.05;
+			pos.z = Ogre::Real(pos.z - arg.state.Z.rel*0.05);
 		else if(pos.z < 200)
 			pos.z = 200;
 		else if(pos.z > 450)
