@@ -1,6 +1,8 @@
 #ifndef __Main_h_
 #define __Main_h_
 
+class EventManager;
+
 class RenderActions : public Ogre::FrameListener, public Ogre::WindowEventListener
 {
 public:
@@ -9,6 +11,8 @@ public:
 	
 private:
 	virtual bool frameRenderingQueued(const Ogre::FrameEvent& evt);
+
+	EventManager* eventMgr;
 };
 
 //---------------------------------------------------------------------------

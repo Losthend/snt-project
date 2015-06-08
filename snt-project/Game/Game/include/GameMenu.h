@@ -27,7 +27,6 @@ author:     Lukas E Meindl
 #ifndef _GameMenu_
 #define _GameMenu_
 
-// Sample class
 class GameMenu
 {
 public:
@@ -39,7 +38,10 @@ public:
     virtual void deinitialise();
     virtual void onEnteringSample();
 
-//protected:
+	bool shouldBeDisplayed;
+	CEGUI::Window* d_root;
+
+protected:
     void setupWindows();
 
     void setupInnerButtonsSubOptionsLabels();
@@ -67,8 +69,6 @@ public:
 
     void makeAllSelectionIconsInvisible();
     void stopStartPopupLinesAnimations();
-
-    CEGUI::Window* d_root;
 
     bool d_mouseIsHoveringNavi;
 

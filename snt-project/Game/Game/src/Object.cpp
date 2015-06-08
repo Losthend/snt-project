@@ -13,7 +13,7 @@
 	Objeto de:
 		- Tipo 1: estaticos
 		- Tipo 2: dinamico, el jugador puede agarrarlo
-		- Tipo 3: dinamico, se mueve automaticamente, te mata con colision en los lados y lo matas cayendo encima
+		- Tipo 3: gallinas
 */
 
 //---------------------------------------------------------------------------
@@ -60,7 +60,6 @@ Object::~Object(void)
 	gSceneMgr->destroySceneNode(m_sceneObject->mNode->getName());
 
 	gPhysics->mWorld->removeRigidBody(m_sceneObject->mRigidBody);
-
 }
 
 //---------------------------------------------------------------------------

@@ -8,9 +8,11 @@ class PhysicsManager;
 class CCegui;
 class GameApplication;
 
-//Jugador y Objetos del entorno de acceso global
+//Jugador + Objetos y entorno
 extern Player* gPlayer;
 extern std::vector<Object*> gObjects;
+extern std::vector<Ogre::Entity*> gEntitys;
+extern std::vector<Ogre::SceneNode*> gNodes;
 
 //Declaramos las variables de configuracion para que puedan ser usadas como globales
 extern Ogre::Root*				gRoot;

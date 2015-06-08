@@ -57,6 +57,8 @@ bool GameMenu::initialise()
 
     d_mouseIsHoveringNavi = false;
 
+	shouldBeDisplayed = true;
+
     return true;
 }
 
@@ -71,12 +73,6 @@ void GameMenu::deinitialise()
 void GameMenu::onEnteringSample()
 {
     d_navigationTravelIcon->setEnabled(false);
-
-	//**********************************************************************************
-	//ELIMINAR O COMENTAR (permite saltarse el menu al empezar el juego)
-	CEGUI::EventArgs simulated = CEGUI::EventArgs();
-	handleInnerPartStartClickAreaClick(simulated);
-	//**********************************************************************************
 
     d_botNaviContainer->setAlpha(1.0f);
 
@@ -114,8 +110,8 @@ bool GameMenu::handleInnerPartStartClickAreaClick(const CEGUI::EventArgs& args)
 	//Cargamos los menus basicos 
 	gCCegui->menu1->show();
 	gCCegui->menu1->activate();
-	//La aplicacion (juego) se ha iniciado
-	gCanUpdate = true;
+	//No mostrar el menu hasta nuevo aviso
+	shouldBeDisplayed = false;
 
     return false;
 }

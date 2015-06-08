@@ -15,6 +15,7 @@ GameApplication::GameApplication(void)
 {
 	//PhysicsManager: control de fisicas y colisiones de Bullet
 	gPhysics = new PhysicsManager();
+	activeScene = 0;
 }
 //---------------------------------------------------------------------------
 GameApplication::~GameApplication(void)
@@ -22,16 +23,23 @@ GameApplication::~GameApplication(void)
 }
 
 //---------------------------------------------------------------------------
-//Establece aquello que se muestra en la escena y sus caracteristicas, incluida la iluminacion
+//ESCENARIO 1
 //---------------------------------------------------------------------------
 void GameApplication::createScene1(void)
 {
+	//****************************************************
+	//Liberar espacio 
+	//****************************************************
+	clearScene();
+	gCanUpdate = true;
+	activeScene = 1;
+
 	//****************************************************
 	//JUGADOR 
 	//****************************************************
 	if(gPlayer == 0)
 	{
-		SceneObject* player = gPhysics->createConvexHullShape("Player", Ogre::Real(5), Ogre::Vector3(100, 10, 0), 1, "Sinbad.mesh");
+		SceneObject* player = gPhysics->createConvexHullShape("Player", Ogre::Real(5), Ogre::Vector3(0, 10, 0), 1, "Sinbad.mesh");
 		gPlayer = new Player(player);
 		gPlayer->m_animMgr = new AnimationManager();
 	}
@@ -54,6 +62,9 @@ void GameApplication::createScene1(void)
 	sceneObj = gPhysics->createPrimitiveShape("elevatorRoof", Ogre::Vector3(Ogre::Real(100*0.1), Ogre::Real(5*0.1), Ogre::Real(150*0.1)), Ogre::Vector3(0, 100, 0), 0, "Cube.mesh");
 	sceneObj->mEntity->setMaterialName("Material/elevator_Floor");
 	gObjects.push_back(new Object(1, sceneObj));
+	sceneObj = gPhysics->createPrimitiveShape("elevatorWall3", Ogre::Vector3(Ogre::Real(2*0.1), Ogre::Real(100*0.1), Ogre::Real(150*0.1)), Ogre::Vector3(49, 150, 0), 0, "Cube.mesh");
+	sceneObj->mEntity->setMaterialName("Material/elevator_Wall");
+	gObjects.push_back(new Object(1, sceneObj));
 	
 	//PUERTA ASCENSOR
 	sceneObj = gPhysics->createPrimitiveShape("elevatorDoor1", Ogre::Vector3(Ogre::Real(2*0.1), Ogre::Real(100*0.1), Ogre::Real(50*0.1)), Ogre::Vector3(51, 50, 50), 0, "Cube.mesh");
@@ -64,33 +75,32 @@ void GameApplication::createScene1(void)
 	sceneObj->mEntity->setMaterialName("Material/bunker_Wall");
 	gObjects.push_back(new Object(1, sceneObj));
 
-	sceneObj = gPhysics->createPrimitiveShape("elevatorDoor3", Ogre::Vector3(Ogre::Real(2*0.1), Ogre::Real(20*0.1), Ogre::Real(50*0.1)), Ogre::Vector3(51, 90, 0), 0, "Cube.mesh");
+	sceneObj = gPhysics->createPrimitiveShape("elevatorDoor3", Ogre::Vector3(Ogre::Real(2*0.1), Ogre::Real(30*0.1), Ogre::Real(50*0.1)), Ogre::Vector3(51, 85, 0), 0, "Cube.mesh");
 	sceneObj->mEntity->setMaterialName("Material/bunker_Wall");
 	gObjects.push_back(new Object(1, sceneObj));
 
-	createObject("elevatorButton", Ogre::Vector3(Ogre::Real(3*0.01), Ogre::Real(15*0.01), Ogre::Real(15*0.01)), Ogre::Vector3(51, 50, 50), "Material/elevator_Button","Cube.mesh");
+	createObject("elevatorButton", Ogre::Vector3(Ogre::Real(3*0.01), Ogre::Real(15*0.01), Ogre::Real(15*0.01)), Ogre::Vector3(51, 40, 50), "Material/elevator_Button","Cube.mesh");
 	
-
 	//SALA PRINCIPAL
-	createFont("bunkerWall1", Ogre::Vector2(900,250), Ogre::Vector3(500,125,-75), "Material/bunker_Wall", Ogre::Vector2(8,2));
+	createFont("bunkerFont1", Ogre::Vector2(900,250), Ogre::Vector3(500,125,-75), "Material/bunker_Wall", Ogre::Vector2(8,2));
+	createFont("bunkerFont2", Ogre::Vector2(900,250), Ogre::Vector3(500,-125,75), "Material/bunker_Wall", Ogre::Vector2(8,2));
 
 	sceneObj = gPhysics->createGroundShape("bunkerFloor1", Ogre::Vector3(530, 5, 150), Ogre::Vector3(315, 0, 0), Ogre::Vector2(5,1), "Material/bunker_Wall");
 	gObjects.push_back(new Object(1, sceneObj));
 	sceneObj = gPhysics->createGroundShape("bunkerFloor2", Ogre::Vector3(260, 5, 150), Ogre::Vector3(820, 0, 0), Ogre::Vector2(2,1), "Material/bunker_Wall");
 	gObjects.push_back(new Object(1, sceneObj));
 	
-	sceneObj = gPhysics->createPrimitiveShape("bunkerWall2", Ogre::Vector3(5*0.1, 250*0.1, 150*0.1), Ogre::Vector3(950, 125, 0), 0, "Cube.mesh");
+	sceneObj = gPhysics->createPrimitiveShape("bunkerWall1", Ogre::Vector3(5*0.1, 250*0.1, 150*0.1), Ogre::Vector3(950, 125, 0), 0, "Cube.mesh");
 	sceneObj->mEntity->setMaterialName("Material/bunker_Wall");
 	gObjects.push_back(new Object(1, sceneObj)); 
-	sceneObj = gPhysics->createPrimitiveShape("bunkerWall3", Ogre::Vector3(Ogre::Real(2*0.1), Ogre::Real(150*0.1), Ogre::Real(150*0.1)), Ogre::Vector3(51, 175, 0), 0, "Cube.mesh");
+	sceneObj = gPhysics->createPrimitiveShape("bunkerWall2", Ogre::Vector3(Ogre::Real(2*0.1), Ogre::Real(150*0.1), Ogre::Real(150*0.1)), Ogre::Vector3(51, 175, 0), 0, "Cube.mesh");
 	sceneObj->mEntity->setMaterialName("Material/bunker_Wall");
 	gObjects.push_back(new Object(1, sceneObj)); 
 	sceneObj = gPhysics->createPrimitiveShape("bunkerRoof", Ogre::Vector3(900*0.1, 5*0.1, 150*0.1), Ogre::Vector3(500, 250, 0), 0, "Cube.mesh");
 	sceneObj->mEntity->setMaterialName("Material/bunker_Wall");
 	gObjects.push_back(new Object(1, sceneObj));
 
-	
-	//Agujero
+	//AGUJERO
 	sceneObj = gPhysics->createGroundShape("bunkerHoleRight", Ogre::Vector3(20, 5, 50), Ogre::Vector3(685, 0, 0), Ogre::Vector2(1,1), "Material/bunker_holeRight");
 	gObjects.push_back(new Object(1, sceneObj));
 	sceneObj = gPhysics->createGroundShape("bunkerHoleLeft", Ogre::Vector3(20, 5, 50), Ogre::Vector3(588, 0, 0), Ogre::Vector2(1,1), "Material/bunker_holeLeft");
@@ -128,6 +138,47 @@ void GameApplication::createScene1(void)
 	sceneObj = gPhysics->createPrimitiveShape("monsterSkeleton", Ogre::Vector3(75, 75, 75), Ogre::Vector3(75, 0, -50), 0, "monster_skeleton.mesh");
 	gObjects.push_back(new Object(1, sceneObj)); 
 
+	//LUCES
+	gSceneMgr->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));
+	Ogre::Light* light = gSceneMgr->createLight("MainLight");
+	light->setPosition(20,80,50);
+}
+
+//---------------------------------------------------------------------------
+//ESCENARIO 2
+//---------------------------------------------------------------------------
+void GameApplication::createScene2(void)
+{
+	//****************************************************
+	//Liberar espacio 
+	//****************************************************
+	clearScene();
+	gCanUpdate = true;
+	activeScene = 2;
+
+	//****************************************************
+	//JUGADOR 
+	//****************************************************
+	if(gPlayer == 0)
+	{
+		SceneObject* player = gPhysics->createConvexHullShape("Player", Ogre::Real(5), Ogre::Vector3(0, 10, 0), 1, "Sinbad.mesh");
+		gPlayer = new Player(player);
+		gPlayer->m_animMgr = new AnimationManager();
+	}
+
+	//Posicion del jugador
+	btTransform transform = gPlayer->m_sceneObject->mRigidBody->getCenterOfMassTransform();
+	transform.setOrigin(btVector3(0, 150, 0));
+	gPlayer->m_sceneObject->mRigidBody->setCenterOfMassTransform(transform);
+
+	//****************************************************
+	//ESCENARIO 2
+	//****************************************************
+	SceneObject* sceneObj;
+
+	//SALA PRINCIPAL
+	sceneObj = gPhysics->createGroundShape("elevatorFloor", Ogre::Vector3(100, 5, 150), Ogre::Vector3(0, 0, 0), Ogre::Vector2(1,1), "Material/elevator_Floor");
+	gObjects.push_back(new Object(1, sceneObj));
 
 	//Hierba (null)
 	//createGroundGrass(Ogre::Vector3(100,100,100), Ogre::Vector3(0,-50,0), 10);
@@ -157,22 +208,30 @@ void GameApplication::createScene1(void)
 	//Enemigos (4)
 	//sceneObj = gPhysics->createBoxObject("penguin1", Ogre::Vector3(10, 10, 10), Ogre::Vector3(-100, -50, 0), 1, "robot.mesh");
 	//gObjects.push_back(new Object(1, sceneObj));
-	
-	//CONFIGURACIONES
+}
 
-	//Posicionamos la camara en la posicion que nos interesa (donde esta el jugador)
-	Ogre::Vector3 playerPos = gPlayer->m_sceneObject->mNode->getPosition();
-	gCamera->setPosition(playerPos.x, playerPos.y, 450.0);
-
-	//Luz ambiente
-	gSceneMgr->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));
-	Ogre::Light* light = gSceneMgr->createLight("MainLight");
-	light->setPosition(20,80,50);
-
-	//Fondo
-	//gSceneMgr->setSkyBox(true, "Examples/MorningSkyBox");
-	// Examples/MorningSkyBox 
-	// Examples/StormySkyBox
+//---------------------------------------------------------------------------
+//Liberar espacio
+//---------------------------------------------------------------------------
+void GameApplication::clearScene(void)
+{
+	for(unsigned x = gObjects.size(); x > 0 ; x--)
+	{
+		gSceneMgr->destroyEntity(gObjects[x-1]->m_sceneObject->mEntity->getName());
+		gSceneMgr->destroySceneNode(gObjects[x-1]->m_sceneObject->mNode->getName());
+		gPhysics->mWorld->removeRigidBody(gObjects[x-1]->m_sceneObject->mRigidBody);
+		gObjects.erase(gObjects.begin()+x-1);
+	}
+	for(unsigned x = gEntitys.size(); x > 0 ; x--)
+	{
+		gSceneMgr->destroyEntity(gEntitys[x-1]->getName());
+		gEntitys.erase(gEntitys.begin()+x-1);
+	}
+	for(unsigned x = gNodes.size(); x > 0 ; x--)
+	{
+		gSceneMgr->destroySceneNode(gNodes[x-1]->getName());
+		gNodes.erase(gNodes.begin()+x-1);
+	}
 }
 
 //---------------------------------------------------------------------------
@@ -193,6 +252,9 @@ void GameApplication::createFont(Ogre::String name, Ogre::Vector2 size, Ogre::Ve
 	Ogre::SceneNode *node = gSceneMgr->getRootSceneNode()->createChildSceneNode(name);
 	node->attachObject(entity);
 	node->setPosition(pos.x, pos.y, pos.z);
+	//Guardar referencias
+	gEntitys.push_back(entity);
+	gNodes.push_back(node);
 }
 
 //---------------------------------------------------------------------------
@@ -207,6 +269,9 @@ void GameApplication::createObject(Ogre::String name, Ogre::Vector3 size, Ogre::
 	node->setScale(size.x, size.y, size.z);
 	node->setPosition(pos.x, pos.y, pos.z);
 	node->_updateBounds();
+	//Guardar referencias
+	gEntitys.push_back(entity);
+	gNodes.push_back(node);
 }
 
 //---------------------------------------------------------------------------

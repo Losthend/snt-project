@@ -1,12 +1,13 @@
 #include "../include/stdafx.h"
 #include "../include/Global.h"
 
-//Jugador (ver constructor de GameApplication.cpp)
+//Jugador + Objetos y entorno
 Player* gPlayer;
-//Vector con los demas objetos (ver createScene de GameApplication.cpp) 
 std::vector<Object*> gObjects;
+std::vector<Ogre::Entity*> gEntitys;
+std::vector<Ogre::SceneNode*> gNodes;
 
-//Variables globales (ver BaseApplication.cpp)
+//Variables globales (Ogre)
 Ogre::Root*				gRoot;
 Ogre::SceneManager*		gSceneMgr;
 Ogre::RenderWindow*		gWindow;
