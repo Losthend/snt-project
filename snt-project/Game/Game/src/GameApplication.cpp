@@ -16,6 +16,8 @@ GameApplication::GameApplication(void)
 	//PhysicsManager: control de fisicas y colisiones de Bullet
 	gPhysics = new PhysicsManager();
 	activeScene = 0;
+	gSceneMgr->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_MODULATIVE);
+	gSceneMgr->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));
 }
 //---------------------------------------------------------------------------
 GameApplication::~GameApplication(void)
@@ -116,11 +118,11 @@ void GameApplication::createScene1(void)
 	gObjects.push_back(new Object(2, sceneObj)); 
 	sceneObj = gPhysics->createConvexHullShape("stone2", Ogre::Real(40), Ogre::Vector3(635, 50, -50), 40, "stone.mesh");
 	gObjects.push_back(new Object(2, sceneObj)); 
-	sceneObj = gPhysics->createConvexHullShape("stone3", Ogre::Real(23), Ogre::Vector3(610, 50, -25), 23, "stone.mesh");
+	sceneObj = gPhysics->createConvexHullShape("stone3", Ogre::Real(23), Ogre::Vector3(610, 50, -35), 23, "stone.mesh");
 	gObjects.push_back(new Object(2, sceneObj)); 
 	sceneObj = gPhysics->createConvexHullShape("stone5", Ogre::Real(50), Ogre::Vector3(635, 50, 0), 50, "stone.mesh");
 	gObjects.push_back(new Object(2, sceneObj)); 
-	sceneObj = gPhysics->createConvexHullShape("stone6", Ogre::Real(48), Ogre::Vector3(640, 50, 25), 48, "stone.mesh");
+	sceneObj = gPhysics->createConvexHullShape("stone6", Ogre::Real(48), Ogre::Vector3(640, 50, 35), 48, "stone.mesh");
 	gObjects.push_back(new Object(2, sceneObj)); 
 	sceneObj = gPhysics->createConvexHullShape("stone7", Ogre::Real(31), Ogre::Vector3(615, 50, 50), 31, "stone.mesh");
 	gObjects.push_back(new Object(2, sceneObj)); 
@@ -128,20 +130,28 @@ void GameApplication::createScene1(void)
 	//DECORACION
 	createFont("bunkerFlag1", Ogre::Vector2(75,150), Ogre::Vector3(200,125,-74), "Material/bunker_flag1", Ogre::Vector2(1,1));
 	createFont("bunkerFlag2", Ogre::Vector2(75,150), Ogre::Vector3(400,125,-74), "Material/bunker_flag2", Ogre::Vector2(1,1));
+	createFont("bunkerFlag3",Ogre::Vector2(75,150), Ogre::Vector3(850,125,-74), "Material/bunker_flag3", Ogre::Vector2(1,1));
 	createFont("bunkerDoor2", Ogre::Vector2(50,75), Ogre::Vector3(750,35,-74), "Material/bunker_Door2", Ogre::Vector2(1,1));
-	createFont("bunker_Poster", Ogre::Vector2(40,50), Ogre::Vector3(860,50,-74), "Material/bunker_Poster", Ogre::Vector2(1,1));
-	createFont("bunker_BulletHole", Ogre::Vector2(50,50), Ogre::Vector3(80,50,-74), "Material/bunker_BulletHole", Ogre::Vector2(1,1));
-	createFont("bunker_wallHole", Ogre::Vector2(150,150), Ogre::Vector3(635,150,-74), "Material/bunker_wallHole", Ogre::Vector2(1,1));
+	createFont("bunkerBulletHole", Ogre::Vector2(50,50), Ogre::Vector3(80,50,-74), "Material/bunker_BulletHole", Ogre::Vector2(1,1));
+	createFont("bunkerwallHole", Ogre::Vector2(150,150), Ogre::Vector3(635,150,-74), "Material/bunker_wallHole", Ogre::Vector2(1,1));
+	createFont("bunkerFissure1", Ogre::Vector2(75,100), Ogre::Vector3(331,0,-74), "Material/bunker_Fissure", Ogre::Vector2(1,1));
 	
 	createObject("bunkerDoor1", Ogre::Vector3(Ogre::Real(7*0.01), Ogre::Real(75*0.01), Ogre::Real(50*0.01)), Ogre::Vector3(950, 35, 0), "Material/bunker_Door1","Cube.mesh");
 
 	sceneObj = gPhysics->createPrimitiveShape("monsterSkeleton", Ogre::Vector3(75, 75, 75), Ogre::Vector3(75, 0, -50), 0, "monster_skeleton.mesh");
 	gObjects.push_back(new Object(1, sceneObj)); 
 
+	sceneObj = gPhysics->createGroundShape("bunkerFissure2", Ogre::Vector3(100, 1, 75), Ogre::Vector3(331, 1, -75), Ogre::Vector2(1,1), "Material/bunker_Fissure");
+	gObjects.push_back(new Object(1, sceneObj));
+	sceneObj = gPhysics->createGroundShape("bunkerBlood", Ogre::Vector3(50, 1, 50), Ogre::Vector3(745, 1, -48), Ogre::Vector2(1,1), "Material/bunker_Blood");
+	gObjects.push_back(new Object(1, sceneObj));
+
 	//LUCES
-	gSceneMgr->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));
-	Ogre::Light* light = gSceneMgr->createLight("MainLight");
-	light->setPosition(20,80,50);
+	Ogre::Light *light = gSceneMgr->createLight("shadowLight");     
+	light->setType(Ogre::Light::LT_SPOTLIGHT);
+	light->setPosition(635, 249, 0);
+	light->setDirection(0,-1,0);
+	light->setSpotlightRange(Ogre::Degree(10), Ogre::Degree(50));	
 }
 
 //---------------------------------------------------------------------------
@@ -208,6 +218,14 @@ void GameApplication::createScene2(void)
 	//Enemigos (4)
 	//sceneObj = gPhysics->createBoxObject("penguin1", Ogre::Vector3(10, 10, 10), Ogre::Vector3(-100, -50, 0), 1, "robot.mesh");
 	//gObjects.push_back(new Object(1, sceneObj));
+
+	//LUCES
+	Ogre::Light *light = gSceneMgr->createLight("shadowLight");     
+	light->setType(Ogre::Light::LT_SPOTLIGHT);
+	light->setPosition(0, 250, 0);
+	light->setDirection(0,-1,0);
+	light->setSpotlightRange(Ogre::Degree(10), Ogre::Degree(50));	
+
 }
 
 //---------------------------------------------------------------------------
@@ -232,6 +250,7 @@ void GameApplication::clearScene(void)
 		gSceneMgr->destroySceneNode(gNodes[x-1]->getName());
 		gNodes.erase(gNodes.begin()+x-1);
 	}
+	gSceneMgr->destroyAllLights();
 }
 
 //---------------------------------------------------------------------------

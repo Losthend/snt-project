@@ -129,6 +129,24 @@ material Material/bunker_flag2
 
 }
 
+material Material/bunker_flag3
+{
+	technique
+        {
+                pass
+                {
+                        scene_blend alpha_blend
+                	depth_write off
+
+                        texture_unit
+                        {
+                                texture bunker_flag3.png
+                        }
+                }
+        }
+
+}
+
 material Material/bunker_Door1
 {
 	technique
@@ -153,21 +171,6 @@ material Material/bunker_Door2
 			texture_unit
                         {
                                 texture bunker_Door2.jpg
-                        }
-                }
-        }
-
-}
-
-material Material/bunker_Poster
-{
-	technique
-        {
-                pass
-                {
-			texture_unit
-                        {
-                                texture bunker_Poster.jpg
                         }
                 }
         }
@@ -209,3 +212,40 @@ material Material/bunker_wallHole
         }
 
 }
+
+material Material/bunker_Blood
+{
+	technique
+        {
+                pass
+                {
+                        scene_blend alpha_blend
+                	depth_write off
+
+                        texture_unit
+                        {
+                                texture bunker_Blood.png
+                        }
+                }
+        }
+
+}
+
+material Material/bunker_Fissure
+{
+	technique
+        {
+                pass
+                {
+                        scene_blend alpha_blend
+                	depth_write off
+
+                        texture_unit
+                        {
+                                texture bunker_Fissure.png
+                        }
+                }
+        }
+
+}
+

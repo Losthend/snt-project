@@ -56,10 +56,13 @@ void EventManager::handleEvent()
 	}
 
 	//****************************************************
-	//CARGA DE ESCENARIOS: En proceso
+	//EVENTOS DE ESCENARIOS: En proceso
 	//****************************************************
-	if(gGameApp->activeScene == 1 && gPlayer != 0 && gPlayer->m_sceneObject->mNode->getPosition().y < -150)
-		gGameApp->createScene2();
+	if(gGameApp->activeScene == 1)
+	{
+		if(gPlayer != 0 && gPlayer->m_sceneObject->mNode->getPosition().y < -150)
+			gGameApp->createScene2();
+	}
 
 	//****************************************************
 	//EVENTOS DE ESCENARIOS: En proceso
