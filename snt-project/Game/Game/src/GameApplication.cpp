@@ -52,8 +52,8 @@ void GameApplication::createScene1(void)
 	SceneObject* sceneObj;
 
 	//ASCENSOR
-	createFont("elevatorWall2", Ogre::Vector2(100,100), Ogre::Vector3(0,50,-75), "Material/elevator_Wall", Ogre::Vector2(1,1));
-	createFont("elevatorNote", Ogre::Vector2(40,40), Ogre::Vector3(0,50,-74), "Material/elevator_Note", Ogre::Vector2(1,1));
+	createFont("elevatorWall2", Ogre::Vector2(100,100), Ogre::Vector3(0,50,-75), "Material/elevator_Wall", Ogre::Vector2(1,1), true);
+	createFont("elevatorNote", Ogre::Vector2(40,40), Ogre::Vector3(0,50,-74), "Material/elevator_Note", Ogre::Vector2(1,1), true);
 
 	sceneObj = gPhysics->createGroundShape("elevatorFloor", Ogre::Vector3(100, 5, 150), Ogre::Vector3(0, 0, 0), Ogre::Vector2(1,1), "Material/elevator_Floor");
 	gObjects.push_back(new Object(1, sceneObj));
@@ -64,28 +64,26 @@ void GameApplication::createScene1(void)
 	sceneObj = gPhysics->createPrimitiveShape("elevatorRoof", Ogre::Vector3(Ogre::Real(100*0.1), Ogre::Real(5*0.1), Ogre::Real(150*0.1)), Ogre::Vector3(0, 100, 0), 0, "Cube.mesh");
 	sceneObj->mEntity->setMaterialName("Material/elevator_Floor");
 	gObjects.push_back(new Object(1, sceneObj));
-	sceneObj = gPhysics->createPrimitiveShape("elevatorWall3", Ogre::Vector3(Ogre::Real(2*0.1), Ogre::Real(100*0.1), Ogre::Real(150*0.1)), Ogre::Vector3(49, 150, 0), 0, "Cube.mesh");
+	sceneObj = gPhysics->createPrimitiveShape("elevatorDoor", Ogre::Vector3(Ogre::Real(2*0.1), Ogre::Real(100*0.1), Ogre::Real(150*0.1)), Ogre::Vector3(49, 150, 0), 0, "Cube.mesh");
 	sceneObj->mEntity->setMaterialName("Material/elevator_Wall");
 	gObjects.push_back(new Object(1, sceneObj));
 	
 	//PUERTA ASCENSOR
-	sceneObj = gPhysics->createPrimitiveShape("elevatorDoor1", Ogre::Vector3(Ogre::Real(2*0.1), Ogre::Real(100*0.1), Ogre::Real(50*0.1)), Ogre::Vector3(51, 50, 50), 0, "Cube.mesh");
-	sceneObj->mEntity->setMaterialName("Material/bunker_Wall");
-	gObjects.push_back(new Object(1, sceneObj));
-
-	sceneObj = gPhysics->createPrimitiveShape("elevatorDoor2", Ogre::Vector3(Ogre::Real(2*0.1), Ogre::Real(100*0.1), Ogre::Real(50*0.1)), Ogre::Vector3(51, 50, -50), 0, "Cube.mesh");
-	sceneObj->mEntity->setMaterialName("Material/bunker_Wall");
-	gObjects.push_back(new Object(1, sceneObj));
-
-	sceneObj = gPhysics->createPrimitiveShape("elevatorDoor3", Ogre::Vector3(Ogre::Real(2*0.1), Ogre::Real(30*0.1), Ogre::Real(50*0.1)), Ogre::Vector3(51, 85, 0), 0, "Cube.mesh");
-	sceneObj->mEntity->setMaterialName("Material/bunker_Wall");
-	gObjects.push_back(new Object(1, sceneObj));
-
 	createObject("elevatorButton", Ogre::Vector3(Ogre::Real(3*0.01), Ogre::Real(15*0.01), Ogre::Real(15*0.01)), Ogre::Vector3(51, 40, 50), "Material/elevator_Button","Cube.mesh");
-	
+
+	sceneObj = gPhysics->createPrimitiveShape("elevatorDoorNear", Ogre::Vector3(Ogre::Real(2*0.1), Ogre::Real(75*0.1), Ogre::Real(50*0.1)), Ogre::Vector3(51, 35, 50), 0, "Cube.mesh");
+	sceneObj->mEntity->setMaterialName("Material/bunker_Wall");
+	gObjects.push_back(new Object(1, sceneObj));
+	sceneObj = gPhysics->createPrimitiveShape("elevatorDoorFar", Ogre::Vector3(Ogre::Real(2*0.1), Ogre::Real(75*0.1), Ogre::Real(50*0.1)), Ogre::Vector3(51, 35, -50), 0, "Cube.mesh");
+	sceneObj->mEntity->setMaterialName("Material/bunker_Wall");
+	gObjects.push_back(new Object(1, sceneObj));
+	sceneObj = gPhysics->createPrimitiveShape("elevatorDoorTop", Ogre::Vector3(Ogre::Real(2*0.1), Ogre::Real(175*0.1), Ogre::Real(150*0.1)), Ogre::Vector3(51, 160, 0), 0, "Cube.mesh");
+	sceneObj->mEntity->setMaterialName("Material/bunker_Wall");
+	gObjects.push_back(new Object(1, sceneObj)); 
+
 	//SALA PRINCIPAL
-	createFont("bunkerFont1", Ogre::Vector2(900,250), Ogre::Vector3(500,125,-75), "Material/bunker_Wall", Ogre::Vector2(8,2));
-	createFont("bunkerFont2", Ogre::Vector2(900,250), Ogre::Vector3(500,-125,75), "Material/bunker_Wall", Ogre::Vector2(8,2));
+	createFont("bunkerFont1", Ogre::Vector2(900,250), Ogre::Vector3(500,125,-75), "Material/bunker_Wall", Ogre::Vector2(8,2), true);
+	createFont("bunkerFont2", Ogre::Vector2(900,250), Ogre::Vector3(500,-125,75), "Material/bunker_Wall", Ogre::Vector2(8,2), true);
 
 	sceneObj = gPhysics->createGroundShape("bunkerFloor1", Ogre::Vector3(530, 5, 150), Ogre::Vector3(315, 0, 0), Ogre::Vector2(5,1), "Material/bunker_Wall");
 	gObjects.push_back(new Object(1, sceneObj));
@@ -95,9 +93,7 @@ void GameApplication::createScene1(void)
 	sceneObj = gPhysics->createPrimitiveShape("bunkerWall1", Ogre::Vector3(5*0.1, 250*0.1, 150*0.1), Ogre::Vector3(950, 125, 0), 0, "Cube.mesh");
 	sceneObj->mEntity->setMaterialName("Material/bunker_Wall");
 	gObjects.push_back(new Object(1, sceneObj)); 
-	sceneObj = gPhysics->createPrimitiveShape("bunkerWall2", Ogre::Vector3(Ogre::Real(2*0.1), Ogre::Real(150*0.1), Ogre::Real(150*0.1)), Ogre::Vector3(51, 175, 0), 0, "Cube.mesh");
-	sceneObj->mEntity->setMaterialName("Material/bunker_Wall");
-	gObjects.push_back(new Object(1, sceneObj)); 
+	
 	sceneObj = gPhysics->createPrimitiveShape("bunkerRoof", Ogre::Vector3(900*0.1, 5*0.1, 150*0.1), Ogre::Vector3(500, 250, 0), 0, "Cube.mesh");
 	sceneObj->mEntity->setMaterialName("Material/bunker_Wall");
 	gObjects.push_back(new Object(1, sceneObj));
@@ -128,23 +124,18 @@ void GameApplication::createScene1(void)
 	gObjects.push_back(new Object(2, sceneObj)); 
 
 	//DECORACION
-	createFont("bunkerFlag1", Ogre::Vector2(75,150), Ogre::Vector3(200,125,-74), "Material/bunker_flag1", Ogre::Vector2(1,1));
-	createFont("bunkerFlag2", Ogre::Vector2(75,150), Ogre::Vector3(400,125,-74), "Material/bunker_flag2", Ogre::Vector2(1,1));
-	createFont("bunkerFlag3",Ogre::Vector2(75,150), Ogre::Vector3(850,125,-74), "Material/bunker_flag3", Ogre::Vector2(1,1));
-	createFont("bunkerDoor2", Ogre::Vector2(50,75), Ogre::Vector3(750,35,-74), "Material/bunker_Door2", Ogre::Vector2(1,1));
-	createFont("bunkerBulletHole", Ogre::Vector2(50,50), Ogre::Vector3(80,50,-74), "Material/bunker_BulletHole", Ogre::Vector2(1,1));
-	createFont("bunkerwallHole", Ogre::Vector2(150,150), Ogre::Vector3(635,150,-74), "Material/bunker_wallHole", Ogre::Vector2(1,1));
-	createFont("bunkerFissure1", Ogre::Vector2(75,100), Ogre::Vector3(331,0,-74), "Material/bunker_Fissure", Ogre::Vector2(1,1));
+	createFont("bunkerFlag1", Ogre::Vector2(75,150), Ogre::Vector3(200,125,-74), "Material/bunker_flag1", Ogre::Vector2(1,1), true);
+	createFont("bunkerFlag2", Ogre::Vector2(75,150), Ogre::Vector3(400,125,-74), "Material/bunker_flag2", Ogre::Vector2(1,1), true);
+	createFont("bunkerFlag3",Ogre::Vector2(75,150), Ogre::Vector3(850,125,-74), "Material/bunker_flag3", Ogre::Vector2(1,1), true);
+	createFont("bunkerDoor2", Ogre::Vector2(50,75), Ogre::Vector3(750,35,-74), "Material/bunker_Door2", Ogre::Vector2(1,1), true);
+	createFont("bunkerBulletHole", Ogre::Vector2(50,50), Ogre::Vector3(80,50,-74), "Material/bunker_BulletHole", Ogre::Vector2(1,1), true);
+	createFont("bunkerwallHole", Ogre::Vector2(150,150), Ogre::Vector3(635,150,-74), "Material/bunker_wallHole", Ogre::Vector2(1,1), true);
+	createFont("bunkerFissure1", Ogre::Vector2(75,100), Ogre::Vector3(331,0,-74), "Material/bunker_Fissure", Ogre::Vector2(1,1), true);
+	createFont("bunkerFissure2", Ogre::Vector2(75,100), Ogre::Vector3(331,1,-75), "Material/bunker_Fissure", Ogre::Vector2(1,1), false);
+	createFont("bunkerBlood", Ogre::Vector2(50,50), Ogre::Vector3(745,1,-48), "Material/bunker_Blood", Ogre::Vector2(1,1), false);
 	
 	createObject("bunkerDoor1", Ogre::Vector3(Ogre::Real(7*0.01), Ogre::Real(75*0.01), Ogre::Real(50*0.01)), Ogre::Vector3(950, 35, 0), "Material/bunker_Door1","Cube.mesh");
-
-	sceneObj = gPhysics->createPrimitiveShape("monsterSkeleton", Ogre::Vector3(75, 75, 75), Ogre::Vector3(75, 0, -50), 0, "monster_skeleton.mesh");
-	gObjects.push_back(new Object(1, sceneObj)); 
-
-	sceneObj = gPhysics->createGroundShape("bunkerFissure2", Ogre::Vector3(100, 1, 75), Ogre::Vector3(331, 1, -75), Ogre::Vector2(1,1), "Material/bunker_Fissure");
-	gObjects.push_back(new Object(1, sceneObj));
-	sceneObj = gPhysics->createGroundShape("bunkerBlood", Ogre::Vector3(50, 1, 50), Ogre::Vector3(745, 1, -48), Ogre::Vector2(1,1), "Material/bunker_Blood");
-	gObjects.push_back(new Object(1, sceneObj));
+	createObject("monsterSkeleton", Ogre::Vector3(Ogre::Real(75*0.1), Ogre::Real(75*0.1), Ogre::Real(75*0.1)), Ogre::Vector3(75, 0, -50), "","monster_skeleton.mesh");
 
 	//LUCES
 	Ogre::Light *light = gSceneMgr->createLight("shadowLight");     
@@ -256,14 +247,27 @@ void GameApplication::clearScene(void)
 //---------------------------------------------------------------------------
 //Crea planos verticales (fondos) con el material indicado
 //---------------------------------------------------------------------------
-void GameApplication::createFont(Ogre::String name, Ogre::Vector2 size, Ogre::Vector3 pos, Ogre::String material, Ogre::Vector2 repeat)
+void GameApplication::createFont(Ogre::String name, Ogre::Vector2 size, Ogre::Vector3 pos, Ogre::String material, Ogre::Vector2 repeat, bool unit)
 {
+	// unit = true, es un fondo // false, es un suelo
+	Ogre::Vector3 vec1;
+	Ogre::Vector3 vec2;
+
+	if(unit){
+		vec1 = Ogre::Vector3::UNIT_Z;
+		vec2 = Ogre::Vector3::UNIT_Y;
+	} 
+	else {
+		vec1 = Ogre::Vector3::UNIT_Y;
+		vec2 = Ogre::Vector3::UNIT_Z;
+	}
+
 	//Plano
-	Ogre::Plane plane(Ogre::Vector3::UNIT_Z, 0);
+	Ogre::Plane plane(vec1, 0);
 	Ogre::MeshPtr meshPtr = Ogre::MeshManager::getSingleton().createPlane(name, 
 																		  Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, 
 																		  plane, size.x, size.y, 
-																		  20, 20, true, 1, repeat.x, repeat.y, Ogre::Vector3::UNIT_Y);
+																		  20, 20, true, 1, repeat.x, repeat.y, vec2);
 	//Entidad 
 	Ogre::Entity *entity = gSceneMgr->createEntity(name);
 	entity->setMaterialName(material);
@@ -282,7 +286,9 @@ void GameApplication::createFont(Ogre::String name, Ogre::Vector2 size, Ogre::Ve
 void GameApplication::createObject(Ogre::String name, Ogre::Vector3 size, Ogre::Vector3 pos, Ogre::String material, Ogre::String mesh)
 {
 	Ogre::Entity *entity = gSceneMgr->createEntity(name, mesh);
-	entity->setMaterialName(material);
+	if (material != "")
+		entity->setMaterialName(material);
+
 	Ogre::SceneNode* node = gSceneMgr->getRootSceneNode()->createChildSceneNode(name);
 	node->attachObject(entity);
 	node->setScale(size.x, size.y, size.z);
