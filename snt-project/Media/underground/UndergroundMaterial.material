@@ -1,27 +1,30 @@
-material /global/environment/iron_ore
+material Material/underground_Wall
 {
 	technique
         {
                 pass
                 {
-                        texture_unit
+			texture_unit
                         {
-                                texture stone1.jpg
+                                texture underground_Wall.png
                         }
                 }
         }
 
 }
 
-material Material/stone2
+material Material/underground_Entrance
 {
 	technique
         {
                 pass
                 {
+                        scene_blend alpha_blend
+                	depth_write off
+
                         texture_unit
                         {
-                                texture stone2.png
+                                texture underground_Entrance.png
                         }
                 }
         }

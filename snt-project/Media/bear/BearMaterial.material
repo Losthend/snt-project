@@ -1,0 +1,14 @@
+material /global/creatures/bear/black
+{
+	technique
+        {
+                pass
+                {
+                        texture_unit
+                        {
+                                texture bear.png
+                        }
+                }
+        }
+
+}

@@ -14,6 +14,7 @@
 		- Tipo 1: estaticos
 		- Tipo 2: dinamico, el jugador puede agarrarlo
 		- Tipo 3: gallinas
+		- Tipo 4: Enemigo oso
 */
 
 //---------------------------------------------------------------------------
@@ -71,10 +72,12 @@ void Object::update()
 	//Objetos Tipo 2: solo si este objeto es de tipo 2, el jugador esta agarrando un objeto y dicho objeto es el mismo que este 
 	if (m_objType == 2 && gPlayer->m_catchObj != 0 && (gPlayer->m_catchObj->m_sceneObject->mNode->getName() == m_sceneObject->mNode->getName()))
 		type2();
-
 	//Objetos tipo 3: Gallinas
-	if (m_objType == 3)
+	else if(m_objType == 3)
 		type3();
+	//Objetos tipo 3: Osos
+	else if(m_objType == 4)
+		type4();
 
 	//Update en Bullet
 	m_sceneObject->update();
@@ -150,4 +153,23 @@ void Object::type3()
 
 	//Mover la gallina
 	m_sceneObject->mRigidBody->translate(btVector3(m_direction.x*m_moveX, 0, 0));
+}
+
+//---------------------------------------------------------------------------
+//Objeto de tipo 4: Osos
+//---------------------------------------------------------------------------
+void Object::type4()
+{
+	//die idel_a idle_b idle_stand run
+	Ogre::AnimationState* mAnim = m_sceneObject->mEntity->getAnimationState("idel_a");
+
+	//IDEA
+	//Si el jugador esta a X distancia, se mantiene quieto "idel_a"
+	//Si el jugador esta a Y distancia, se pone en alerta "idle_stand"
+	//Si el jugador esta a Z distancia, ataca "run"
+	//Si su vida es menor de 10, reproduce una vez la muerte "die" y pone la vida a cero para no realizar ninguna accion mas
+
+	mAnim->setLoop(true);
+	mAnim->setEnabled(true);
+	mAnim->addTime(Ogre::Real(FPS)*2);
 }

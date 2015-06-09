@@ -12,6 +12,7 @@ public:
 	void update();
 	void type2();
 	void type3();
+	void type4();
 
 	//SceneObject: Node + btRigidBody
 	SceneObject*		m_sceneObject;
