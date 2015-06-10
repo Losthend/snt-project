@@ -78,6 +78,8 @@ void Object::update()
 	//Objetos tipo 3: Osos
 	else if(m_objType == 4)
 		type4();
+	else if(m_objType == 5)
+		type5();
 
 	//Update en Bullet
 	m_sceneObject->update();
@@ -172,4 +174,37 @@ void Object::type4()
 	mAnim->setLoop(true);
 	mAnim->setEnabled(true);
 	mAnim->addTime(Ogre::Real(FPS)*2);
+}
+
+//---------------------------------------------------------------------------
+//Objeto de tipo 5: Puente
+//---------------------------------------------------------------------------
+void Object::type5()
+{
+	//Si el jugador colisiona con el puente, este se cae (es necesario re-crear el objeto)
+	if (m_sceneObject->mMass == 0)
+	{
+		CollisionManager cm = CollisionManager();
+		gPhysics->mWorld->contactPairTest(m_sceneObject->mRigidBody, gPlayer->m_sceneObject->mRigidBody, cm);
+		if (cm.m_collision)
+		{
+			//Almacenamos los datos necesarios
+			Ogre::String name = m_sceneObject->mNode->getName();
+			Ogre::Vector3 pos = m_sceneObject->mNode->getPosition();
+			//Eliminamos aquello que cambia y provoca conflicto
+			gSceneMgr->destroyEntity(m_sceneObject->mEntity->getName());
+			gSceneMgr->destroySceneNode(name);
+			gPhysics->mWorld->removeRigidBody(m_sceneObject->mRigidBody);
+			//Creamos el "nuevo" objeto
+			//SceneObject* sceneObj = gPhysics->createPrimitiveShape(name, size, pos, 10, "WoodPallet.mesh");	
+			SceneObject* sceneObj = gPhysics->createConvexHullShape(name, Ogre::Real(70), pos, 10, "stone.mesh");
+			sceneObj->mEntity->setMaterialName("Material/stone2");
+			//Asignamos los valores del "nuevo" objeto a este objeto
+			m_sceneObject->mRigidBody = sceneObj->mRigidBody;
+			m_sceneObject->mNode = sceneObj->mNode;
+			m_sceneObject->mEntity = sceneObj->mEntity;
+			m_sceneObject->mMass = sceneObj->mMass;
+		}
+		cm.~CollisionManager();
+	}
 }

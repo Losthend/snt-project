@@ -30,3 +30,108 @@ material Material/underground_Entrance
         }
 
 }
+
+material Material/underground_Hole
+{
+	technique
+        {
+                pass
+                {
+			texture_unit
+                        {
+                                texture underground_Hole.jpg
+                        }
+                }
+        }
+
+}
+
+material /global/structures/moraf_normal_wall
+{
+	technique
+        {
+                pass
+                {
+			texture_unit
+                        {
+                                texture underground_Tower1.png
+                        }
+                }
+        }
+
+}
+
+
+material /global/structures/moraf_floor
+{
+	technique
+        {
+                pass
+                {
+			texture_unit
+                        {
+                                texture underground_Tower2.png
+                        }
+                }
+        }
+
+}
+
+material /global/structures/moraf_stone_wall_side
+{
+	technique
+        {
+                pass
+                {
+			texture_unit
+                        {
+                                texture underground_Tower3.png
+                        }
+                }
+        }
+
+}
+
+material /global/structures/temple_base
+{
+	technique
+        {
+                pass
+                {
+			texture_unit
+                        {
+                                texture underground_Temple1.png
+                        }
+                }
+        }
+
+}
+material /global/structures/temple_main
+{
+	technique
+        {
+                pass
+                {
+			texture_unit
+                        {
+                                texture underground_Temple2.png
+                        }
+                }
+        }
+
+}
+material /global/structures/temple_roof
+{
+	technique
+        {
+                pass
+                {
+			texture_unit
+                        {
+                                texture underground_Temple3.png
+                        }
+                }
+        }
+
+}
+

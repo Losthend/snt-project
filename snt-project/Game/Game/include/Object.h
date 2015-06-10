@@ -13,6 +13,7 @@ public:
 	void type2();
 	void type3();
 	void type4();
+	void type5();
 
 	//SceneObject: Node + btRigidBody
 	SceneObject*		m_sceneObject;

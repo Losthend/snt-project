@@ -59,7 +59,7 @@ void EventManager::handleEvent()
 	//EVENTOS DE ESCENARIOS: En proceso
 	//****************************************************
 	if(gGameApp->activeScene == 1){
-		if(gPlayer != 0 && gPlayer->m_sceneObject->mNode->getPosition().y < -150)
+		if(gPlayer != 0 && gPlayer->m_sceneObject->mNode->getPosition().y < -100)
 			gGameApp->createScene2();
 	}
 
@@ -89,14 +89,14 @@ void EventManager::handleEvent()
 				gSceneMgr->getLight("shadowLight3")->setCastShadows(false);
 				gSceneMgr->getLight("shadowLight4")->setCastShadows(false);
 			}
-			else if (posX > 1400 && posX < 1600 && !gSceneMgr->getLight("shadowLight3")->getCastShadows()){
+			else if (posX > 1500 && posX < 1700 && !gSceneMgr->getLight("shadowLight3")->getCastShadows()){
 				gSceneMgr->getLight("shadowLight0")->setCastShadows(false);
 				gSceneMgr->getLight("shadowLight1")->setCastShadows(false);
 				gSceneMgr->getLight("shadowLight2")->setCastShadows(false);
 				gSceneMgr->getLight("shadowLight3")->setCastShadows(true);
 				gSceneMgr->getLight("shadowLight4")->setCastShadows(false);
 			}
-			else if (posX > 1600 && posX < 1800 && !gSceneMgr->getLight("shadowLight4")->getCastShadows()){
+			else if (posX > 1700 && posX < 1900 && !gSceneMgr->getLight("shadowLight4")->getCastShadows()){
 				gSceneMgr->getLight("shadowLight0")->setCastShadows(false);
 				gSceneMgr->getLight("shadowLight1")->setCastShadows(false);
 				gSceneMgr->getLight("shadowLight2")->setCastShadows(false);
