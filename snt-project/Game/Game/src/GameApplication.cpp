@@ -17,7 +17,7 @@ GameApplication::GameApplication(void)
 	gPhysics = new PhysicsManager();
 	activeScene = 0;
 	gSceneMgr->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_MODULATIVE);
-	gSceneMgr->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));
+	gSceneMgr->setAmbientLight(Ogre::ColourValue(0.7f, 0.7f, 0.7f));
 }
 //---------------------------------------------------------------------------
 GameApplication::~GameApplication(void)
@@ -169,8 +169,7 @@ void GameApplication::createScene2(void)
 
 	//Posicion del jugador
 	btTransform transform = gPlayer->m_sceneObject->mRigidBody->getCenterOfMassTransform();
-	//transform.setOrigin(btVector3(0, 250, 0));
-	transform.setOrigin(btVector3(2500, 0, 0));
+	transform.setOrigin(btVector3(0, 250, 0));
 	gPlayer->m_sceneObject->mRigidBody->setCenterOfMassTransform(transform);
 
 	//****************************************************
@@ -178,14 +177,14 @@ void GameApplication::createScene2(void)
 	//****************************************************
 	SceneObject* sceneObj;
 
-	//Punto de caida
+	//ZONA 1: Punto de caida
+	createFont("undergroundEntrance", Ogre::Vector2(200,100), Ogre::Vector3(400,30,-74), "Material/underground_Entrance", Ogre::Vector2(1,1), true);
+	createFont("undergroundFarWall1", Ogre::Vector2(1000,250), Ogre::Vector3(450,125,-75), "Material/underground_Wall", Ogre::Vector2(1,1), true);
+	createFont("undergroundNearWall1", Ogre::Vector2(1000,500), Ogre::Vector3(450,-250,75), "Material/underground_Wall", Ogre::Vector2(1,2), true);
+
 	sceneObj = gPhysics->createConvexHullShape("bigStone1", Ogre::Real(100), Ogre::Vector3(5, 25, 0), 0, "stone.mesh");
 	sceneObj->mEntity->setMaterialName("Material/stone2");
 	gObjects.push_back(new Object(1, sceneObj));
-
-	//ZONA 1: sala del oso
-	createFont("undergroundFarWall1", Ogre::Vector2(1000,250), Ogre::Vector3(450,125,-75), "Material/underground_Wall", Ogre::Vector2(1,1), true);
-	createFont("undergroundNearWall1", Ogre::Vector2(1000,500), Ogre::Vector3(450,-250,75), "Material/underground_Wall", Ogre::Vector2(1,2), true);
 
 	sceneObj = gPhysics->createGroundShape("undergroundFloor1", Ogre::Vector3(900, 5, 150), Ogre::Vector3(500, 0, 0), Ogre::Vector2(5,1), "Material/underground_Wall");
 	gObjects.push_back(new Object(1, sceneObj));
@@ -224,13 +223,9 @@ void GameApplication::createScene2(void)
 	gObjects.push_back(new Object(1, sceneObj));
 
 	createObject("undergroundWall1", Ogre::Vector3(Ogre::Real(5*0.01), Ogre::Real(550*0.01), Ogre::Real(550*0.01)), Ogre::Vector3(950, -25, -350), "Material/underground_Wall","Cube.mesh");
-	createObject("undergroundTower", Ogre::Vector3(Ogre::Real(50*0.01), Ogre::Real(27*0.01), Ogre::Real(50*0.01)), Ogre::Vector3(1200, -250, -500), "","Tower01.mesh");
 	createObject("undergroundTemple", Ogre::Vector3(Ogre::Real(35), Ogre::Real(35), Ogre::Real(35)), Ogre::Vector3(1445, -300, -500), "","temple.mesh");
-
-	//ZONA 2: techo
-	//sceneObj = gPhysics->createPrimitiveShape("undergroundRoof", Ogre::Vector3(1000*0.1, 5*0.1, 150*0.1), Ogre::Vector3(1400, 250, 0), 0, "Cube.mesh");
-	//sceneObj->mEntity->setMaterialName("Material/underground_Wall");
-	//gObjects.push_back(new Object(1, sceneObj)); 
+	createObject("stalactite1", Ogre::Vector3(250, 250, 250), Ogre::Vector3(1100, -270, -400), "","stalactites.mesh");
+	createObject("stalactite2", Ogre::Vector3(150, 150, 150), Ogre::Vector3(1710, -260, -500), "","stalactites.mesh");
 
 	//Zona 3: Precipicio
 	createFont("undergroundFarWall3", Ogre::Vector2(1400,2000), Ogre::Vector3(2550,-300,-600), "Material/underground_Wall", Ogre::Vector2(2,2), true);
@@ -238,7 +233,6 @@ void GameApplication::createScene2(void)
 	createObject("undergroundNearWall3", Ogre::Vector3(Ogre::Real(5*0.01), Ogre::Real(900*0.01), Ogre::Real(700*0.01)), Ogre::Vector3(1850, -750, -275), "Material/underground_Wall","Cube.mesh");
 
 	//Zona 4: Puente
-	//Camino principal
 	sceneObj = gPhysics->createConvexHullShape("stone1", Ogre::Real(70), Ogre::Vector3(1940, -310, 0), 0, "stone.mesh");
 	sceneObj->mEntity->setMaterialName("Material/stone2");
 	gObjects.push_back(new Object(5, sceneObj));
@@ -248,78 +242,48 @@ void GameApplication::createScene2(void)
 	sceneObj = gPhysics->createConvexHullShape("stone3", Ogre::Real(70), Ogre::Vector3(2220, -350, 0), 0, "stone.mesh");
 	sceneObj->mEntity->setMaterialName("Material/stone2");
 	gObjects.push_back(new Object(5, sceneObj));
-	sceneObj = gPhysics->createConvexHullShape("stone4", Ogre::Real(70), Ogre::Vector3(2050, -400, 0), 0, "stone.mesh");
-	sceneObj->mEntity->setMaterialName("Material/stone2");
-	gObjects.push_back(new Object(5, sceneObj));
 
 	//Zona 5: Secreto
-	sceneObj = gPhysics->createPrimitiveShape("undergroundSecret", Ogre::Vector3(Ogre::Real(400*0.1), Ogre::Real(1000*0.1), Ogre::Real(700*0.1)), Ogre::Vector3(2470, -805, -275), 0, "Cube.mesh");
+	createObject("undergroundBlockFar", Ogre::Vector3(300, 300, 300), Ogre::Vector3(2450, -300, -310), "Material/stone2","stone.mesh");
+	createObject("undergroundStatue", Ogre::Vector3(20, 20, 20), Ogre::Vector3(2430, -300, -100), "","statue.mesh");
+
+	sceneObj = gPhysics->createPrimitiveShape("undergroundGroundSecret", Ogre::Vector3(Ogre::Real(600*0.1), Ogre::Real(1000*0.1), Ogre::Real(700*0.1)), Ogre::Vector3(2570, -805, -275), 0, "Cube.mesh");
 	sceneObj->mEntity->setMaterialName("Material/underground_Wall");
 	gObjects.push_back(new Object(1, sceneObj)); 
+	sceneObj = gPhysics->createPrimitiveShape("undergroundBlock1", Ogre::Vector3(3000, 3000, 3000), Ogre::Vector3(2500, 0, -100), 0, "stone.mesh");
+	sceneObj->mEntity->setMaterialName("Material/stone2");
+	gObjects.push_back(new Object(1, sceneObj));
 
-
-
-	//sceneObj = gPhysics->createConvexHullShape("bigStone3", Ogre::Real(300), Ogre::Vector3(2650, -230, -100), 0, "stone.mesh");
-	//sceneObj->mEntity->setMaterialName("Material/stone2");
-	//gObjects.push_back(new Object(1, sceneObj));
-
-	//DECORACION
-	createFont("undergroundEntrance", Ogre::Vector2(200,100), Ogre::Vector3(400,30,-74), "Material/underground_Entrance", Ogre::Vector2(1,1), true);
-
+	sceneObj = gPhysics->createConvexHullShape("undergroundBlock2", Ogre::Real(400), Ogre::Vector3(2700, -150, -100), 0, "stone.mesh");
+	sceneObj->mEntity->setMaterialName("Material/stone2");
+	gObjects.push_back(new Object(1, sceneObj));
+	
 	//ENEMIGO
-	/*
-	sceneObj = gPhysics->createConvexHullShape("bear", Ogre::Real(40), Ogre::Vector3(200, 50, 0), 10, "bear.mesh");
-	//Mirar inicialmente hacia el eje X+
-	transform;
+	sceneObj = gPhysics->createConvexHullShape("bear", Ogre::Real(40), Ogre::Vector3(1400, -250, 0), 10, "bear.mesh");
 	sceneObj->mRigidBody->getMotionState()->getWorldTransform(transform);
 	transform.setRotation(btQuaternion(0,1,0,1));
 	sceneObj->mRigidBody->setMotionState(new btDefaultMotionState(transform));
-	//Guardar en global
 	gObjects.push_back(new Object(4, sceneObj));
-	*/
 
-	//Hierba (null)
-	//createGroundGrass(Ogre::Vector3(100,100,100), Ogre::Vector3(0,-50,0), 10);
-	
-	//Objetos (2)
-	/*
-	sceneObj = gPhysics->createPrimitiveShape("Cube1", Ogre::Vector3(50, 50, 50), Ogre::Vector3(-50, 80, 0), 10, "Barrel.mesh");
-	gObjects.push_back(new Object(2, sceneObj));
-    sceneObj = gPhysics->createPrimitiveShape("Cube2", Ogre::Vector3(50, 50, 50), Ogre::Vector3(50, 120, 0), 10, "Barrel.mesh");
-	gObjects.push_back(new Object(2, sceneObj));
-    sceneObj = gPhysics->createPrimitiveShape("Cube3", Ogre::Vector3(50, 50, 50), Ogre::Vector3(50, 150, 0), 10, "Barrel.mesh");
-	gObjects.push_back(new Object(2, sceneObj));
-    sceneObj = gPhysics->createPrimitiveShape("Cube4", Ogre::Vector3(50, 50, 50), Ogre::Vector3(-50, 100, 0), 10, "Barrel.mesh");
-	gObjects.push_back(new Object(2, sceneObj));
-	sceneObj = gPhysics->createPrimitiveShape("Plane1", Ogre::Vector3(100, 100, 100), Ogre::Vector3(60, 110, 0), 10, "WoodPallet.mesh");
-	gObjects.push_back(new Object(2, sceneObj));
-	*/
+	//ESPADA
+	Ogre::Entity *entitySword = gSceneMgr->createEntity("undergroundSword", "Sword.mesh");
+	Ogre::SceneNode* nodeSword = gSceneMgr->getRootSceneNode()->createChildSceneNode("undergroundSword");
+	nodeSword->attachObject(entitySword);
+	nodeSword->setScale(7, 7, 7);
+	nodeSword->setPosition(2500, -280, 15);
+	nodeSword->yaw(Ogre::Degree(90));
+	gEntitys.push_back(entitySword);
+	gNodes.push_back(nodeSword);
 
-	//LUZ 0 
-	Ogre::Light *light = gSceneMgr->createLight("shadowLight0");     
+	//LUZ 1 
+	Ogre::Light *light = gSceneMgr->createLight("shadowLight1");     
 	light->setType(Ogre::Light::LT_SPOTLIGHT);
 	light->setPosition(0, 249, 0);
 	light->setDirection(0,-1,0);
 	light->setSpotlightRange(Ogre::Degree(30), Ogre::Degree(50));	
 
-	//LUZ 1
-	Ogre::Vector3 lightPos(1100, -280, -600);
-	createObject("cubeLeft1", Ogre::Vector3(Ogre::Real(2*0.01), Ogre::Real(10*0.01), Ogre::Real(10*0.01)), Ogre::Vector3(lightPos.x-2, lightPos.y, lightPos.z), "Material/underground_Wall","Cube.mesh");
-	createObject("cubeRight1", Ogre::Vector3(Ogre::Real(2*0.01), Ogre::Real(10*0.01), Ogre::Real(10*0.01)), Ogre::Vector3(lightPos.x+2, lightPos.y, lightPos.z), "Material/underground_Wall","Cube.mesh");
-	createObject("cubeBack1", Ogre::Vector3(Ogre::Real(10*0.01), Ogre::Real(5*0.01), Ogre::Real(10*0.01)), Ogre::Vector3(lightPos.x, lightPos.y, lightPos.z-10), "Material/underground_Wall","Cube.mesh");
-	createObject("cubeTop1", Ogre::Vector3(Ogre::Real(10*0.01), Ogre::Real(5*0.01), Ogre::Real(10*0.01)), Ogre::Vector3(lightPos.x, lightPos.y+10, lightPos.z), "Material/underground_Wall","Cube.mesh");
-	createObject("cubeBottom1", Ogre::Vector3(Ogre::Real(10*0.01), Ogre::Real(10*0.01), Ogre::Real(10*0.01)), Ogre::Vector3(lightPos.x, lightPos.y-10, lightPos.z), "Material/underground_Wall","Cube.mesh");
-	Ogre::Light *light1 = gSceneMgr->createLight("shadowLight1");     
-	light1->setType(Ogre::Light::LT_SPOTLIGHT);
-	light1->setPosition(lightPos);
-	light1->setDirection(0,0,1);
-	light1->setDiffuseColour(1.0, 0.0, 0.0);     
-	light1->setSpecularColour(1.0, 0.0, 0.0);   
-	light1->setSpotlightRange(Ogre::Degree(10), Ogre::Degree(100));
-	light1->setCastShadows(false);
-
 	//LUZ 2
-	lightPos = Ogre::Vector3(1300, -290, -600);
+	Ogre::Vector3 lightPos(1300, -290, -600);
 	createObject("cubeLeft2", Ogre::Vector3(Ogre::Real(2*0.01), Ogre::Real(10*0.01), Ogre::Real(10*0.01)), Ogre::Vector3(lightPos.x-2, lightPos.y, lightPos.z), "Material/underground_Wall","Cube.mesh");
 	createObject("cubeRight2", Ogre::Vector3(Ogre::Real(2*0.01), Ogre::Real(10*0.01), Ogre::Real(10*0.01)), Ogre::Vector3(lightPos.x+2, lightPos.y, lightPos.z), "Material/underground_Wall","Cube.mesh");
 	createObject("cubeBack2", Ogre::Vector3(Ogre::Real(10*0.01), Ogre::Real(5*0.01), Ogre::Real(10*0.01)), Ogre::Vector3(lightPos.x, lightPos.y, lightPos.z-10), "Material/underground_Wall","Cube.mesh");
@@ -349,23 +313,64 @@ void GameApplication::createScene2(void)
 	light3->setSpecularColour(0.0, 0.0, 1.0);   
 	light3->setSpotlightRange(Ogre::Degree(10), Ogre::Degree(100));
 	light3->setCastShadows(false);
-
-	//LUZ 4
-	lightPos = Ogre::Vector3(1800, -290, -600);
-	createObject("cubeLeft4", Ogre::Vector3(Ogre::Real(2*0.01), Ogre::Real(10*0.01), Ogre::Real(10*0.01)), Ogre::Vector3(lightPos.x-2, lightPos.y, lightPos.z), "Material/underground_Wall","Cube.mesh");
-	createObject("cubeRight4", Ogre::Vector3(Ogre::Real(2*0.01), Ogre::Real(10*0.01), Ogre::Real(10*0.01)), Ogre::Vector3(lightPos.x+2, lightPos.y, lightPos.z), "Material/underground_Wall","Cube.mesh");
-	createObject("cubeBack4", Ogre::Vector3(Ogre::Real(10*0.01), Ogre::Real(5*0.01), Ogre::Real(10*0.01)), Ogre::Vector3(lightPos.x, lightPos.y, lightPos.z-10), "Material/underground_Wall","Cube.mesh");
-	createObject("cubeTop4", Ogre::Vector3(Ogre::Real(10*0.01), Ogre::Real(5*0.01), Ogre::Real(10*0.01)), Ogre::Vector3(lightPos.x, lightPos.y+10, lightPos.z), "Material/underground_Wall","Cube.mesh");
-	createObject("cubeBottom4", Ogre::Vector3(Ogre::Real(10*0.01), Ogre::Real(10*0.01), Ogre::Real(10*0.01)), Ogre::Vector3(lightPos.x, lightPos.y-10, lightPos.z), "Material/underground_Wall","Cube.mesh");
-	Ogre::Light *light4 = gSceneMgr->createLight("shadowLight4");     
-	light4->setType(Ogre::Light::LT_SPOTLIGHT);
-	light4->setPosition(lightPos);
-	light4->setDirection(0,0,1);
-	light4->setDiffuseColour(1.0, 1.0, 1.0);     
-	light4->setSpecularColour(1.0, 1.0, 1.0);   
-	light4->setSpotlightRange(Ogre::Degree(10), Ogre::Degree(100));
-	light4->setCastShadows(false);
 }
+
+
+//---------------------------------------------------------------------------
+//ESCENARIO 3
+//---------------------------------------------------------------------------
+void GameApplication::createScene3(void)
+{
+	//****************************************************
+	//Liberar espacio 
+	//****************************************************
+	clearScene();
+	gCanUpdate = true;
+	activeScene = 3;
+
+	//****************************************************
+	//JUGADOR 
+	//****************************************************
+	if(gPlayer == 0)
+	{
+		SceneObject* player = gPhysics->createConvexHullShape("Player", Ogre::Real(5), Ogre::Vector3(0, 10, 0), 1, "Sinbad.mesh");
+		gPlayer = new Player(player);
+		gPlayer->m_animMgr = new AnimationManager();
+	}
+
+	//Posicion del jugador
+	btTransform transform = gPlayer->m_sceneObject->mRigidBody->getCenterOfMassTransform();
+	transform.setOrigin(btVector3(0, 50, 0));
+	gPlayer->m_sceneObject->mRigidBody->setCenterOfMassTransform(transform);
+
+	//****************************************************
+	//ESCENARIO 3
+	//****************************************************
+	SceneObject* sceneObj;
+
+	sceneObj = gPhysics->createGroundShape("elevatorFloor", Ogre::Vector3(100, 5, 150), Ogre::Vector3(0, 0, 0), Ogre::Vector2(1,1), "Material/elevator_Floor");
+	gObjects.push_back(new Object(1, sceneObj));
+
+	//Hierba (null)
+	//createGroundGrass(Ogre::Vector3(100,100,100), Ogre::Vector3(0,-50,0), 10);
+	
+	//Objetos (2)
+	/*
+	sceneObj = gPhysics->createPrimitiveShape("Cube1", Ogre::Vector3(50, 50, 50), Ogre::Vector3(-50, 80, 0), 10, "Barrel.mesh");
+	gObjects.push_back(new Object(2, sceneObj));
+    sceneObj = gPhysics->createPrimitiveShape("Cube2", Ogre::Vector3(50, 50, 50), Ogre::Vector3(50, 120, 0), 10, "Barrel.mesh");
+	gObjects.push_back(new Object(2, sceneObj));
+    sceneObj = gPhysics->createPrimitiveShape("Cube3", Ogre::Vector3(50, 50, 50), Ogre::Vector3(50, 150, 0), 10, "Barrel.mesh");
+	gObjects.push_back(new Object(2, sceneObj));
+    sceneObj = gPhysics->createPrimitiveShape("Cube4", Ogre::Vector3(50, 50, 50), Ogre::Vector3(-50, 100, 0), 10, "Barrel.mesh");
+	gObjects.push_back(new Object(2, sceneObj));
+	sceneObj = gPhysics->createPrimitiveShape("Plane1", Ogre::Vector3(100, 100, 100), Ogre::Vector3(60, 110, 0), 10, "WoodPallet.mesh");
+	gObjects.push_back(new Object(2, sceneObj));
+	*/
+
+}
+
+
 
 //---------------------------------------------------------------------------
 //Liberar espacio

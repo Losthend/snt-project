@@ -1,4 +1,4 @@
-material Material/underground_Wall
+material /global/structures/statue_body
 {
 	technique
         {
@@ -6,32 +6,15 @@ material Material/underground_Wall
                 {
 			texture_unit
                         {
-                                texture underground_Wall.png
+                                texture statue_body.png
                         }
                 }
         }
 
 }
 
-material Material/underground_Entrance
-{
-	technique
-        {
-                pass
-                {
-                        scene_blend alpha_blend
-                	depth_write off
 
-                        texture_unit
-                        {
-                                texture underground_Entrance.png
-                        }
-                }
-        }
-
-}
-
-material Material/underground_Hole
+material /global/structures/statue_helmet
 {
 	technique
         {
@@ -39,14 +22,14 @@ material Material/underground_Hole
                 {
 			texture_unit
                         {
-                                texture underground_Hole.jpg
+                                texture statue_helmet.png
                         }
                 }
         }
 
 }
 
-material /global/structures/temple_base
+material /global/structures/statue_weapon
 {
 	technique
         {
@@ -54,14 +37,15 @@ material /global/structures/temple_base
                 {
 			texture_unit
                         {
-                                texture underground_Temple1.png
+                                texture statue_weapon.png
                         }
                 }
         }
 
 }
 
-material /global/structures/temple_main
+
+material /global/structures/statue_bezier
 {
 	technique
         {
@@ -69,14 +53,14 @@ material /global/structures/temple_main
                 {
 			texture_unit
                         {
-                                texture underground_Temple2.png
+                                texture statue_bezier.png
                         }
                 }
         }
 
 }
 
-material /global/structures/temple_roof
+material /global/structures/statue_shin
 {
 	technique
         {
@@ -84,14 +68,14 @@ material /global/structures/temple_roof
                 {
 			texture_unit
                         {
-                                texture underground_Temple3.png
+                                texture statue_shin.png
                         }
                 }
         }
 
 }
 
-material /global/environment/limestone
+material /global/structures/statue_belt
 {
 	technique
         {
@@ -99,7 +83,22 @@ material /global/environment/limestone
                 {
 			texture_unit
                         {
-                                texture stalactites.png
+                                texture statue_belt.png
+                        }
+                }
+        }
+
+}
+
+material /global/structures/statue_arms
+{
+	technique
+        {
+                pass
+                {
+			texture_unit
+                        {
+                                texture statue_arms.png
                         }
                 }
         }

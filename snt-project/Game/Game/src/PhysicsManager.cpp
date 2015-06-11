@@ -15,7 +15,7 @@ PhysicsManager::PhysicsManager()
 	mWorld = new btDiscreteDynamicsWorld(mCollisionDispatcher, &mBroadphase, &mConstraintSolver, &mCollisionConfig);
 	//mWorld->setGravity(btVector3(0,-9.81f,0));
 	mWorld->setGravity(btVector3(0,-500.f,0));
-	m_magicCount = 0;
+	magicObj = 0;
 }
 
 //---------------------------------------------------------------------------
@@ -188,33 +188,11 @@ SceneObject* PhysicsManager::createGroundShape(Ogre::String name, Ogre::Vector3 
 //---------------------------------------------------------------------------
 void PhysicsManager::magicGenerator(Ogre::Vector3 pos)
 {
-	Ogre::String id;
-	id = Ogre::StringConverter::toString(m_magicCount);
+	if (magicObj != 0)
+		magicObj->~Object();
 
-	if(m_magicCount>=3)
-	{
-		bool chickenDelete = false;
-		for(unsigned x = 0; x < gObjects.size() && !chickenDelete; x++)
-		{
-			for (unsigned y = 0; y <= 3 && !chickenDelete; y++)
-			{
-				id = Ogre::StringConverter::toString(y).c_str();
-				if(gObjects[x]->m_sceneObject->mNode->getName() == "magic"+id)
-				{
-					gObjects[x]->~Object();
-					m_magicCount--;
-					chickenDelete = true;
-				}
-			}
-		}
-	}
+	SceneObject* sceneObject = gPhysics->createPrimitiveShape("magicObject", Ogre::Vector3(20, 20, 20), Ogre::Vector3(pos.x, pos.y, pos.z), 1, "chicken.mesh");
 
-	m_magicCount++;
-
-	Ogre::String name = "magic"+id;
-	SceneObject* sceneObject = gPhysics->createPrimitiveShape(name, Ogre::Vector3(20, 20, 20), Ogre::Vector3(pos.x, pos.y, pos.z), 1, "chicken.mesh");
-
-	//Mirar inicialmente hacia el eje X+
 	btTransform transform;
 	sceneObject->mRigidBody->getMotionState()->getWorldTransform(transform);
 	transform.setRotation(btQuaternion(0,1,0,1));
@@ -222,8 +200,9 @@ void PhysicsManager::magicGenerator(Ogre::Vector3 pos)
 
 	Object* obj = new Object(3, sceneObject);
 	obj->m_direction.x = 1;
-	gObjects.push_back(obj);
 
+	magicObj = obj;
+	gObjects.push_back(obj);
 }
 
 

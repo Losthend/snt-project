@@ -11,6 +11,7 @@ public:
     virtual ~GameApplication(void);
     void createScene1(void);
 	void createScene2(void);
+	void createScene3(void);
 
 	int activeScene;
 

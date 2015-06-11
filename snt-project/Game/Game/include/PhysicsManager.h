@@ -2,6 +2,7 @@
 #define __PhysicsManager_h_
 
 class SceneObject;
+class Object;
 
 class PhysicsManager 
 {
@@ -27,7 +28,8 @@ public:
                         const Ogre::Quaternion &orient,
                         const Ogre::Vector3 &scale);
 
-	int m_magicCount;
+	Object* magicObj;
+
 	//mWorld: simulara un mundo fisico con objetos en movimiento. 
 	btDiscreteDynamicsWorld *mWorld;
 	//mCollisionDispatcher: decide como tratar las colisiones, gestion de los objetos que colisionan, etc.
