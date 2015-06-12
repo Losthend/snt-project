@@ -1,8 +1,8 @@
 #ifndef __GameApplication_h_
 #define __GameApplication_h_
 
-//---------------------------------------------------------------------------
 class PhysicsManager;
+class SceneObject;
 
 class GameApplication
 {
@@ -14,6 +14,8 @@ public:
 	void createScene3(void);
 
 	int activeScene;
+	SceneObject* specialObject1;
+	SceneObject* specialObject2;
 
 private:
 	void clearScene(void);

@@ -8,6 +8,8 @@ public:
 	virtual ~EventManager(void);
 
 	void handleEvent(void);
+
+	bool platform;
 };
 
 //---------------------------------------------------------------------------

@@ -1,0 +1,134 @@
+material Material/temple_Floor
+{
+	technique
+        {
+                pass
+                {
+                        texture_unit
+                        {
+                                texture temple_Floor.jpg
+                        }
+                }
+        }
+
+}
+
+material Material/temple_Wall
+{
+	technique
+        {
+                pass
+                {
+                        texture_unit
+                        {
+                                texture temple_Wall.jpg
+                        }
+                }
+        }
+
+}
+
+material Material/temple_Column
+{
+	technique
+        {
+                pass
+                {
+                        texture_unit
+                        {
+                                texture temple_Column.jpg
+                        }
+                }
+        }
+
+}
+
+material Material/temple_Ouroboros
+{
+	technique
+        {
+                pass
+                {
+                        scene_blend alpha_blend
+                	depth_write off
+
+                        texture_unit
+                        {
+                                texture temple_Ouroboros.png
+                        }
+                }
+        }
+
+}
+
+material Ground_Grass_sub2
+{
+	technique
+        {
+                pass
+                {
+                        scene_blend alpha_blend
+                	depth_write off
+
+                        texture_unit
+                        {
+                                texture temple_Energy.png
+                        }
+                }
+        }
+
+}
+
+material Material/temple_Creeper
+{
+	technique
+        {
+                pass
+                {
+                        scene_blend alpha_blend
+                	depth_write off
+
+                        texture_unit
+                        {
+                                texture temple_Creeper.png
+                        }
+                }
+        }
+
+}
+
+material Material/temple_Lock
+{
+	technique
+        {
+                pass
+                {
+                        scene_blend alpha_blend
+                	depth_write off
+
+                        texture_unit
+                        {
+                                texture temple_Lock.png
+                        }
+                }
+        }
+
+}
+
+material Material/temple_Hieroglyph1
+{
+	technique
+        {
+                pass
+                {
+                        scene_blend alpha_blend
+                	depth_write off
+
+                        texture_unit
+                        {
+                                texture temple_Hieroglyph1.png
+                        }
+                }
+        }
+
+}

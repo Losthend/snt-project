@@ -340,7 +340,7 @@ void GameApplication::createScene3(void)
 
 	//Posicion del jugador
 	btTransform transform = gPlayer->m_sceneObject->mRigidBody->getCenterOfMassTransform();
-	transform.setOrigin(btVector3(0, 50, 0));
+	transform.setOrigin(btVector3(350, 100, 0));
 	gPlayer->m_sceneObject->mRigidBody->setCenterOfMassTransform(transform);
 
 	//****************************************************
@@ -348,7 +348,81 @@ void GameApplication::createScene3(void)
 	//****************************************************
 	SceneObject* sceneObj;
 
-	sceneObj = gPhysics->createGroundShape("elevatorFloor", Ogre::Vector3(100, 5, 150), Ogre::Vector3(0, 0, 0), Ogre::Vector2(1,1), "Material/elevator_Floor");
+	//ZONA CENTRAL
+	createFont("templeFarWall1", Ogre::Vector2(1600,250), Ogre::Vector3(0,125,-150), "Material/temple_Wall", Ogre::Vector2(3,1), true);
+	createFont("templeNearWall1", Ogre::Vector2(1000,250), Ogre::Vector3(300,-125,150), "Material/temple_Wall", Ogre::Vector2(2,1), true);
+
+	createFont("templeOuroboros1", Ogre::Vector2(130,130), Ogre::Vector3(350,125,-148), "Material/temple_Ouroboros", Ogre::Vector2(1,1), true);
+	createFont("templeOuroboros2", Ogre::Vector2(130,130), Ogre::Vector3(350,1,0), "Material/temple_Ouroboros", Ogre::Vector2(1,1), false);
+	
+	createFont("templeHieroglyph1", Ogre::Vector2(60,60), Ogre::Vector3(350,125,-149), "Material/temple_Hieroglyph1", Ogre::Vector2(1,1), true);
+
+	createObject("templeColumn1", Ogre::Vector3(2, Ogre::Real(0.55), 2), Ogre::Vector3(-100, 60, -140), "Material/temple_Column","Column.mesh");
+	createObject("templeColumn2", Ogre::Vector3(2, Ogre::Real(0.55), 2), Ogre::Vector3(200, 60, -140), "Material/temple_Column","Column.mesh");
+	createObject("templeColumn3", Ogre::Vector3(2, Ogre::Real(0.55), 2), Ogre::Vector3(500, 60, -140), "Material/temple_Column","Column.mesh");
+
+	sceneObj = gPhysics->createGroundShape("templeFloor", Ogre::Vector3(1000, 5, 300), Ogre::Vector3(300, 0, 0), Ogre::Vector2(2,1), "Material/temple_Floor");
+	gObjects.push_back(new Object(1, sceneObj));
+
+	sceneObj = gPhysics->createPrimitiveShape("templeRoof", Ogre::Vector3(1600*0.1, 5*0.1, 250*0.1), Ogre::Vector3(0, 245, 0), 0, "Cube.mesh");
+	sceneObj->mEntity->setMaterialName("Material/temple_Floor");
+	gObjects.push_back(new Object(1, sceneObj));
+
+	sceneObj = gPhysics->createPrimitiveShape("templeRight", Ogre::Vector3(Ogre::Real(5*0.1), Ogre::Real(250*0.1), Ogre::Real(300*0.1)), Ogre::Vector3(799, 125, 0), 0, "Cube.mesh");
+	sceneObj->mEntity->setMaterialName("Material/temple_Wall");
+	gObjects.push_back(new Object(1, sceneObj));
+
+
+
+	sceneObj = gPhysics->createPrimitiveShape("stone1", Ogre::Vector3(Ogre::Real(100*0.1), Ogre::Real(7*0.1), Ogre::Real(150*0.1)), Ogre::Vector3(0, 10, 0), 60, "Cube.mesh");
+	sceneObj->mEntity->setMaterialName("Material/bunker_Wall");
+	gObjects.push_back(new Object(2, sceneObj)); 
+
+
+
+	//ZONA TRAMPAS
+	createFont("templeNearWall3", Ogre::Vector2(1600,250), Ogre::Vector3(-200,-375,150), "Material/temple_Wall", Ogre::Vector2(3,1), true);
+
+	sceneObj = gPhysics->createGroundShape("templeFloor3", Ogre::Vector3(300, 5, 300), Ogre::Vector3(-350, -250, 0), Ogre::Vector2(1,1), "Material/temple_Floor");
+	gObjects.push_back(new Object(1, sceneObj));
+
+	sceneObj = gPhysics->createPrimitiveShape("templeFall1", Ogre::Vector3(Ogre::Real(5*0.1), Ogre::Real(250*0.1), Ogre::Real(300*0.1)), Ogre::Vector3(-500, -125, 0), 0, "Cube.mesh");
+	sceneObj->mEntity->setMaterialName("Material/temple_Wall");
+	gObjects.push_back(new Object(1, sceneObj));
+	sceneObj = gPhysics->createPrimitiveShape("templeFall2", Ogre::Vector3(Ogre::Real(5*0.1), Ogre::Real(250*0.1), Ogre::Real(300*0.1)), Ogre::Vector3(-200, -125, 0), 0, "Cube.mesh");
+	sceneObj->mEntity->setMaterialName("Material/temple_Wall");
+	gObjects.push_back(new Object(1, sceneObj));
+
+	//PASARELA
+	sceneObj = gPhysics->createPrimitiveShape("templePlatform", Ogre::Vector3(Ogre::Real(25*0.1), Ogre::Real(25*0.1), Ogre::Real(300*0.1)), Ogre::Vector3(-350, 0, 0), 1, "Cube.mesh");
+	sceneObj->mRigidBody->setGravity(btVector3(0,0,0));
+	sceneObj->mRigidBody->setAngularFactor(btVector3(0,0,0));
+	sceneObj->mRigidBody->setLinearFactor(btVector3(0,0,0));
+	sceneObj->mEntity->setMaterialName("Material/temple_Wall");
+	specialObject2 = sceneObj;
+	gObjects.push_back(new Object(1, sceneObj));
+
+	//ZONA DEL NUCLEO
+	createFont("templeFarWall2", Ogre::Vector2(300,250), Ogre::Vector3(-350,-125,-150), "Material/temple_Wall", Ogre::Vector2(1,1), true);
+	createFont("templeNearWall2", Ogre::Vector2(300,250), Ogre::Vector3(-650,-125,150), "Material/temple_Wall", Ogre::Vector2(1,1), true);
+	createFont("templeCreeper", Ogre::Vector2(300,300), Ogre::Vector3(-650,115,-149), "Material/temple_Creeper", Ogre::Vector2(1,1), true);
+
+	sceneObj = gPhysics->createGroundShape("templeFloor2", Ogre::Vector3(300, 5, 300), Ogre::Vector3(-650, 0, 0), Ogre::Vector2(2,1), "Material/temple_Floor");
+	gObjects.push_back(new Object(1, sceneObj));
+	
+	sceneObj = gPhysics->createPrimitiveShape("templeLeft", Ogre::Vector3(Ogre::Real(5*0.1), Ogre::Real(250*0.1), Ogre::Real(300*0.1)), Ogre::Vector3(-799, 125, 0), 0, "Cube.mesh");
+	sceneObj->mEntity->setMaterialName("Material/temple_Wall");
+	gObjects.push_back(new Object(1, sceneObj));
+
+	sceneObj = gPhysics->createConvexHullShape("templeKey", Ogre::Real(0.2), Ogre::Vector3(-650, 50, 0), 1, "geosphere4500.mesh");
+	specialObject1 = sceneObj;
+	gObjects.push_back(new Object(2, sceneObj));
+
+	//SALIDA
+	createObject("templeLock", Ogre::Vector3(Ogre::Real(5*0.1), Ogre::Real(5*0.1), Ogre::Real(7*0.1)), Ogre::Vector3(773, 125, 5), "Material/temple_Lock","Cube.mesh");
+
+	sceneObj = gPhysics->createPrimitiveShape("templeLockSupport", Ogre::Vector3(Ogre::Real(50*0.1), Ogre::Real(75*0.1), Ogre::Real(75*0.1)), Ogre::Vector3(775, 125, 0), 0, "Cube.mesh");
+	sceneObj->mEntity->setMaterialName("Material/temple_Wall");
 	gObjects.push_back(new Object(1, sceneObj));
 
 	//Hierba (null)
@@ -396,6 +470,8 @@ void GameApplication::clearScene(void)
 	}
 	gSceneMgr->destroyAllLights();
 	gSceneMgr->destroyAllStaticGeometry();
+	specialObject1 = 0;
+	specialObject2 = 0;
 }
 
 //---------------------------------------------------------------------------
