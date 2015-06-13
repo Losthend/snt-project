@@ -340,7 +340,8 @@ void GameApplication::createScene3(void)
 
 	//Posicion del jugador
 	btTransform transform = gPlayer->m_sceneObject->mRigidBody->getCenterOfMassTransform();
-	transform.setOrigin(btVector3(350, 100, 0));
+	//transform.setOrigin(btVector3(350, 100, 0));
+	transform.setOrigin(btVector3(-600, 100, 0));
 	gPlayer->m_sceneObject->mRigidBody->setCenterOfMassTransform(transform);
 
 	//****************************************************
@@ -352,10 +353,13 @@ void GameApplication::createScene3(void)
 	createFont("templeFarWall1", Ogre::Vector2(1600,250), Ogre::Vector3(0,125,-150), "Material/temple_Wall", Ogre::Vector2(3,1), true);
 	createFont("templeNearWall1", Ogre::Vector2(1000,250), Ogre::Vector3(300,-125,150), "Material/temple_Wall", Ogre::Vector2(2,1), true);
 
-	createFont("templeOuroboros1", Ogre::Vector2(130,130), Ogre::Vector3(350,125,-148), "Material/temple_Ouroboros", Ogre::Vector2(1,1), true);
+	createFont("templeOuroboros1", Ogre::Vector2(130,130), Ogre::Vector3(350,125,-149), "Material/temple_Ouroboros", Ogre::Vector2(1,1), true);
 	createFont("templeOuroboros2", Ogre::Vector2(130,130), Ogre::Vector3(350,1,0), "Material/temple_Ouroboros", Ogre::Vector2(1,1), false);
 	
-	createFont("templeHieroglyph1", Ogre::Vector2(60,60), Ogre::Vector3(350,125,-149), "Material/temple_Hieroglyph1", Ogre::Vector2(1,1), true);
+	createFont("templeHieroglyph1", Ogre::Vector2(145,145), Ogre::Vector3(650,125,-149), "Material/temple_Hieroglyph1", Ogre::Vector2(1,1), true);
+	createFont("templeHieroglyph2", Ogre::Vector2(125,125), Ogre::Vector3(50,125,-149), "Material/temple_Hieroglyph2", Ogre::Vector2(1,1), true);
+	createFont("templeHieroglyph3", Ogre::Vector2(145,145), Ogre::Vector3(-325,125,-149), "Material/temple_Hieroglyph3", Ogre::Vector2(1,1), true);
+	createFont("templeHieroglyph4", Ogre::Vector2(50,50), Ogre::Vector3(-250,75,-149), "Material/temple_Hieroglyph4", Ogre::Vector2(1,1), true);
 
 	createObject("templeColumn1", Ogre::Vector3(2, Ogre::Real(0.55), 2), Ogre::Vector3(-100, 60, -140), "Material/temple_Column","Column.mesh");
 	createObject("templeColumn2", Ogre::Vector3(2, Ogre::Real(0.55), 2), Ogre::Vector3(200, 60, -140), "Material/temple_Column","Column.mesh");
@@ -374,7 +378,7 @@ void GameApplication::createScene3(void)
 
 
 
-	sceneObj = gPhysics->createPrimitiveShape("stone1", Ogre::Vector3(Ogre::Real(100*0.1), Ogre::Real(7*0.1), Ogre::Real(150*0.1)), Ogre::Vector3(0, 10, 0), 60, "Cube.mesh");
+	sceneObj = gPhysics->createPrimitiveShape("stone1", Ogre::Vector3(Ogre::Real(100*0.1), Ogre::Real(15*0.1), Ogre::Real(150*0.1)), Ogre::Vector3(-350, 0, 0), 30, "Cube.mesh");
 	sceneObj->mEntity->setMaterialName("Material/bunker_Wall");
 	gObjects.push_back(new Object(2, sceneObj)); 
 
@@ -403,9 +407,12 @@ void GameApplication::createScene3(void)
 	gObjects.push_back(new Object(1, sceneObj));
 
 	//ZONA DEL NUCLEO
+	createGroundGrass(Ogre::Vector3(285,100,300), Ogre::Vector3(-650,0,0), 50);
+
 	createFont("templeFarWall2", Ogre::Vector2(300,250), Ogre::Vector3(-350,-125,-150), "Material/temple_Wall", Ogre::Vector2(1,1), true);
 	createFont("templeNearWall2", Ogre::Vector2(300,250), Ogre::Vector3(-650,-125,150), "Material/temple_Wall", Ogre::Vector2(1,1), true);
-	createFont("templeCreeper", Ogre::Vector2(300,300), Ogre::Vector3(-650,115,-149), "Material/temple_Creeper", Ogre::Vector2(1,1), true);
+	createFont("templeCreeper1", Ogre::Vector2(300,300), Ogre::Vector3(-650,115,-149), "Material/temple_Creeper1", Ogre::Vector2(1,1), true);
+	createFont("templeCreeper2", Ogre::Vector2(250,250), Ogre::Vector3(-625,-115,151), "Material/temple_Creeper2", Ogre::Vector2(1,1), true);
 
 	sceneObj = gPhysics->createGroundShape("templeFloor2", Ogre::Vector3(300, 5, 300), Ogre::Vector3(-650, 0, 0), Ogre::Vector2(2,1), "Material/temple_Floor");
 	gObjects.push_back(new Object(1, sceneObj));
@@ -424,9 +431,6 @@ void GameApplication::createScene3(void)
 	sceneObj = gPhysics->createPrimitiveShape("templeLockSupport", Ogre::Vector3(Ogre::Real(50*0.1), Ogre::Real(75*0.1), Ogre::Real(75*0.1)), Ogre::Vector3(775, 125, 0), 0, "Cube.mesh");
 	sceneObj->mEntity->setMaterialName("Material/temple_Wall");
 	gObjects.push_back(new Object(1, sceneObj));
-
-	//Hierba (null)
-	//createGroundGrass(Ogre::Vector3(100,100,100), Ogre::Vector3(0,-50,0), 10);
 	
 	//Objetos (2)
 	/*
@@ -538,9 +542,9 @@ void GameApplication::createGroundGrass(Ogre::Vector3 vSize, Ogre::Vector3 vPos,
 	Ogre::StaticGeometry* sg = gSceneMgr->createStaticGeometry("GrassArea");
 
 	sg->setRegionDimensions(Ogre::Vector3(vSize.x, vSize.y, vSize.z));
-	sg->setOrigin(Ogre::Vector3(vSize.x, vSize.y, vSize.z));
+	sg->setOrigin(Ogre::Vector3(vPos.x, vPos.y, vPos.z));
 
-	for (Ogre::Real x = -vSize.x/2; x < vSize.x/2; x += (vSize.x / amount))
+	for (Ogre::Real x = vPos.x - (vSize.x/2); x < (vPos.x + vSize.x/2); x += (vSize.x / amount))
 	{
 		for (Ogre::Real z = -vSize.z/2; z < vSize.z/2; z += (vSize.z / amount))
 		{

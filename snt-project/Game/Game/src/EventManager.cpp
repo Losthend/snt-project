@@ -97,8 +97,16 @@ void EventManager::handleEvent()
 		gSceneMgr->getSceneNode("templeOuroboros2")->yaw(Ogre::Degree(Ogre::Real(0.1)));
 
 		SceneObject* specialObj1 = gGameApp->specialObject1;
-		if(specialObj1 != 0 && specialObj1->mNode->getPosition().y < 50)
-			specialObj1->mRigidBody->applyCentralImpulse(btVector3(0, 50, 0));
+		if(specialObj1 != 0)
+		{
+			Ogre::Vector3 posObj1 = specialObj1->mNode->getPosition();
+			if (posObj1.y < 50)
+				specialObj1->mRigidBody->applyCentralImpulse(btVector3(0, 50, 0));
+			if (posObj1.x < -650)
+				specialObj1->mRigidBody->applyCentralImpulse(btVector3(0.5, 0, 0));
+			else if (posObj1.x > -650)
+				specialObj1->mRigidBody->applyCentralImpulse(btVector3(-0.5, 0, 0));
+		}
 
 		SceneObject* specialObj2 = gGameApp->specialObject2;
 		if(specialObj2 != 0)

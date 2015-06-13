@@ -79,7 +79,7 @@ material Ground_Grass_sub2
 
 }
 
-material Material/temple_Creeper
+material Material/temple_Creeper1
 {
 	technique
         {
@@ -90,7 +90,25 @@ material Material/temple_Creeper
 
                         texture_unit
                         {
-                                texture temple_Creeper.png
+                                texture temple_Creeper1.png
+                        }
+                }
+        }
+
+}
+
+material Material/temple_Creeper2
+{
+	technique
+        {
+                pass
+                {
+                        scene_blend alpha_blend
+                	depth_write off
+
+                        texture_unit
+                        {
+                                texture temple_Creeper2.png
                         }
                 }
         }
@@ -127,6 +145,60 @@ material Material/temple_Hieroglyph1
                         texture_unit
                         {
                                 texture temple_Hieroglyph1.png
+                        }
+                }
+        }
+
+}
+
+material Material/temple_Hieroglyph2
+{
+	technique
+        {
+                pass
+                {
+                        scene_blend alpha_blend
+                	depth_write off
+
+                        texture_unit
+                        {
+                                texture temple_Hieroglyph2.png
+                        }
+                }
+        }
+
+}
+
+material Material/temple_Hieroglyph3
+{
+	technique
+        {
+                pass
+                {
+                        scene_blend alpha_blend
+                	depth_write off
+
+                        texture_unit
+                        {
+                                texture temple_Hieroglyph3.png
+                        }
+                }
+        }
+
+}
+
+material Material/temple_Hieroglyph4
+{
+	technique
+        {
+                pass
+                {
+                        scene_blend alpha_blend
+                	depth_write off
+
+                        texture_unit
+                        {
+                                texture temple_Hieroglyph4.png
                         }
                 }
         }
