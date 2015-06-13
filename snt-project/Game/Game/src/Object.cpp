@@ -12,9 +12,12 @@
 /* 
 	Objeto de:
 		- Tipo 1: estaticos
-		- Tipo 2: dinamico, el jugador puede agarrarlo
+		- Tipo 2: telequinesis
 		- Tipo 3: gallinas
-		- Tipo 4: Enemigo oso
+		- Tipo 4: Enemigo (oso)
+		- Tipo 5: Puente
+		- Tipo 6: Plataforma
+		- Tipo 7: Trampa
 */
 
 //---------------------------------------------------------------------------
@@ -80,6 +83,10 @@ void Object::update()
 		type4();
 	else if(m_objType == 5)
 		type5();
+	else if(m_objType == 6)
+		type6();
+	else if(m_objType == 7)
+		type7();
 
 	//Update en Bullet
 	m_sceneObject->update();
@@ -207,4 +214,29 @@ void Object::type5()
 		}
 		cm.~CollisionManager();
 	}
+}
+
+//---------------------------------------------------------------------------
+//Objeto de tipo 6: plataforma
+//---------------------------------------------------------------------------
+void Object::type6()
+{
+	Ogre::Real pos = m_sceneObject->mNode->getPosition().z;
+	if (pos >= 0)
+		m_lookAt = true;
+	else if (pos <= -280)
+		m_lookAt = false;
+	//Movimiento
+	if (m_lookAt)
+		m_sceneObject->mRigidBody->translate(btVector3(0, 0, -3));
+	else
+		m_sceneObject->mRigidBody->translate(btVector3(0, 0, 2));
+}
+
+//---------------------------------------------------------------------------
+//Objeto de tipo 7: trampa
+//---------------------------------------------------------------------------
+void Object::type7()
+{
+	m_sceneObject->mRigidBody->applyTorqueImpulse(btVector3(0,0,300));
 }

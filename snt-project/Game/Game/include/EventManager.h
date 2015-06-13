@@ -8,8 +8,9 @@ public:
 	virtual ~EventManager(void);
 
 	void handleEvent(void);
+	void doScene3(void);
 
-	bool platform;
+	bool inExit;
 };
 
 //---------------------------------------------------------------------------

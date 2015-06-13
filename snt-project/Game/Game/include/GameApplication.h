@@ -2,7 +2,7 @@
 #define __GameApplication_h_
 
 class PhysicsManager;
-class SceneObject;
+class Object;
 
 class GameApplication
 {
@@ -14,8 +14,7 @@ public:
 	void createScene3(void);
 
 	int activeScene;
-	SceneObject* specialObject1;
-	SceneObject* specialObject2;
+	Object* specialObject1;
 
 private:
 	void clearScene(void);

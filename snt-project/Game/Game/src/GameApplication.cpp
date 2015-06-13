@@ -340,8 +340,7 @@ void GameApplication::createScene3(void)
 
 	//Posicion del jugador
 	btTransform transform = gPlayer->m_sceneObject->mRigidBody->getCenterOfMassTransform();
-	//transform.setOrigin(btVector3(350, 100, 0));
-	transform.setOrigin(btVector3(-600, 100, 0));
+	transform.setOrigin(btVector3(-195, 150, 0));
 	gPlayer->m_sceneObject->mRigidBody->setCenterOfMassTransform(transform);
 
 	//****************************************************
@@ -352,12 +351,9 @@ void GameApplication::createScene3(void)
 	//ZONA CENTRAL
 	createFont("templeFarWall1", Ogre::Vector2(1600,250), Ogre::Vector3(0,125,-150), "Material/temple_Wall", Ogre::Vector2(3,1), true);
 	createFont("templeNearWall1", Ogre::Vector2(1000,250), Ogre::Vector3(300,-125,150), "Material/temple_Wall", Ogre::Vector2(2,1), true);
-
-	createFont("templeOuroboros1", Ogre::Vector2(130,130), Ogre::Vector3(350,125,-149), "Material/temple_Ouroboros", Ogre::Vector2(1,1), true);
-	createFont("templeOuroboros2", Ogre::Vector2(130,130), Ogre::Vector3(350,1,0), "Material/temple_Ouroboros", Ogre::Vector2(1,1), false);
 	
-	createFont("templeHieroglyph1", Ogre::Vector2(145,145), Ogre::Vector3(650,125,-149), "Material/temple_Hieroglyph1", Ogre::Vector2(1,1), true);
-	createFont("templeHieroglyph2", Ogre::Vector2(125,125), Ogre::Vector3(50,125,-149), "Material/temple_Hieroglyph2", Ogre::Vector2(1,1), true);
+	createFont("templeHieroglyph1", Ogre::Vector2(145,145), Ogre::Vector3(350,125,-149), "Material/temple_Hieroglyph1", Ogre::Vector2(1,1), true);
+	createFont("templeHieroglyph2", Ogre::Vector2(150,125), Ogre::Vector3(50,125,-149), "Material/temple_Hieroglyph2", Ogre::Vector2(1,1), true);
 	createFont("templeHieroglyph3", Ogre::Vector2(145,145), Ogre::Vector3(-325,125,-149), "Material/temple_Hieroglyph3", Ogre::Vector2(1,1), true);
 	createFont("templeHieroglyph4", Ogre::Vector2(50,50), Ogre::Vector3(-250,75,-149), "Material/temple_Hieroglyph4", Ogre::Vector2(1,1), true);
 
@@ -376,14 +372,6 @@ void GameApplication::createScene3(void)
 	sceneObj->mEntity->setMaterialName("Material/temple_Wall");
 	gObjects.push_back(new Object(1, sceneObj));
 
-
-
-	sceneObj = gPhysics->createPrimitiveShape("stone1", Ogre::Vector3(Ogre::Real(100*0.1), Ogre::Real(15*0.1), Ogre::Real(150*0.1)), Ogre::Vector3(-350, 0, 0), 30, "Cube.mesh");
-	sceneObj->mEntity->setMaterialName("Material/bunker_Wall");
-	gObjects.push_back(new Object(2, sceneObj)); 
-
-
-
 	//ZONA TRAMPAS
 	createFont("templeNearWall3", Ogre::Vector2(1600,250), Ogre::Vector3(-200,-375,150), "Material/temple_Wall", Ogre::Vector2(3,1), true);
 
@@ -397,14 +385,34 @@ void GameApplication::createScene3(void)
 	sceneObj->mEntity->setMaterialName("Material/temple_Wall");
 	gObjects.push_back(new Object(1, sceneObj));
 
+	//TRAMPAS
+	sceneObj = gPhysics->createConvexHullShape("templeSpine1", Ogre::Real(4), Ogre::Vector3(-425, -175, -200), 100, "spine.mesh");
+	sceneObj->mEntity->setMaterialName("Material/temple_Wood1");
+	sceneObj->mRigidBody->getMotionState()->getWorldTransform(transform);
+	transform.setRotation(btQuaternion(1,0,0,1));
+	sceneObj->mRigidBody->setMotionState(new btDefaultMotionState(transform));
+	sceneObj->mRigidBody->setGravity(btVector3(0,0,0));
+	sceneObj->mRigidBody->setLinearFactor(btVector3(0,0,0));
+	sceneObj->mRigidBody->setAngularFactor(btVector3(0,0,1));
+	gObjects.push_back(new Object(7, sceneObj));
+
+	sceneObj = gPhysics->createConvexHullShape("templeSpine2", Ogre::Real(4), Ogre::Vector3(-275, -175, -200), 100, "spine.mesh");
+	sceneObj->mEntity->setMaterialName("Material/temple_Wood2");
+	sceneObj->mRigidBody->getMotionState()->getWorldTransform(transform);
+	transform.setRotation(btQuaternion(1,0,0,1));
+	sceneObj->mRigidBody->setMotionState(new btDefaultMotionState(transform));
+	sceneObj->mRigidBody->setGravity(btVector3(0,0,0));
+	sceneObj->mRigidBody->setLinearFactor(btVector3(0,0,0));
+	sceneObj->mRigidBody->setAngularFactor(btVector3(0,0,1));
+	gObjects.push_back(new Object(7, sceneObj));
+
 	//PASARELA
 	sceneObj = gPhysics->createPrimitiveShape("templePlatform", Ogre::Vector3(Ogre::Real(25*0.1), Ogre::Real(25*0.1), Ogre::Real(300*0.1)), Ogre::Vector3(-350, 0, 0), 1, "Cube.mesh");
 	sceneObj->mRigidBody->setGravity(btVector3(0,0,0));
 	sceneObj->mRigidBody->setAngularFactor(btVector3(0,0,0));
 	sceneObj->mRigidBody->setLinearFactor(btVector3(0,0,0));
 	sceneObj->mEntity->setMaterialName("Material/temple_Wall");
-	specialObject2 = sceneObj;
-	gObjects.push_back(new Object(1, sceneObj));
+	gObjects.push_back(new Object(6, sceneObj));
 
 	//ZONA DEL NUCLEO
 	createGroundGrass(Ogre::Vector3(285,100,300), Ogre::Vector3(-650,0,0), 50);
@@ -421,30 +429,22 @@ void GameApplication::createScene3(void)
 	sceneObj->mEntity->setMaterialName("Material/temple_Wall");
 	gObjects.push_back(new Object(1, sceneObj));
 
-	sceneObj = gPhysics->createConvexHullShape("templeKey", Ogre::Real(0.2), Ogre::Vector3(-650, 50, 0), 1, "geosphere4500.mesh");
-	specialObject1 = sceneObj;
-	gObjects.push_back(new Object(2, sceneObj));
+	sceneObj = gPhysics->createConvexHullShape("templeKey", Ogre::Real(0.2), Ogre::Vector3(650, 50, 0), 1, "geosphere4500.mesh");
+	specialObject1 = new Object(2, sceneObj);
+	gObjects.push_back(specialObject1);
 
 	//SALIDA
-	createObject("templeLock", Ogre::Vector3(Ogre::Real(5*0.1), Ogre::Real(5*0.1), Ogre::Real(7*0.1)), Ogre::Vector3(773, 125, 5), "Material/temple_Lock","Cube.mesh");
+	createFont("templeOuroboros1", Ogre::Vector2(130,130), Ogre::Vector3(650,125,-149), "Material/temple_Ouroboros", Ogre::Vector2(1,1), true);
+	createFont("templeOuroboros2", Ogre::Vector2(130,130), Ogre::Vector3(650,1,0), "Material/temple_Ouroboros", Ogre::Vector2(1,1), false);
 
-	sceneObj = gPhysics->createPrimitiveShape("templeLockSupport", Ogre::Vector3(Ogre::Real(50*0.1), Ogre::Real(75*0.1), Ogre::Real(75*0.1)), Ogre::Vector3(775, 125, 0), 0, "Cube.mesh");
-	sceneObj->mEntity->setMaterialName("Material/temple_Wall");
+	sceneObj = gPhysics->createConvexHullShape("templeLockSupport1", Ogre::Real(25), Ogre::Vector3(650, 0, 0), 0, "pedestal.mesh");
 	gObjects.push_back(new Object(1, sceneObj));
-	
-	//Objetos (2)
-	/*
-	sceneObj = gPhysics->createPrimitiveShape("Cube1", Ogre::Vector3(50, 50, 50), Ogre::Vector3(-50, 80, 0), 10, "Barrel.mesh");
-	gObjects.push_back(new Object(2, sceneObj));
-    sceneObj = gPhysics->createPrimitiveShape("Cube2", Ogre::Vector3(50, 50, 50), Ogre::Vector3(50, 120, 0), 10, "Barrel.mesh");
-	gObjects.push_back(new Object(2, sceneObj));
-    sceneObj = gPhysics->createPrimitiveShape("Cube3", Ogre::Vector3(50, 50, 50), Ogre::Vector3(50, 150, 0), 10, "Barrel.mesh");
-	gObjects.push_back(new Object(2, sceneObj));
-    sceneObj = gPhysics->createPrimitiveShape("Cube4", Ogre::Vector3(50, 50, 50), Ogre::Vector3(-50, 100, 0), 10, "Barrel.mesh");
-	gObjects.push_back(new Object(2, sceneObj));
-	sceneObj = gPhysics->createPrimitiveShape("Plane1", Ogre::Vector3(100, 100, 100), Ogre::Vector3(60, 110, 0), 10, "WoodPallet.mesh");
-	gObjects.push_back(new Object(2, sceneObj));
-	*/
+
+	sceneObj = gPhysics->createConvexHullShape("templeLockSupport2", Ogre::Real(24), Ogre::Vector3(650, 230, 0), 0, "pedestal.mesh");
+	sceneObj->mRigidBody->getMotionState()->getWorldTransform(transform);
+	transform.setRotation(btQuaternion(0,0,1,0));
+	sceneObj->mRigidBody->setMotionState(new btDefaultMotionState(transform));
+	gObjects.push_back(new Object(1, sceneObj));
 
 }
 
@@ -475,7 +475,6 @@ void GameApplication::clearScene(void)
 	gSceneMgr->destroyAllLights();
 	gSceneMgr->destroyAllStaticGeometry();
 	specialObject1 = 0;
-	specialObject2 = 0;
 }
 
 //---------------------------------------------------------------------------

@@ -25,8 +25,8 @@ EventManager::EventManager(void)
 	gCCegui->menu1->activate();
 	//*********************************************************************
 
-	//Otras variables
-	platform = false;
+	//inExit: indica si se estan realizando los eventos de salida del escenario 3
+	inExit = false;
 }
 
 EventManager::~EventManager(void)
@@ -59,13 +59,21 @@ void EventManager::handleEvent()
 	}
 
 	//****************************************************
-	//EVENTOS DE ESCENARIOS: En proceso
+	//EVENTOS DE ESCENARIOS
+	//****************************************************
+
+	//****************************************************
+	//ESCENARIO 1: Bunker
 	//****************************************************
 	if(gGameApp->activeScene == 1){
+		//Cambio de escenario
 		if(gPlayer != 0 && gPlayer->m_sceneObject->mNode->getPosition().y < -100)
 			gGameApp->createScene2();
 	}
 
+	//****************************************************
+	//ESCENARIO 2: Cueva
+	//****************************************************
 	if(gGameApp->activeScene == 2){
 		//Iluminacion
 		if(gPlayer != 0){
@@ -92,13 +100,28 @@ void EventManager::handleEvent()
 		}
 	}
 
+	//****************************************************
+	//ESCENARIO 3: Templo
+	//****************************************************
 	if(gGameApp->activeScene == 3){
-		gSceneMgr->getSceneNode("templeOuroboros1")->roll(Ogre::Degree(Ogre::Real(0.1)));
-		gSceneMgr->getSceneNode("templeOuroboros2")->yaw(Ogre::Degree(Ogre::Real(0.1)));
+		doScene3();
+	}
 
-		SceneObject* specialObj1 = gGameApp->specialObject1;
-		if(specialObj1 != 0)
-		{
+	//****************************************************
+	//ESCENARIO 4: Final
+	//****************************************************
+	if(gGameApp->activeScene == 4){
+		//TO-DO
+	}
+}
+
+void EventManager::doScene3()
+{
+	//NUCLEO DE ENERGIA + CAMBIO DE ESCENARIO
+	SceneObject* specialObj1 = gGameApp->specialObject1->m_sceneObject;
+	if(specialObj1 != 0)
+	{
+		if (!inExit){
 			Ogre::Vector3 posObj1 = specialObj1->mNode->getPosition();
 			if (posObj1.y < 50)
 				specialObj1->mRigidBody->applyCentralImpulse(btVector3(0, 50, 0));
@@ -106,26 +129,48 @@ void EventManager::handleEvent()
 				specialObj1->mRigidBody->applyCentralImpulse(btVector3(0.5, 0, 0));
 			else if (posObj1.x > -650)
 				specialObj1->mRigidBody->applyCentralImpulse(btVector3(-0.5, 0, 0));
+			//Cambio de escenario: activacion de la animacion
+			if(specialObj1->mNode->getPosition().x > 650 && gPlayer->m_sceneObject->mNode->getPosition().x > 500)
+			{
+				gGameApp->specialObject1->~Object();
+				SceneObject*sceneObj = gPhysics->createConvexHullShape("templeKey", Ogre::Real(0.2), Ogre::Vector3(650, 115, 0), 0, "geosphere4500.mesh");
+				gGameApp->specialObject1 = new Object(1, sceneObj);
+				gObjects.push_back(gGameApp->specialObject1);
+				inExit = true;
+			}
 		}
-
-		SceneObject* specialObj2 = gGameApp->specialObject2;
-		if(specialObj2 != 0)
-		{
-			Ogre::Real pos = specialObj2->mNode->getPosition().z;
-			if (pos >= 0)
-				platform = true;
-			else if (pos <= -280)
-				platform = false;
-
-			if (platform)
-				specialObj2->mRigidBody->translate(btVector3(0, 0, -3));
-			else
-				specialObj2->mRigidBody->translate(btVector3(0, 0, 2));
+		else{
+			//Cambio de escenario con animacion
+			Ogre::Vector3 scale = specialObj1->mNode->getScale();
+			specialObj1->mNode->setScale(Ogre::Real(scale.x/1.001), Ogre::Real(scale.y/1.001), Ogre::Real(scale.z/1.001));
+			Ogre::Real x = scale.x*1000;
+			if( x >= 160 ){
+				gSceneMgr->getSceneNode("templeOuroboros1")->roll(Ogre::Degree(Ogre::Real(0.5)));
+				gSceneMgr->getSceneNode("templeOuroboros2")->yaw(Ogre::Degree(Ogre::Real(0.5)));
+			}
+			else if( x < 160 && x >= 150 ){
+				gSceneMgr->getSceneNode("templeOuroboros1")->roll(Ogre::Degree(Ogre::Real(1)));
+				gSceneMgr->getSceneNode("templeOuroboros2")->yaw(Ogre::Degree(Ogre::Real(1)));
+				specialObj1->mEntity->setMaterialName("Material/temple_Energy2");
+			}
+			else if( x < 150 && x >= 130 ){
+				gSceneMgr->getSceneNode("templeOuroboros1")->roll(Ogre::Degree(Ogre::Real(1.5)));
+				gSceneMgr->getSceneNode("templeOuroboros2")->yaw(Ogre::Degree(Ogre::Real(1.5)));
+				specialObj1->mEntity->setMaterialName("Material/temple_Energy3");
+			}
+			else if( x < 130 && x >= 110 ){
+				gSceneMgr->getSceneNode("templeOuroboros1")->roll(Ogre::Degree(Ogre::Real(2)));
+				gSceneMgr->getSceneNode("templeOuroboros2")->yaw(Ogre::Degree(Ogre::Real(2)));
+				specialObj1->mEntity->setMaterialName("Material/temple_Energy4");
+			}
+			else if( x < 110 && x >= 80 ){
+				gSceneMgr->getSceneNode("templeOuroboros1")->roll(Ogre::Degree(Ogre::Real(2.5)));
+				gSceneMgr->getSceneNode("templeOuroboros2")->yaw(Ogre::Degree(Ogre::Real(2.5)));
+				specialObj1->mEntity->setMaterialName("Material/temple_Energy5");
+			}
+			else if( x < 80 ){
+				//Cambio de escenario
+			}
 		}
 	}
-
-	//****************************************************
-	//EVENTOS DE ESCENARIOS: En proceso
-	//****************************************************
-
 }

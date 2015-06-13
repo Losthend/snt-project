@@ -76,7 +76,74 @@ material Ground_Grass_sub2
                         }
                 }
         }
+}
 
+material Material/temple_Energy2
+{
+	technique
+        {
+                pass
+                {
+                        scene_blend alpha_blend
+                	depth_write off
+
+                        texture_unit
+                        {
+                                texture temple_Energy2.png
+                        }
+                }
+        }
+}
+
+material Material/temple_Energy3
+{
+	technique
+        {
+                pass
+                {
+                        scene_blend alpha_blend
+                	depth_write off
+
+                        texture_unit
+                        {
+                                texture temple_Energy3.png
+                        }
+                }
+        }
+}
+
+material Material/temple_Energy4
+{
+	technique
+        {
+                pass
+                {
+                        scene_blend alpha_blend
+                	depth_write off
+
+                        texture_unit
+                        {
+                                texture temple_Energy4.png
+                        }
+                }
+        }
+}
+
+material Material/temple_Energy5
+{
+	technique
+        {
+                pass
+                {
+                        scene_blend alpha_blend
+                	depth_write off
+
+                        texture_unit
+                        {
+                                texture temple_Energy5.png
+                        }
+                }
+        }
 }
 
 material Material/temple_Creeper1
@@ -109,24 +176,6 @@ material Material/temple_Creeper2
                         texture_unit
                         {
                                 texture temple_Creeper2.png
-                        }
-                }
-        }
-
-}
-
-material Material/temple_Lock
-{
-	technique
-        {
-                pass
-                {
-                        scene_blend alpha_blend
-                	depth_write off
-
-                        texture_unit
-                        {
-                                texture temple_Lock.png
                         }
                 }
         }
@@ -199,6 +248,52 @@ material Material/temple_Hieroglyph4
                         texture_unit
                         {
                                 texture temple_Hieroglyph4.png
+                        }
+                }
+        }
+
+}
+
+material /global/structures/stone_palisade
+{
+	technique
+        {
+                pass
+                {
+                        texture_unit
+                        {
+                                texture temple_Wall.jpg
+                        }
+                }
+        }
+
+}
+
+
+material Material/temple_Wood1
+{
+	technique
+        {
+                pass
+                {
+                        texture_unit
+                        {
+                                texture temple_Wood1.jpg
+                        }
+                }
+        }
+
+}
+
+material Material/temple_Wood2
+{
+	technique
+        {
+                pass
+                {
+                        texture_unit
+                        {
+                                texture temple_Wood2.jpg
                         }
                 }
         }
