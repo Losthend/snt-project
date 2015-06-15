@@ -340,7 +340,7 @@ void GameApplication::createScene3(void)
 
 	//Posicion del jugador
 	btTransform transform = gPlayer->m_sceneObject->mRigidBody->getCenterOfMassTransform();
-	transform.setOrigin(btVector3(-195, 150, 0));
+	transform.setOrigin(btVector3(350, 150, 0));
 	gPlayer->m_sceneObject->mRigidBody->setCenterOfMassTransform(transform);
 
 	//****************************************************
@@ -429,7 +429,7 @@ void GameApplication::createScene3(void)
 	sceneObj->mEntity->setMaterialName("Material/temple_Wall");
 	gObjects.push_back(new Object(1, sceneObj));
 
-	sceneObj = gPhysics->createConvexHullShape("templeKey", Ogre::Real(0.2), Ogre::Vector3(650, 50, 0), 1, "geosphere4500.mesh");
+	sceneObj = gPhysics->createConvexHullShape("templeKey", Ogre::Real(0.2), Ogre::Vector3(-650, 50, 0), 1, "geosphere4500.mesh");
 	specialObject1 = new Object(2, sceneObj);
 	gObjects.push_back(specialObject1);
 
@@ -446,9 +446,46 @@ void GameApplication::createScene3(void)
 	sceneObj->mRigidBody->setMotionState(new btDefaultMotionState(transform));
 	gObjects.push_back(new Object(1, sceneObj));
 
+	Ogre::Light *light = gSceneMgr->createLight("templeLight");     
+	light->setType(Ogre::Light::LT_SPOTLIGHT);
+	light->setPosition(795, 245, 0);
+	light->setDirection(0,-1,0);
+	light->setSpotlightRange(Ogre::Degree(10), Ogre::Degree(200));
+	light->setVisible(false);
 }
 
+//---------------------------------------------------------------------------
+//ESCENARIO 3
+//---------------------------------------------------------------------------
+void GameApplication::createScene4(void)
+{
+	//****************************************************
+	//Liberar espacio 
+	//****************************************************
+	clearScene();
+	gCanUpdate = true;
+	activeScene = 4;
 
+	//****************************************************
+	//JUGADOR 
+	//****************************************************
+	if(gPlayer == 0)
+	{
+		SceneObject* player = gPhysics->createConvexHullShape("Player", Ogre::Real(5), Ogre::Vector3(0, 10, 0), 1, "Sinbad.mesh");
+		gPlayer = new Player(player);
+		gPlayer->m_animMgr = new AnimationManager();
+	}
+
+	//Posicion del jugador
+	btTransform transform = gPlayer->m_sceneObject->mRigidBody->getCenterOfMassTransform();
+	transform.setOrigin(btVector3(0, 150, 0));
+	gPlayer->m_sceneObject->mRigidBody->setCenterOfMassTransform(transform);
+
+	//****************************************************
+	//ESCENARIO 3
+	//****************************************************
+	SceneObject* sceneObj;
+}
 
 //---------------------------------------------------------------------------
 //Liberar espacio

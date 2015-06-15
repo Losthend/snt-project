@@ -10,6 +10,7 @@ public:
 	void handleEvent(void);
 	void doScene3(void);
 
+	int inExitCount;
 	bool inExit;
 };
 

@@ -12,6 +12,7 @@ public:
     void createScene1(void);
 	void createScene2(void);
 	void createScene3(void);
+	void createScene4(void);
 
 	int activeScene;
 	Object* specialObject1;

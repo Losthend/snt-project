@@ -118,29 +118,9 @@ material Material/temple_Energy4
         {
                 pass
                 {
-                        scene_blend alpha_blend
-                	depth_write off
-
                         texture_unit
                         {
                                 texture temple_Energy4.png
-                        }
-                }
-        }
-}
-
-material Material/temple_Energy5
-{
-	technique
-        {
-                pass
-                {
-                        scene_blend alpha_blend
-                	depth_write off
-
-                        texture_unit
-                        {
-                                texture temple_Energy5.png
                         }
                 }
         }
