@@ -18,6 +18,7 @@
 		- Tipo 5: Puente
 		- Tipo 6: Plataforma
 		- Tipo 7: Trampa
+		- Tipo 8: "Jefe" final
 */
 
 //---------------------------------------------------------------------------
@@ -87,6 +88,8 @@ void Object::update()
 		type6();
 	else if(m_objType == 7)
 		type7();
+	else if(m_objType == 8)
+		type8();
 
 	//Update en Bullet
 	m_sceneObject->update();
@@ -239,4 +242,17 @@ void Object::type6()
 void Object::type7()
 {
 	m_sceneObject->mRigidBody->applyTorqueImpulse(btVector3(0,0,300));
+}
+
+//---------------------------------------------------------------------------
+//Objeto de tipo 8: "jefe" final
+//---------------------------------------------------------------------------
+void Object::type8()
+{
+	//idleA run walk
+	Ogre::AnimationState* mAnim = m_sceneObject->mEntity->getAnimationState("Idle");
+
+	mAnim->setLoop(true);
+	mAnim->setEnabled(true);
+	mAnim->addTime(Ogre::Real(FPS));
 }

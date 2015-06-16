@@ -1,0 +1,60 @@
+material Material/end_Floor1
+{
+	technique
+        {
+                pass
+                {
+                        texture_unit
+                        {
+                                texture end_Floor1.jpg
+                        }
+                }
+        }
+}
+
+material Material/end_Floor2
+{
+	technique
+        {
+                pass
+                {
+                        texture_unit
+                        {
+                                texture end_Floor2.jpg
+                        }
+                }
+        }
+}
+
+material Material/elevator_Note
+{
+	technique
+        {
+                pass
+                {
+                        scene_blend alpha_blend
+                	depth_write off
+
+                        texture_unit
+                        {
+                                texture elevator_Note.png
+                        }
+                }
+        }
+
+}
+
+material Material/temple_Box
+{
+	technique
+        {
+                pass
+                {
+                        texture_unit
+                        {
+                                texture temple_Box.jpg
+                        }
+                }
+        }
+
+}

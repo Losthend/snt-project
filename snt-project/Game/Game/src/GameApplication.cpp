@@ -455,7 +455,7 @@ void GameApplication::createScene3(void)
 }
 
 //---------------------------------------------------------------------------
-//ESCENARIO 3
+//ESCENARIO 4
 //---------------------------------------------------------------------------
 void GameApplication::createScene4(void)
 {
@@ -478,13 +478,82 @@ void GameApplication::createScene4(void)
 
 	//Posicion del jugador
 	btTransform transform = gPlayer->m_sceneObject->mRigidBody->getCenterOfMassTransform();
-	transform.setOrigin(btVector3(0, 150, 0));
+	transform.setOrigin(btVector3(-150, 50, 0));
 	gPlayer->m_sceneObject->mRigidBody->setCenterOfMassTransform(transform);
 
 	//****************************************************
-	//ESCENARIO 3
+	//ESCENARIO 4
 	//****************************************************
 	SceneObject* sceneObj;
+
+	//Estructura general
+	createFont("endFarWall1", Ogre::Vector2(500,250), Ogre::Vector3(0,125,-150), "Material/end_Floor1", Ogre::Vector2(1,1), true);
+	createFont("endNearWall1", Ogre::Vector2(500,250), Ogre::Vector3(0,-125,150), "Material/end_Floor1", Ogre::Vector2(1,1), true);
+	createFont("endFalseFloor", Ogre::Vector2(125,125), Ogre::Vector3(-150,1,0), "Material/end_Floor2", Ogre::Vector2(1,1), false);
+
+	sceneObj = gPhysics->createGroundShape("endFloor", Ogre::Vector3(500, 5, 300), Ogre::Vector3(0, 0, 0), Ogre::Vector2(1,1), "Material/end_Floor1");
+	gObjects.push_back(new Object(1, sceneObj));
+
+	sceneObj = gPhysics->createPrimitiveShape("endRoof", Ogre::Vector3(500*0.1, 5*0.1, 250*0.1), Ogre::Vector3(0, 245, 0), 0, "Cube.mesh");
+	sceneObj->mEntity->setMaterialName("Material/end_Floor1");
+	gObjects.push_back(new Object(1, sceneObj));
+
+	sceneObj = gPhysics->createPrimitiveShape("endRight", Ogre::Vector3(Ogre::Real(5*0.1), Ogre::Real(250*0.1), Ogre::Real(300*0.1)), Ogre::Vector3(250, 125, 0), 0, "Cube.mesh");
+	sceneObj->mEntity->setMaterialName("Material/end_Floor1");
+	gObjects.push_back(new Object(1, sceneObj));
+
+	sceneObj = gPhysics->createPrimitiveShape("endLeft", Ogre::Vector3(Ogre::Real(5*0.1), Ogre::Real(250*0.1), Ogre::Real(300*0.1)), Ogre::Vector3(-250, 125, 0), 0, "Cube.mesh");
+	sceneObj->mEntity->setMaterialName("Material/end_Floor1");
+	gObjects.push_back(new Object(1, sceneObj));
+
+	//Elementos de teletransporte
+	sceneObj = gPhysics->createConvexHullShape("endSupport1", Ogre::Real(10), Ogre::Vector3(-150, 0, -75), 0, "pedestal.mesh");
+	sceneObj->mEntity->setMaterialName("Material/end_Floor1");
+	gObjects.push_back(new Object(1, sceneObj));
+	sceneObj = gPhysics->createConvexHullShape("endKey1", Ogre::Real(0.02), Ogre::Vector3(-150, 40, -75), 0, "geosphere4500.mesh");
+	gObjects.push_back(new Object(1, sceneObj));
+
+	sceneObj = gPhysics->createConvexHullShape("endSupport2", Ogre::Real(10), Ogre::Vector3(-150, 0, 75), 0, "pedestal.mesh");
+	sceneObj->mEntity->setMaterialName("Material/end_Floor1");
+	gObjects.push_back(new Object(1, sceneObj));
+	sceneObj = gPhysics->createConvexHullShape("endKey2", Ogre::Real(0.02), Ogre::Vector3(-150, 40, 75), 0, "geosphere4500.mesh");
+	gObjects.push_back(new Object(1, sceneObj));
+
+	sceneObj = gPhysics->createConvexHullShape("endSupport3", Ogre::Real(10), Ogre::Vector3(-200, 0, 0), 0, "pedestal.mesh");
+	sceneObj->mEntity->setMaterialName("Material/end_Floor1");
+	gObjects.push_back(new Object(1, sceneObj));
+	sceneObj = gPhysics->createConvexHullShape("endKey3", Ogre::Real(0.02), Ogre::Vector3(-200, 40, 0), 0, "geosphere4500.mesh");
+	gObjects.push_back(new Object(1, sceneObj));
+
+	sceneObj = gPhysics->createConvexHullShape("endSupport4", Ogre::Real(24), Ogre::Vector3(-150, 230, 0), 0, "pedestal.mesh");
+	sceneObj->mEntity->setMaterialName("Material/end_Floor1");
+	sceneObj->mRigidBody->getMotionState()->getWorldTransform(transform);
+	transform.setRotation(btQuaternion(0,0,1,0));
+	sceneObj->mRigidBody->setMotionState(new btDefaultMotionState(transform));
+	gObjects.push_back(new Object(1, sceneObj));
+	sceneObj = gPhysics->createConvexHullShape("endKey4", Ogre::Real(0.05), Ogre::Vector3(-150, 140, 0), 0, "geosphere4500.mesh");
+	sceneObj->mEntity->setMaterialName("Material/temple_Energy2");
+	gObjects.push_back(new Object(1, sceneObj));
+
+	//"Jefe" final
+	sceneObj = gPhysics->createConvexHullShape("endBoss", Ogre::Real(0.8), Ogre::Vector3(100, 30, 0), 100, "robot.mesh");
+	sceneObj->mRigidBody->getMotionState()->getWorldTransform(transform);
+	transform.setRotation(btQuaternion(0,1,0,0));
+	sceneObj->mRigidBody->setMotionState(new btDefaultMotionState(transform));
+	gObjects.push_back(new Object(8, sceneObj));
+
+	//Decoracion
+	createObject("box1", Ogre::Vector3(Ogre::Real(50*0.01), Ogre::Real(50*0.01), Ogre::Real(50*0.01)), Ogre::Vector3(180, 25, 0), "Material/temple_Box","Cube.mesh");
+	createObject("box2", Ogre::Vector3(Ogre::Real(50*0.01), Ogre::Real(50*0.01), Ogre::Real(50*0.01)), Ogre::Vector3(200, 25, -50), "Material/temple_Box","Cube.mesh");
+	createObject("box3", Ogre::Vector3(Ogre::Real(50*0.01), Ogre::Real(50*0.01), Ogre::Real(50*0.01)), Ogre::Vector3(210, 25, 50), "Material/temple_Box","Cube.mesh");
+	createObject("box4", Ogre::Vector3(Ogre::Real(50*0.01), Ogre::Real(50*0.01), Ogre::Real(50*0.01)), Ogre::Vector3(220, 75, 0), "Material/temple_Box","Cube.mesh");
+
+	createObject("barrel1", Ogre::Vector3(5, 5, 5), Ogre::Vector3(125, 15, -50), "","Barrel.mesh");
+	createObject("barrel2", Ogre::Vector3(5, 5, 5), Ogre::Vector3(150, 15, -65), "","Barrel.mesh");
+	createObject("barrel3", Ogre::Vector3(5, 5, 5), Ogre::Vector3(145, 15, 55), "","Barrel.mesh");
+	createObject("barrel4", Ogre::Vector3(5, 5, 5), Ogre::Vector3(130, 15, 75), "","Barrel.mesh");
+	createObject("barrel5", Ogre::Vector3(5, 5, 5), Ogre::Vector3(150, 15, 65), "","Barrel.mesh");
+
 }
 
 //---------------------------------------------------------------------------
