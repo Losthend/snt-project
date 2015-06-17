@@ -13,7 +13,7 @@ public:
 
 	btRigidBody* createBody(const btTransform &transform, float mass, btCollisionShape* shape);
 	
-	SceneObject* createPrimitiveShape(Ogre::String name, Ogre::Vector3 size, Ogre::Vector3 pos, float mass, Ogre::String meshName);
+	SceneObject* createPrimitiveShape(Ogre::String name, Ogre::Vector3 size, Ogre::Vector3 pos, float mass, Ogre::String meshName, bool type);
 	SceneObject* createConvexHullShape(Ogre::String name, Ogre::Real size, Ogre::Vector3 pos, float mass, Ogre::String meshName);	
 	SceneObject* createGroundShape(Ogre::String name, Ogre::Vector3 size, Ogre::Vector3 pos, Ogre::Vector2 repeat, Ogre::String material);
 	

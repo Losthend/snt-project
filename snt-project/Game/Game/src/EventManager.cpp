@@ -19,7 +19,7 @@ EventManager::EventManager(void)
 	//ELIMINAR: Sustituye a la accion del boton START del menu
 	gCCegui->gameMenu->shouldBeDisplayed = false;
 	gCanUpdate = true;
-	gGameApp->createScene4();
+	gGameApp->createScene1();
 	gCCegui->gameMenu->d_root->hide();
 	gCCegui->menu1->show();
 	gCCegui->menu1->activate();
@@ -67,6 +67,11 @@ void EventManager::handleEvent()
 	//ESCENARIO 1: Bunker
 	//****************************************************
 	if(gGameApp->activeScene == 1){
+		//Puerta del ascensor
+		SceneObject* specialObj2 = gGameApp->specialObject0->m_sceneObject;
+		if(specialObj2 != 0 && specialObj2->mNode->getPosition().y < 125){
+			specialObj2->mRigidBody->translate(btVector3(0, btScalar(0.1), 0));
+		}
 		//Cambio de escenario
 		if(gPlayer != 0 && gPlayer->m_sceneObject->mNode->getPosition().y < -100)
 			gGameApp->createScene2();
@@ -79,20 +84,9 @@ void EventManager::handleEvent()
 		//Iluminacion
 		if(gPlayer != 0){
 			Ogre::Real posX = gPlayer->m_sceneObject->mNode->getPosition().x;
-			if ( posX < 950 && !gSceneMgr->getLight("shadowLight1")->getCastShadows()){
-				gSceneMgr->getLight("shadowLight1")->setCastShadows(true);
-				gSceneMgr->getLight("shadowLight2")->setCastShadows(false);
-				gSceneMgr->getLight("shadowLight3")->setCastShadows(false);
-			}
-			else if (posX > 950 && posX < 1400 && !gSceneMgr->getLight("shadowLight2")->getCastShadows()){
+			if ( posX > 1000 ){
 				gSceneMgr->getLight("shadowLight1")->setCastShadows(false);
-				gSceneMgr->getLight("shadowLight2")->setCastShadows(true);
-				gSceneMgr->getLight("shadowLight3")->setCastShadows(false);
-			}
-			else if (posX > 1500 && posX < 1700 && !gSceneMgr->getLight("shadowLight3")->getCastShadows()){
-				gSceneMgr->getLight("shadowLight1")->setCastShadows(false);
-				gSceneMgr->getLight("shadowLight2")->setCastShadows(false);
-				gSceneMgr->getLight("shadowLight3")->setCastShadows(true);
+				gSceneMgr->setAmbientLight(Ogre::ColourValue(0.2f, 0.2f, 0.2f));
 			}
 
 		//Cambio de escenario
@@ -105,6 +99,7 @@ void EventManager::handleEvent()
 	//ESCENARIO 3: Templo
 	//****************************************************
 	if(gGameApp->activeScene == 3){
+		//Nucleo y cambio de escenario
 		doScene3();
 	}
 
@@ -137,10 +132,10 @@ void EventManager::doScene3()
 				SceneObject*sceneObj = gPhysics->createConvexHullShape("templeKey", Ogre::Real(0.2), Ogre::Vector3(650, 115, 0), 0, "geosphere4500.mesh");
 				gGameApp->specialObject1 = new Object(1, sceneObj);
 				gObjects.push_back(gGameApp->specialObject1);
-				sceneObj = gPhysics->createPrimitiveShape("templeMagicBlock1", Ogre::Vector3(Ogre::Real(25*0.1), Ogre::Real(250*0.1), Ogre::Real(300*0.1)), Ogre::Vector3(475, 125, 0), 0, "Cube.mesh");
+				sceneObj = gPhysics->createPrimitiveShape("templeMagicBlock1", Ogre::Vector3(Ogre::Real(25*0.1), Ogre::Real(250*0.1), Ogre::Real(300*0.1)), Ogre::Vector3(475, 125, 0), 0, "Cube.mesh", true);
 				sceneObj->mEntity->setMaterialName("Material/temple_Wall");
 				gObjects.push_back(new Object(1, sceneObj));
-				sceneObj = gPhysics->createPrimitiveShape("templeMagicBlock2", Ogre::Vector3(Ogre::Real(300*0.1), Ogre::Real(250*0.1), Ogre::Real(1*0.1)), Ogre::Vector3(650, 125, -150), 0, "Cube.mesh");
+				sceneObj = gPhysics->createPrimitiveShape("templeMagicBlock2", Ogre::Vector3(Ogre::Real(300*0.1), Ogre::Real(250*0.1), Ogre::Real(1*0.1)), Ogre::Vector3(650, 125, -150), 0, "Cube.mesh", true);
 				sceneObj->mEntity->setMaterialName("Material/temple_Wall");
 				gObjects.push_back(new Object(1, sceneObj));
 				inExit = true;

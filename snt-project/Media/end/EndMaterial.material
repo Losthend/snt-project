@@ -26,22 +26,18 @@ material Material/end_Floor2
         }
 }
 
-material Material/elevator_Note
+material Material/end_FarWall
 {
 	technique
         {
                 pass
                 {
-                        scene_blend alpha_blend
-                	depth_write off
-
                         texture_unit
                         {
-                                texture elevator_Note.png
+                                texture end_FarWall.jpg
                         }
                 }
         }
-
 }
 
 material Material/temple_Box

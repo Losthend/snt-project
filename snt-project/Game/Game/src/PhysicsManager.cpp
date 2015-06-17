@@ -84,7 +84,7 @@ void PhysicsManager::update(float ticks)
 //---------------------------------------------------------------------------
 //Creacion de shapes primitivos (box, circle, etc).
 //---------------------------------------------------------------------------
-SceneObject* PhysicsManager::createPrimitiveShape(Ogre::String name, Ogre::Vector3 size, Ogre::Vector3 pos, float mass, Ogre::String meshName)
+SceneObject* PhysicsManager::createPrimitiveShape(Ogre::String name, Ogre::Vector3 size, Ogre::Vector3 pos, float mass, Ogre::String meshName, bool type)
 {
 	//Creacion del SceneNode que representara el objeto en pantalla
 	Ogre::SceneNode* node = gSceneMgr->getRootSceneNode()->createChildSceneNode(name);
@@ -98,7 +98,11 @@ SceneObject* PhysicsManager::createPrimitiveShape(Ogre::String name, Ogre::Vecto
 
 	//Shape adaptado al objeto
 	Ogre::Vector3 nodeSize = node->_getWorldAABB().getSize();
-	btCollisionShape* shape = new btBoxShape(btVector3(nodeSize.x/2, nodeSize.y/2, nodeSize.z/2));
+	btCollisionShape* shape;
+	if (type)
+		shape = new btBoxShape(btVector3(nodeSize.x/2, nodeSize.y/2, nodeSize.z/2));
+	else
+		shape = new btSphereShape(nodeSize.x/2);
 
 	//Creacion del cuerpo rigido que envuelve al sceneNode
 	btRigidBody* body = gPhysics->createBody(btTransform(btQuaternion::getIdentity(), btVector3(pos.x, pos.y, pos.z)), mass, shape);
@@ -191,7 +195,7 @@ void PhysicsManager::magicGenerator(Ogre::Vector3 pos)
 	if (magicObj != 0)
 		magicObj->~Object();
 
-	SceneObject* sceneObject = gPhysics->createPrimitiveShape("magicObject", Ogre::Vector3(20, 20, 20), Ogre::Vector3(pos.x, pos.y, pos.z), 1, "chicken.mesh");
+	SceneObject* sceneObject = gPhysics->createPrimitiveShape("magicObject", Ogre::Vector3(20, 20, 20), Ogre::Vector3(pos.x, pos.y, pos.z), 1, "chicken.mesh", true);
 
 	btTransform transform;
 	sceneObject->mRigidBody->getMotionState()->getWorldTransform(transform);

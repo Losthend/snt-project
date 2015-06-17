@@ -17,7 +17,6 @@ GameApplication::GameApplication(void)
 	gPhysics = new PhysicsManager();
 	activeScene = 0;
 	gSceneMgr->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_MODULATIVE);
-	gSceneMgr->setAmbientLight(Ogre::ColourValue(0.7f, 0.7f, 0.7f));
 }
 //---------------------------------------------------------------------------
 GameApplication::~GameApplication(void)
@@ -49,6 +48,7 @@ void GameApplication::createScene1(void)
 	//****************************************************
 	//ESCENARIO 1: SceneObjects (Bullet) + gObjects (personal)
 	//****************************************************
+	gSceneMgr->setAmbientLight(Ogre::ColourValue(0.7f, 0.7f, 0.7f));
 	SceneObject* sceneObj;
 
 	//ASCENSOR
@@ -58,26 +58,31 @@ void GameApplication::createScene1(void)
 	sceneObj = gPhysics->createGroundShape("elevatorFloor", Ogre::Vector3(100, 5, 150), Ogre::Vector3(0, 0, 0), Ogre::Vector2(1,1), "Material/elevator_Floor");
 	gObjects.push_back(new Object(1, sceneObj));
 
-	sceneObj = gPhysics->createPrimitiveShape("elevatorWall1", Ogre::Vector3(Ogre::Real(5*0.1), Ogre::Real(100*0.1), Ogre::Real(150*0.1)), Ogre::Vector3(-50, 50, 0), 0, "Cube.mesh");
+	sceneObj = gPhysics->createPrimitiveShape("elevatorWall1", Ogre::Vector3(Ogre::Real(5*0.1), Ogre::Real(100*0.1), Ogre::Real(150*0.1)), Ogre::Vector3(-50, 50, 0), 0, "Cube.mesh", true);
 	sceneObj->mEntity->setMaterialName("Material/elevator_Wall");
 	gObjects.push_back(new Object(1, sceneObj)); 
-	sceneObj = gPhysics->createPrimitiveShape("elevatorRoof", Ogre::Vector3(Ogre::Real(100*0.1), Ogre::Real(5*0.1), Ogre::Real(150*0.1)), Ogre::Vector3(0, 100, 0), 0, "Cube.mesh");
+	sceneObj = gPhysics->createPrimitiveShape("elevatorRoof", Ogre::Vector3(Ogre::Real(98*0.1), Ogre::Real(5*0.1), Ogre::Real(150*0.1)), Ogre::Vector3(-2, 100, 0), 0, "Cube.mesh", true);
 	sceneObj->mEntity->setMaterialName("Material/elevator_Floor");
 	gObjects.push_back(new Object(1, sceneObj));
-	sceneObj = gPhysics->createPrimitiveShape("elevatorDoor", Ogre::Vector3(Ogre::Real(2*0.1), Ogre::Real(100*0.1), Ogre::Real(150*0.1)), Ogre::Vector3(49, 150, 0), 0, "Cube.mesh");
+
+	sceneObj = gPhysics->createPrimitiveShape("elevatorDoor", Ogre::Vector3(Ogre::Real(2*0.1), Ogre::Real(100*0.1), Ogre::Real(150*0.1)), Ogre::Vector3(49, 50, 0), 1, "Cube.mesh", true);
 	sceneObj->mEntity->setMaterialName("Material/elevator_Wall");
-	gObjects.push_back(new Object(1, sceneObj));
+	sceneObj->mRigidBody->setGravity(btVector3(0,0,0));
+	sceneObj->mRigidBody->setLinearFactor(btVector3(0,1,0));
+	sceneObj->mRigidBody->setAngularFactor(btVector3(0,0,0));
+	specialObject0 = new Object(1, sceneObj);
+	gObjects.push_back(specialObject0);
 	
 	//PUERTA ASCENSOR
 	createObject("elevatorButton", Ogre::Vector3(Ogre::Real(3*0.01), Ogre::Real(15*0.01), Ogre::Real(15*0.01)), Ogre::Vector3(51, 40, 50), "Material/elevator_Button","Cube.mesh");
 
-	sceneObj = gPhysics->createPrimitiveShape("elevatorDoorNear", Ogre::Vector3(Ogre::Real(2*0.1), Ogre::Real(75*0.1), Ogre::Real(50*0.1)), Ogre::Vector3(51, 35, 50), 0, "Cube.mesh");
+	sceneObj = gPhysics->createPrimitiveShape("elevatorDoorNear", Ogre::Vector3(Ogre::Real(2*0.1), Ogre::Real(75*0.1), Ogre::Real(50*0.1)), Ogre::Vector3(51, 35, 50), 0, "Cube.mesh", true);
 	sceneObj->mEntity->setMaterialName("Material/bunker_Wall");
 	gObjects.push_back(new Object(1, sceneObj));
-	sceneObj = gPhysics->createPrimitiveShape("elevatorDoorFar", Ogre::Vector3(Ogre::Real(2*0.1), Ogre::Real(75*0.1), Ogre::Real(50*0.1)), Ogre::Vector3(51, 35, -50), 0, "Cube.mesh");
+	sceneObj = gPhysics->createPrimitiveShape("elevatorDoorFar", Ogre::Vector3(Ogre::Real(2*0.1), Ogre::Real(75*0.1), Ogre::Real(50*0.1)), Ogre::Vector3(51, 35, -50), 0, "Cube.mesh", true);
 	sceneObj->mEntity->setMaterialName("Material/bunker_Wall");
 	gObjects.push_back(new Object(1, sceneObj));
-	sceneObj = gPhysics->createPrimitiveShape("elevatorDoorTop", Ogre::Vector3(Ogre::Real(2*0.1), Ogre::Real(175*0.1), Ogre::Real(150*0.1)), Ogre::Vector3(51, 160, 0), 0, "Cube.mesh");
+	sceneObj = gPhysics->createPrimitiveShape("elevatorDoorTop", Ogre::Vector3(Ogre::Real(2*0.1), Ogre::Real(175*0.1), Ogre::Real(150*0.1)), Ogre::Vector3(51, 160, 0), 0, "Cube.mesh", true);
 	sceneObj->mEntity->setMaterialName("Material/bunker_Wall");
 	gObjects.push_back(new Object(1, sceneObj)); 
 
@@ -90,11 +95,11 @@ void GameApplication::createScene1(void)
 	sceneObj = gPhysics->createGroundShape("bunkerFloor2", Ogre::Vector3(260, 5, 150), Ogre::Vector3(820, 0, 0), Ogre::Vector2(2,1), "Material/bunker_Wall");
 	gObjects.push_back(new Object(1, sceneObj));
 	
-	sceneObj = gPhysics->createPrimitiveShape("bunkerWall1", Ogre::Vector3(5*0.1, 250*0.1, 150*0.1), Ogre::Vector3(950, 125, 0), 0, "Cube.mesh");
+	sceneObj = gPhysics->createPrimitiveShape("bunkerWall1", Ogre::Vector3(5*0.1, 250*0.1, 150*0.1), Ogre::Vector3(950, 125, 0), 0, "Cube.mesh", true);
 	sceneObj->mEntity->setMaterialName("Material/bunker_Wall");
 	gObjects.push_back(new Object(1, sceneObj)); 
 	
-	sceneObj = gPhysics->createPrimitiveShape("bunkerRoof", Ogre::Vector3(900*0.1, 5*0.1, 150*0.1), Ogre::Vector3(500, 250, 0), 0, "Cube.mesh");
+	sceneObj = gPhysics->createPrimitiveShape("bunkerRoof", Ogre::Vector3(900*0.1, 5*0.1, 150*0.1), Ogre::Vector3(500, 250, 0), 0, "Cube.mesh", true);
 	sceneObj->mEntity->setMaterialName("Material/bunker_Wall");
 	gObjects.push_back(new Object(1, sceneObj));
 
@@ -109,7 +114,7 @@ void GameApplication::createScene1(void)
 	gObjects.push_back(new Object(1, sceneObj));	
 
 	//BLOQUEO
-	sceneObj = gPhysics->createPrimitiveShape("stone1", Ogre::Vector3(100*0.1, 5*0.1, 150*0.1), Ogre::Vector3(635, 10, 0), 60, "Cube.mesh");
+	sceneObj = gPhysics->createPrimitiveShape("stone1", Ogre::Vector3(100*0.1, 5*0.1, 150*0.1), Ogre::Vector3(635, 10, 0), 60, "Cube.mesh", true);
 	sceneObj->mEntity->setMaterialName("Material/bunker_Wall");
 	gObjects.push_back(new Object(2, sceneObj)); 
 	sceneObj = gPhysics->createConvexHullShape("stone2", Ogre::Real(40), Ogre::Vector3(635, 50, -50), 40, "stone.mesh");
@@ -175,6 +180,7 @@ void GameApplication::createScene2(void)
 	//****************************************************
 	//ESCENARIO 2
 	//****************************************************
+	gSceneMgr->setAmbientLight(Ogre::ColourValue(0.7f, 0.7f, 0.7f));
 	SceneObject* sceneObj;
 
 	//ZONA 1: Punto de caida
@@ -189,12 +195,12 @@ void GameApplication::createScene2(void)
 	sceneObj = gPhysics->createGroundShape("undergroundFloor1", Ogre::Vector3(900, 5, 150), Ogre::Vector3(500, 0, 0), Ogre::Vector2(5,1), "Material/underground_Wall");
 	gObjects.push_back(new Object(1, sceneObj));
 
-	sceneObj = gPhysics->createPrimitiveShape("undergroundLeft", Ogre::Vector3(Ogre::Real(5*0.1), Ogre::Real(250*0.1), Ogre::Real(150*0.1)), Ogre::Vector3(-50, 125, 0), 0, "Cube.mesh");
+	sceneObj = gPhysics->createPrimitiveShape("undergroundLeft", Ogre::Vector3(Ogre::Real(5*0.1), Ogre::Real(250*0.1), Ogre::Real(150*0.1)), Ogre::Vector3(-50, 125, 0), 0, "Cube.mesh", true);
 	sceneObj->mEntity->setMaterialName("Material/underground_Wall");
 	gObjects.push_back(new Object(1, sceneObj)); 
 
 	//ZONA 1: techo
-	sceneObj = gPhysics->createPrimitiveShape("undergroundHole", Ogre::Vector3(Ogre::Real(150*0.1), Ogre::Real(5*0.1), Ogre::Real(125*0.1)), Ogre::Vector3(25, 250, 0), 0, "Cube.mesh");
+	sceneObj = gPhysics->createPrimitiveShape("undergroundHole", Ogre::Vector3(Ogre::Real(150*0.1), Ogre::Real(5*0.1), Ogre::Real(125*0.1)), Ogre::Vector3(25, 250, 0), 0, "Cube.mesh", true);
 	sceneObj->mEntity->setMaterialName("Material/underground_Hole");
 	gObjects.push_back(new Object(1, sceneObj));
 
@@ -218,7 +224,7 @@ void GameApplication::createScene2(void)
 	sceneObj = gPhysics->createGroundShape("undergroundFloor2", Ogre::Vector3(900, 5, 700), Ogre::Vector3(1400, -300, -275), Ogre::Vector2(3,1), "Material/underground_Wall");
 	gObjects.push_back(new Object(1, sceneObj));
 
-	sceneObj = gPhysics->createPrimitiveShape("undergroundCenter", Ogre::Vector3(Ogre::Real(5*0.1), Ogre::Real(300*0.1), Ogre::Real(150*0.1)), Ogre::Vector3(950, -150, 0), 0, "Cube.mesh");
+	sceneObj = gPhysics->createPrimitiveShape("undergroundCenter", Ogre::Vector3(Ogre::Real(5*0.1), Ogre::Real(300*0.1), Ogre::Real(150*0.1)), Ogre::Vector3(950, -150, 0), 0, "Cube.mesh", true);
 	sceneObj->mEntity->setMaterialName("Material/underground_Wall");
 	gObjects.push_back(new Object(1, sceneObj));
 
@@ -247,10 +253,10 @@ void GameApplication::createScene2(void)
 	createObject("undergroundBlockFar", Ogre::Vector3(300, 300, 300), Ogre::Vector3(2450, -300, -310), "Material/stone2","stone.mesh");
 	createObject("undergroundStatue", Ogre::Vector3(20, 20, 20), Ogre::Vector3(2430, -300, -100), "","statue.mesh");
 
-	sceneObj = gPhysics->createPrimitiveShape("undergroundGroundSecret", Ogre::Vector3(Ogre::Real(600*0.1), Ogre::Real(1000*0.1), Ogre::Real(700*0.1)), Ogre::Vector3(2570, -805, -275), 0, "Cube.mesh");
+	sceneObj = gPhysics->createPrimitiveShape("undergroundGroundSecret", Ogre::Vector3(Ogre::Real(600*0.1), Ogre::Real(1000*0.1), Ogre::Real(700*0.1)), Ogre::Vector3(2570, -805, -275), 0, "Cube.mesh", true);
 	sceneObj->mEntity->setMaterialName("Material/underground_Wall");
 	gObjects.push_back(new Object(1, sceneObj)); 
-	sceneObj = gPhysics->createPrimitiveShape("undergroundBlock1", Ogre::Vector3(3000, 3000, 3000), Ogre::Vector3(2500, 0, -100), 0, "stone.mesh");
+	sceneObj = gPhysics->createPrimitiveShape("undergroundBlock1", Ogre::Vector3(3000, 3000, 3000), Ogre::Vector3(2500, 0, -100), 0, "stone.mesh", true);
 	sceneObj->mEntity->setMaterialName("Material/stone2");
 	gObjects.push_back(new Object(1, sceneObj));
 
@@ -283,36 +289,14 @@ void GameApplication::createScene2(void)
 	light->setSpotlightRange(Ogre::Degree(30), Ogre::Degree(50));	
 
 	//LUZ 2
-	Ogre::Vector3 lightPos(1300, -290, -600);
-	createObject("cubeLeft2", Ogre::Vector3(Ogre::Real(2*0.01), Ogre::Real(10*0.01), Ogre::Real(10*0.01)), Ogre::Vector3(lightPos.x-2, lightPos.y, lightPos.z), "Material/underground_Wall","Cube.mesh");
-	createObject("cubeRight2", Ogre::Vector3(Ogre::Real(2*0.01), Ogre::Real(10*0.01), Ogre::Real(10*0.01)), Ogre::Vector3(lightPos.x+2, lightPos.y, lightPos.z), "Material/underground_Wall","Cube.mesh");
-	createObject("cubeBack2", Ogre::Vector3(Ogre::Real(10*0.01), Ogre::Real(5*0.01), Ogre::Real(10*0.01)), Ogre::Vector3(lightPos.x, lightPos.y, lightPos.z-10), "Material/underground_Wall","Cube.mesh");
-	createObject("cubeTop2", Ogre::Vector3(Ogre::Real(10*0.01), Ogre::Real(5*0.01), Ogre::Real(10*0.01)), Ogre::Vector3(lightPos.x, lightPos.y+10, lightPos.z), "Material/underground_Wall","Cube.mesh");
-	createObject("cubeBottom2", Ogre::Vector3(Ogre::Real(10*0.01), Ogre::Real(10*0.01), Ogre::Real(10*0.01)), Ogre::Vector3(lightPos.x, lightPos.y-10, lightPos.z), "Material/underground_Wall","Cube.mesh");
-	Ogre::Light *light2 = gSceneMgr->createLight("shadowLight2");     
+	Ogre::Light *light2 = gSceneMgr->createLight("shadowLight3");     
 	light2->setType(Ogre::Light::LT_SPOTLIGHT);
-	light2->setPosition(lightPos);
+	light2->setPosition(1500, -290, -600);
 	light2->setDirection(0,0,1);
-	light2->setDiffuseColour(0.0, 1.0, 0.0);     
-	light2->setSpecularColour(0.0, 1.0, 0.0);   
+	light2->setDiffuseColour(0.0, 0.5, 0.0);     
+	light2->setSpecularColour(0.0, 0.5, 0.0);   
 	light2->setSpotlightRange(Ogre::Degree(10), Ogre::Degree(100));
 	light2->setCastShadows(false);
-
-	//LUZ 3
-	lightPos = Ogre::Vector3(1600, -290, -600);
-	createObject("cubeLeft3", Ogre::Vector3(Ogre::Real(2*0.01), Ogre::Real(10*0.01), Ogre::Real(10*0.01)), Ogre::Vector3(lightPos.x-2, lightPos.y, lightPos.z), "Material/underground_Wall","Cube.mesh");
-	createObject("cubeRight3", Ogre::Vector3(Ogre::Real(2*0.01), Ogre::Real(10*0.01), Ogre::Real(10*0.01)), Ogre::Vector3(lightPos.x+2, lightPos.y, lightPos.z), "Material/underground_Wall","Cube.mesh");
-	createObject("cubeBack3", Ogre::Vector3(Ogre::Real(10*0.01), Ogre::Real(5*0.01), Ogre::Real(10*0.01)), Ogre::Vector3(lightPos.x, lightPos.y, lightPos.z-10), "Material/underground_Wall","Cube.mesh");
-	createObject("cubeTop3", Ogre::Vector3(Ogre::Real(10*0.01), Ogre::Real(5*0.01), Ogre::Real(10*0.01)), Ogre::Vector3(lightPos.x, lightPos.y+10, lightPos.z), "Material/underground_Wall","Cube.mesh");
-	createObject("cubeBottom3", Ogre::Vector3(Ogre::Real(10*0.01), Ogre::Real(10*0.01), Ogre::Real(10*0.01)), Ogre::Vector3(lightPos.x, lightPos.y-10, lightPos.z), "Material/underground_Wall","Cube.mesh");
-	Ogre::Light *light3 = gSceneMgr->createLight("shadowLight3");     
-	light3->setType(Ogre::Light::LT_SPOTLIGHT);
-	light3->setPosition(lightPos);
-	light3->setDirection(0,0,1);
-	light3->setDiffuseColour(0.0, 0.0, 1.0);     
-	light3->setSpecularColour(0.0, 0.0, 1.0);   
-	light3->setSpotlightRange(Ogre::Degree(10), Ogre::Degree(100));
-	light3->setCastShadows(false);
 }
 
 
@@ -346,6 +330,7 @@ void GameApplication::createScene3(void)
 	//****************************************************
 	//ESCENARIO 3
 	//****************************************************
+	gSceneMgr->setAmbientLight(Ogre::ColourValue(0.5f, 0.5f, 0.5f));
 	SceneObject* sceneObj;
 
 	//ZONA CENTRAL
@@ -364,11 +349,11 @@ void GameApplication::createScene3(void)
 	sceneObj = gPhysics->createGroundShape("templeFloor", Ogre::Vector3(1000, 5, 300), Ogre::Vector3(300, 0, 0), Ogre::Vector2(2,1), "Material/temple_Floor");
 	gObjects.push_back(new Object(1, sceneObj));
 
-	sceneObj = gPhysics->createPrimitiveShape("templeRoof", Ogre::Vector3(1600*0.1, 5*0.1, 250*0.1), Ogre::Vector3(0, 245, 0), 0, "Cube.mesh");
+	sceneObj = gPhysics->createPrimitiveShape("templeRoof", Ogre::Vector3(1600*0.1, 5*0.1, 250*0.1), Ogre::Vector3(0, 245, 0), 0, "Cube.mesh", true);
 	sceneObj->mEntity->setMaterialName("Material/temple_Floor");
 	gObjects.push_back(new Object(1, sceneObj));
 
-	sceneObj = gPhysics->createPrimitiveShape("templeRight", Ogre::Vector3(Ogre::Real(5*0.1), Ogre::Real(250*0.1), Ogre::Real(300*0.1)), Ogre::Vector3(799, 125, 0), 0, "Cube.mesh");
+	sceneObj = gPhysics->createPrimitiveShape("templeRight", Ogre::Vector3(Ogre::Real(5*0.1), Ogre::Real(250*0.1), Ogre::Real(300*0.1)), Ogre::Vector3(799, 125, 0), 0, "Cube.mesh", true);
 	sceneObj->mEntity->setMaterialName("Material/temple_Wall");
 	gObjects.push_back(new Object(1, sceneObj));
 
@@ -378,10 +363,10 @@ void GameApplication::createScene3(void)
 	sceneObj = gPhysics->createGroundShape("templeFloor3", Ogre::Vector3(300, 5, 300), Ogre::Vector3(-350, -250, 0), Ogre::Vector2(1,1), "Material/temple_Floor");
 	gObjects.push_back(new Object(1, sceneObj));
 
-	sceneObj = gPhysics->createPrimitiveShape("templeFall1", Ogre::Vector3(Ogre::Real(5*0.1), Ogre::Real(250*0.1), Ogre::Real(300*0.1)), Ogre::Vector3(-500, -125, 0), 0, "Cube.mesh");
+	sceneObj = gPhysics->createPrimitiveShape("templeFall1", Ogre::Vector3(Ogre::Real(5*0.1), Ogre::Real(250*0.1), Ogre::Real(300*0.1)), Ogre::Vector3(-500, -125, 0), 0, "Cube.mesh", true);
 	sceneObj->mEntity->setMaterialName("Material/temple_Wall");
 	gObjects.push_back(new Object(1, sceneObj));
-	sceneObj = gPhysics->createPrimitiveShape("templeFall2", Ogre::Vector3(Ogre::Real(5*0.1), Ogre::Real(250*0.1), Ogre::Real(300*0.1)), Ogre::Vector3(-200, -125, 0), 0, "Cube.mesh");
+	sceneObj = gPhysics->createPrimitiveShape("templeFall2", Ogre::Vector3(Ogre::Real(5*0.1), Ogre::Real(250*0.1), Ogre::Real(300*0.1)), Ogre::Vector3(-200, -125, 0), 0, "Cube.mesh", true);
 	sceneObj->mEntity->setMaterialName("Material/temple_Wall");
 	gObjects.push_back(new Object(1, sceneObj));
 
@@ -407,7 +392,7 @@ void GameApplication::createScene3(void)
 	gObjects.push_back(new Object(7, sceneObj));
 
 	//PASARELA
-	sceneObj = gPhysics->createPrimitiveShape("templePlatform", Ogre::Vector3(Ogre::Real(25*0.1), Ogre::Real(25*0.1), Ogre::Real(300*0.1)), Ogre::Vector3(-350, 0, 0), 1, "Cube.mesh");
+	sceneObj = gPhysics->createPrimitiveShape("templePlatform", Ogre::Vector3(Ogre::Real(25*0.1), Ogre::Real(25*0.1), Ogre::Real(300*0.1)), Ogre::Vector3(-350, 0, 0), 1, "Cube.mesh", true);
 	sceneObj->mRigidBody->setGravity(btVector3(0,0,0));
 	sceneObj->mRigidBody->setAngularFactor(btVector3(0,0,0));
 	sceneObj->mRigidBody->setLinearFactor(btVector3(0,0,0));
@@ -425,11 +410,11 @@ void GameApplication::createScene3(void)
 	sceneObj = gPhysics->createGroundShape("templeFloor2", Ogre::Vector3(300, 5, 300), Ogre::Vector3(-650, 0, 0), Ogre::Vector2(2,1), "Material/temple_Floor");
 	gObjects.push_back(new Object(1, sceneObj));
 	
-	sceneObj = gPhysics->createPrimitiveShape("templeLeft", Ogre::Vector3(Ogre::Real(5*0.1), Ogre::Real(250*0.1), Ogre::Real(300*0.1)), Ogre::Vector3(-799, 125, 0), 0, "Cube.mesh");
+	sceneObj = gPhysics->createPrimitiveShape("templeLeft", Ogre::Vector3(Ogre::Real(5*0.1), Ogre::Real(250*0.1), Ogre::Real(300*0.1)), Ogre::Vector3(-799, 125, 0), 0, "Cube.mesh", true);
 	sceneObj->mEntity->setMaterialName("Material/temple_Wall");
 	gObjects.push_back(new Object(1, sceneObj));
 
-	sceneObj = gPhysics->createConvexHullShape("templeKey", Ogre::Real(0.2), Ogre::Vector3(-650, 50, 0), 1, "geosphere4500.mesh");
+	sceneObj = gPhysics->createPrimitiveShape("templeKey", Ogre::Vector3(2, 2, 2), Ogre::Vector3(-650, 50, 0), 1, "geosphere4500.mesh", false);
 	specialObject1 = new Object(2, sceneObj);
 	gObjects.push_back(specialObject1);
 
@@ -487,22 +472,22 @@ void GameApplication::createScene4(void)
 	SceneObject* sceneObj;
 
 	//Estructura general
-	createFont("endFarWall1", Ogre::Vector2(500,250), Ogre::Vector3(0,125,-150), "Material/end_Floor1", Ogre::Vector2(1,1), true);
+	createFont("endFarWall1", Ogre::Vector2(500,250), Ogre::Vector3(0,125,-150), "Material/end_FarWall", Ogre::Vector2(1,1), true);
 	createFont("endNearWall1", Ogre::Vector2(500,250), Ogre::Vector3(0,-125,150), "Material/end_Floor1", Ogre::Vector2(1,1), true);
 	createFont("endFalseFloor", Ogre::Vector2(125,125), Ogre::Vector3(-150,1,0), "Material/end_Floor2", Ogre::Vector2(1,1), false);
 
 	sceneObj = gPhysics->createGroundShape("endFloor", Ogre::Vector3(500, 5, 300), Ogre::Vector3(0, 0, 0), Ogre::Vector2(1,1), "Material/end_Floor1");
 	gObjects.push_back(new Object(1, sceneObj));
 
-	sceneObj = gPhysics->createPrimitiveShape("endRoof", Ogre::Vector3(500*0.1, 5*0.1, 250*0.1), Ogre::Vector3(0, 245, 0), 0, "Cube.mesh");
+	sceneObj = gPhysics->createPrimitiveShape("endRoof", Ogre::Vector3(500*0.1, 5*0.1, 250*0.1), Ogre::Vector3(0, 245, 0), 0, "Cube.mesh", true);
 	sceneObj->mEntity->setMaterialName("Material/end_Floor1");
 	gObjects.push_back(new Object(1, sceneObj));
 
-	sceneObj = gPhysics->createPrimitiveShape("endRight", Ogre::Vector3(Ogre::Real(5*0.1), Ogre::Real(250*0.1), Ogre::Real(300*0.1)), Ogre::Vector3(250, 125, 0), 0, "Cube.mesh");
+	sceneObj = gPhysics->createPrimitiveShape("endRight", Ogre::Vector3(Ogre::Real(5*0.1), Ogre::Real(250*0.1), Ogre::Real(300*0.1)), Ogre::Vector3(250, 125, 0), 0, "Cube.mesh", true);
 	sceneObj->mEntity->setMaterialName("Material/end_Floor1");
 	gObjects.push_back(new Object(1, sceneObj));
 
-	sceneObj = gPhysics->createPrimitiveShape("endLeft", Ogre::Vector3(Ogre::Real(5*0.1), Ogre::Real(250*0.1), Ogre::Real(300*0.1)), Ogre::Vector3(-250, 125, 0), 0, "Cube.mesh");
+	sceneObj = gPhysics->createPrimitiveShape("endLeft", Ogre::Vector3(Ogre::Real(5*0.1), Ogre::Real(250*0.1), Ogre::Real(300*0.1)), Ogre::Vector3(-250, 125, 0), 0, "Cube.mesh", true);
 	sceneObj->mEntity->setMaterialName("Material/end_Floor1");
 	gObjects.push_back(new Object(1, sceneObj));
 
@@ -542,7 +527,7 @@ void GameApplication::createScene4(void)
 	sceneObj->mRigidBody->setMotionState(new btDefaultMotionState(transform));
 	gObjects.push_back(new Object(8, sceneObj));
 
-	//Decoracion
+	//Decoracion	
 	createObject("box1", Ogre::Vector3(Ogre::Real(50*0.01), Ogre::Real(50*0.01), Ogre::Real(50*0.01)), Ogre::Vector3(180, 25, 0), "Material/temple_Box","Cube.mesh");
 	createObject("box2", Ogre::Vector3(Ogre::Real(50*0.01), Ogre::Real(50*0.01), Ogre::Real(50*0.01)), Ogre::Vector3(200, 25, -50), "Material/temple_Box","Cube.mesh");
 	createObject("box3", Ogre::Vector3(Ogre::Real(50*0.01), Ogre::Real(50*0.01), Ogre::Real(50*0.01)), Ogre::Vector3(210, 25, 50), "Material/temple_Box","Cube.mesh");
@@ -580,7 +565,9 @@ void GameApplication::clearScene(void)
 	}
 	gSceneMgr->destroyAllLights();
 	gSceneMgr->destroyAllStaticGeometry();
+	specialObject0 = 0;
 	specialObject1 = 0;
+	gPhysics->magicObj = 0;
 }
 
 //---------------------------------------------------------------------------

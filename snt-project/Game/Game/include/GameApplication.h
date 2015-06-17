@@ -15,8 +15,9 @@ public:
 	void createScene4(void);
 
 	int activeScene;
+	Object* specialObject0;
 	Object* specialObject1;
-
+	
 private:
 	void clearScene(void);
 	void createGroundGrass(Ogre::Vector3 vSize, Ogre::Vector3 vPos, int amount);
