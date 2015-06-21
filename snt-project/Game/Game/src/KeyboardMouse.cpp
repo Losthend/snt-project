@@ -9,6 +9,7 @@
 #include "../include/CCegui.h"
 #include "../include/GameMenu.h"
 #include "../include/AnimationManager.h"
+#include "../include/EventManager.h"
 
 KeyboardMouse::KeyboardMouse(void)
 {
@@ -36,12 +37,29 @@ bool KeyboardMouse::keyPressed( const OIS::KeyEvent &arg )
 	context.injectKeyDown((CEGUI::Key::Scan)arg.key);
 	context.injectChar((CEGUI::Key::Scan)arg.text);
 
-	if(gPlayer != 0)
+	//Basicos
+	switch (arg.key)
+	{
+	case OIS::KC_ESCAPE:
+		gShutDown = true;
+		break;
+	case OIS::KC_RETURN:
+		if (gCCegui->dialogBox->isActive())
+			gEventMgr->nextText = true;
+		break;
+	}
+
+	//Jugador
+	if(gCanUpdate && gPlayer != 0)
 	{
 		switch (arg.key)
 		{
 			case OIS::KC_ESCAPE:
 				gShutDown = true;
+				break;
+			case OIS::KC_RETURN:
+				if (gCCegui->dialogBox->isActive())
+					gEventMgr->nextText = true;
 				break;
 			case OIS::KC_A:
 				if (gPlayer->m_direction.x == 0)

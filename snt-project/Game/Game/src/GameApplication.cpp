@@ -180,7 +180,7 @@ void GameApplication::createScene2(void)
 	//****************************************************
 	//ESCENARIO 2
 	//****************************************************
-	gSceneMgr->setAmbientLight(Ogre::ColourValue(0.7f, 0.7f, 0.7f));
+	gSceneMgr->setAmbientLight(Ogre::ColourValue(0.9f, 0.9f, 0.9f));
 	SceneObject* sceneObj;
 
 	//ZONA 1: Punto de caida

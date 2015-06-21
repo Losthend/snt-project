@@ -23,4 +23,4 @@ bool					gCanUpdate;
 PhysicsManager*			gPhysics;
 CCegui*					gCCegui;
 GameApplication*		gGameApp;
-
+EventManager*			gEventMgr;

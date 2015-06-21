@@ -7,6 +7,7 @@ class SceneObject;
 class PhysicsManager;
 class CCegui;
 class GameApplication;
+class EventManager;
 
 //Jugador + Objetos y entorno
 extern Player* gPlayer;
@@ -30,3 +31,4 @@ extern bool						gCanUpdate;
 extern PhysicsManager*			gPhysics;
 extern CCegui*					gCCegui;
 extern GameApplication*			gGameApp;
+extern EventManager*			gEventMgr;

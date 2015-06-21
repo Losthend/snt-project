@@ -10,14 +10,17 @@ public:
 	virtual ~CCegui(void);
 	CEGUI::MouseButton convertButton(OIS::MouseButtonID buttonID);
 
-	bool quit(const CEGUI::EventArgs &e);
 	void initLoads();
 	void loadWindows();
+	void gameDialogBox();
+
+	bool handleNext(const CEGUI::EventArgs &e);
 
 	CEGUI::OgreRenderer* mRenderer;
 
 	GameMenu* gameMenu;
-	CEGUI::Window* menu1;
+	CEGUI::Window* dialogBox;
+	CEGUI::Window* alertBox;
 };
 
 //---------------------------------------------------------------------------

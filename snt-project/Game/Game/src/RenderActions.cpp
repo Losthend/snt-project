@@ -22,7 +22,7 @@ RenderActions::RenderActions(void)
 	gGameApp = new GameApplication();
 
 	//Gestor de eventos
-	eventMgr = new EventManager();
+	gEventMgr = new EventManager();
 }
 
 //------------------------------------------------------------------
@@ -57,7 +57,7 @@ bool RenderActions::frameRenderingQueued(const Ogre::FrameEvent& evt)
     CEGUI::System::getSingleton().injectTimePulse(evt.timeSinceLastFrame);
 
 	//Tratar eventos 
-	eventMgr->handleEvent();
+	gEventMgr->handleEvent();
 	
 	//Finalizacion del frame
 	endFrame();

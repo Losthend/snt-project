@@ -21,11 +21,16 @@ EventManager::EventManager(void)
 	gCanUpdate = true;
 	gGameApp->createScene1();
 	gCCegui->gameMenu->d_root->hide();
-	gCCegui->menu1->show();
-	gCCegui->menu1->activate();
 	//*********************************************************************
-
-	//inExit: indica si se estan realizando los eventos de salida del escenario 3
+	//Escenario 1
+	actualText = 1;
+	nextText = false;
+	text_1_7 = false;
+	text_8_9 = false;
+	text_10 = false;
+	text_11 = false;
+	text_12_13 = false;
+	//Escenario 3
 	inExitCount = 0;
 	inExit = false;
 }
@@ -69,12 +74,14 @@ void EventManager::handleEvent()
 	if(gGameApp->activeScene == 1){
 		//Puerta del ascensor
 		SceneObject* specialObj2 = gGameApp->specialObject0->m_sceneObject;
-		if(specialObj2 != 0 && specialObj2->mNode->getPosition().y < 125){
+		if(gCanUpdate && specialObj2 != 0 && specialObj2->mNode->getPosition().y < 125){
 			specialObj2->mRigidBody->translate(btVector3(0, btScalar(0.1), 0));
 		}
 		//Cambio de escenario
 		if(gPlayer != 0 && gPlayer->m_sceneObject->mNode->getPosition().y < -100)
 			gGameApp->createScene2();
+		//Eventos de texto
+		controlText1();
 	}
 
 	//****************************************************
@@ -86,7 +93,7 @@ void EventManager::handleEvent()
 			Ogre::Real posX = gPlayer->m_sceneObject->mNode->getPosition().x;
 			if ( posX > 1000 ){
 				gSceneMgr->getLight("shadowLight1")->setCastShadows(false);
-				gSceneMgr->setAmbientLight(Ogre::ColourValue(0.2f, 0.2f, 0.2f));
+				gSceneMgr->setAmbientLight(Ogre::ColourValue(0.3f, 0.3f, 0.3f));
 			}
 
 		//Cambio de escenario
@@ -194,4 +201,171 @@ void EventManager::doScene3()
 			}
 		}
 	}
+}
+
+void EventManager::controlText1()
+{
+	Ogre::String string = "";
+	//Introducción
+	if(!text_1_7)
+	{
+		if(actualText == 1){
+			gCCegui->dialogBox->show();
+			gCCegui->dialogBox->activate();
+			string = selectText1(actualText);
+			gCCegui->dialogBox->getChildAtIdx(3)->setText(string);
+			actualText++;
+			gCanUpdate = false;
+		}
+		else if (actualText > 1 && actualText <= 7 && nextText){
+			if(actualText == 7)
+				gCCegui->dialogBox->getChildAtIdx(2)->setText("AYUDA");
+			string = selectText1(actualText);
+			gCCegui->dialogBox->getChildAtIdx(3)->setText(string);
+			actualText++;
+			nextText = false;
+		}
+		else if (actualText == 8 && nextText){
+			gCCegui->dialogBox->getChildAtIdx(3)->setText("");
+			gCCegui->dialogBox->getChildAtIdx(2)->setText("SUJETO 123");
+			gCCegui->dialogBox->hide();
+			text_1_7 = true;
+			nextText = false;
+			gCanUpdate = true;
+		}
+	}
+	//Interaccion con la sangre
+	if(!text_8_9)
+	{
+		//To-Do
+		//Posicion del jugador (para mostrar el aviso): gPlayer->m_sceneObject->mNode->getPosition().x
+	}
+
+}
+
+Ogre::String EventManager::selectText1(int textNumber)
+{
+	Ogre::String string = "";
+	switch (textNumber)
+	{
+//Introducción
+	case 1:
+		string = "¿De qué me han servido tantos años de lealtad y sacrificio? De nada.";
+		string = string	+ "\nDebí habermelo pensado dos veces antes de comprometerme con el proyecto.";
+		actualText = 1;
+		break;
+	case 2:
+		string = "Ya ni siquiera tengo nombre. Tan solo soy otro número, otra rata de laboratorio bajo";
+		string = string	+ "\nla atenta mirada de Adolf Hitler.";
+		actualText = 2;
+		break;
+	case 3:
+		string = "Y todo para qué... ¿Para ganar la guerra? ¿Para dominar el mundo?";
+		string = string	+ "\n¿Viajes en el tiempo como arma definitiva? Santo Dios...";
+		actualText = 3;
+		break;
+	case 4:
+		string = "Da igual, poco puedo hacer ya. Será mejor que me centre en la misión.";
+		string = string	+ "\nSi logro encontrar la respuesta... quizá, solo quizá, me dejen marchar.";
+		actualText = 4;
+		break;
+	case 5:
+		string = "Segun recuerdo, debo desvelar 3 secretos para hallar la respuesta y poder salir.";
+		string = string	+ "\nUn momento... ¿Respuesta? No recuerdo que hubiera una pregunta.";
+		actualText = 5;
+		break;
+	case 6:
+		string = "Estoy confuso. Joder... ¿Que me está pasando?";
+		actualText = 6;
+		break;
+	case 7:
+		string = "(Puedes acercar/alejar la cámara utilizando el SCROLL del ratón.)";
+		string = string	+ "\n(Para moverte a la izquierda/derecha utiliza la tecla A/D, respectivamente.)";
+		string = string	+ "\n(Pulsa \"E\" al ver el icono con dicha letra para interactuar con el entorno.)";
+		actualText = 7;
+		break;
+//Interacción con la sangre
+	case 8:
+		string = "¿Esto es sangre? Parece reciente.";
+		actualText = 8;
+		break;
+	case 9:
+		string = "No tiene sentido, el último comunicado emitido por esta base se";
+		string = string	+ "\nremonta a hace casi un año... será mejor andarse con cuidado.";
+		actualText = 9;
+		break;
+//Interacción con la puerta
+	case 10:
+		string = "Esta cerrada... debo encontrar otra forma de avanzar.";
+		actualText = 10;
+		break;
+//Primera interacción con el derrumbamiento
+	case 11:
+		string = "Parece un derrumbamiento. Será mejor pasar con cuidado.";
+		string = string	+ "\n(Para saltar pulsa la tecla SPACE)";
+		actualText = 11;
+		break;
+//Segunda interacción con el derrumbamiento
+	case 12:
+		string = "Puede que haya algo que se me escape. Será mejor revisar este lugar.";
+		actualText = 12;
+		break;
+	case 13:
+		string = "(Para mover objetos con telequinesis, realiza click derecho sobre el objeto)";
+		string = string	+ "\ny, sosteniendo la pulsación, desplaza el ratón hacia el lugar donde desees llevarlo.";
+		actualText = 13;
+		break;
+	default:
+		break;
+	}
+
+	return string;
+}
+
+Ogre::String EventManager::selectText2(int textNumber)
+{
+	Ogre::String string = "";
+				//"1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31"
+	switch (textNumber)
+	{
+	case 1:
+		string = "";
+	case 2:
+		string = "";
+		break;
+	case 3:
+		string = "";
+		break;
+	case 4:
+		string = "";
+		break;
+	case 5:
+		string = "";
+		break;
+	case 6:
+		string = "";
+		break;
+	case 7:
+		string = "";
+		break;
+	case 8:
+		string = "";
+		break;
+	case 9:
+		string = "";
+		break;
+	case 10:
+		string = "";
+		break;
+	case 11:
+		string = "";
+		break;
+	case 12:
+		string = "";
+		break;
+	default:
+		break;
+	}
+
+	return string;
 }

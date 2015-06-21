@@ -11,8 +11,6 @@ public:
 	
 private:
 	virtual bool frameRenderingQueued(const Ogre::FrameEvent& evt);
-
-	EventManager* eventMgr;
 };
 
 //---------------------------------------------------------------------------

@@ -103,14 +103,10 @@ bool GameMenu::handleInnerPartStartClickAreaClick(const CEGUI::EventArgs& args)
     d_startButtonClickArea->setVisible(false);
 
 	//INICIO DEL JUEGO
-	//Se crea el escenario
+	//Se crea el escenario inicial
 	gGameApp->createScene1();
-	//Ocultamos el menu principal
+	//Ocultamos el menu principal y no se muestra mas (en principio)
 	d_root->hide();
-	//Cargamos los menus basicos 
-	gCCegui->menu1->show();
-	gCCegui->menu1->activate();
-	//No mostrar el menu hasta nuevo aviso
 	shouldBeDisplayed = false;
 
     return false;
