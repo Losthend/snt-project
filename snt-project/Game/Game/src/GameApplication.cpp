@@ -167,7 +167,7 @@ void GameApplication::createScene2(void)
 	//****************************************************
 	if(gPlayer == 0)
 	{
-		SceneObject* player = gPhysics->createConvexHullShape("Player", Ogre::Real(5), Ogre::Vector3(0, 10, 0), 1, "Sinbad.mesh");
+		SceneObject* player = gPhysics->createConvexHullShape("Player", Ogre::Real(5), Ogre::Vector3(0, 250, 0), 1, "Sinbad.mesh");
 		gPlayer = new Player(player);
 		gPlayer->m_animMgr = new AnimationManager();
 	}
@@ -317,7 +317,7 @@ void GameApplication::createScene3(void)
 	//****************************************************
 	if(gPlayer == 0)
 	{
-		SceneObject* player = gPhysics->createConvexHullShape("Player", Ogre::Real(5), Ogre::Vector3(0, 10, 0), 1, "Sinbad.mesh");
+		SceneObject* player = gPhysics->createConvexHullShape("Player", Ogre::Real(5), Ogre::Vector3(350, 150, 0), 1, "Sinbad.mesh");
 		gPlayer = new Player(player);
 		gPlayer->m_animMgr = new AnimationManager();
 	}
@@ -431,12 +431,19 @@ void GameApplication::createScene3(void)
 	sceneObj->mRigidBody->setMotionState(new btDefaultMotionState(transform));
 	gObjects.push_back(new Object(1, sceneObj));
 
-	Ogre::Light *light = gSceneMgr->createLight("templeLight");     
+	//LUCES
+	Ogre::Light *light = gSceneMgr->createLight("shadowLight");     
 	light->setType(Ogre::Light::LT_SPOTLIGHT);
-	light->setPosition(795, 245, 0);
-	light->setDirection(0,-1,0);
-	light->setSpotlightRange(Ogre::Degree(10), Ogre::Degree(200));
-	light->setVisible(false);
+	light->setPosition(-795, 150, 0);
+	light->setDirection(1,0,0);
+	light->setSpotlightRange(Ogre::Degree(10), Ogre::Degree(50));	
+
+	Ogre::Light *light2 = gSceneMgr->createLight("templeLight");     
+	light2->setType(Ogre::Light::LT_SPOTLIGHT);
+	light2->setPosition(795, 245, 0);
+	light2->setDirection(0,-1,0);
+	light2->setSpotlightRange(Ogre::Degree(10), Ogre::Degree(200));
+	light2->setVisible(false);
 }
 
 //---------------------------------------------------------------------------
@@ -456,7 +463,7 @@ void GameApplication::createScene4(void)
 	//****************************************************
 	if(gPlayer == 0)
 	{
-		SceneObject* player = gPhysics->createConvexHullShape("Player", Ogre::Real(5), Ogre::Vector3(0, 10, 0), 1, "Sinbad.mesh");
+		SceneObject* player = gPhysics->createConvexHullShape("Player", Ogre::Real(5), Ogre::Vector3(-150, 50, 0), 1, "Sinbad.mesh");
 		gPlayer = new Player(player);
 		gPlayer->m_animMgr = new AnimationManager();
 	}
@@ -469,6 +476,7 @@ void GameApplication::createScene4(void)
 	//****************************************************
 	//ESCENARIO 4
 	//****************************************************
+	gSceneMgr->setAmbientLight(Ogre::ColourValue(0.5f, 0.5f, 0.5f));
 	SceneObject* sceneObj;
 
 	//Estructura general
@@ -538,6 +546,13 @@ void GameApplication::createScene4(void)
 	createObject("barrel3", Ogre::Vector3(5, 5, 5), Ogre::Vector3(145, 15, 55), "","Barrel.mesh");
 	createObject("barrel4", Ogre::Vector3(5, 5, 5), Ogre::Vector3(130, 15, 75), "","Barrel.mesh");
 	createObject("barrel5", Ogre::Vector3(5, 5, 5), Ogre::Vector3(150, 15, 65), "","Barrel.mesh");
+
+	//LUCES
+	Ogre::Light *light = gSceneMgr->createLight("shadowLight");     
+	light->setType(Ogre::Light::LT_SPOTLIGHT);
+	light->setPosition(245, 150, 0);
+	light->setDirection(0,-1,0);
+	light->setSpotlightRange(Ogre::Degree(10), Ogre::Degree(50));	
 
 }
 

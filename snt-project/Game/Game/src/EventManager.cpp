@@ -19,7 +19,7 @@ EventManager::EventManager(void)
 	//ELIMINAR: Sustituye a la accion del boton START del menu
 	gCCegui->gameMenu->shouldBeDisplayed = false;
 	gCanUpdate = true;
-	gGameApp->createScene1();
+	gGameApp->createScene3();
 	gCCegui->gameMenu->d_root->hide();
 	//*********************************************************************
 	//General
@@ -32,6 +32,10 @@ EventManager::EventManager(void)
 	text_10 = false;
 	text_11 = false;
 	text_12_13 = false;
+	//Escenario 2
+	text_1_3 = false;
+	text_4_5 = false;
+	text_6_7 = false;
 	//Escenario 3
 	inExitCount = 0;
 	inExit = false;
@@ -92,15 +96,11 @@ void EventManager::handleEvent()
 	if(gGameApp->activeScene == 2){
 		//Iluminacion
 		if(gPlayer != 0){
-			Ogre::Real posX = gPlayer->m_sceneObject->mNode->getPosition().x;
-			if ( posX > 1000 ){
-				gSceneMgr->getLight("shadowLight1")->setCastShadows(false);
-				gSceneMgr->setAmbientLight(Ogre::ColourValue(0.3f, 0.3f, 0.3f));
-			}
-
-		//Cambio de escenario
-		if(gPlayer->m_sceneObject->mNode->getPosition().y < -600)
-			gGameApp->createScene3();
+			//Eventos de texto
+			controlText2();
+			//Cambio de escenario
+			if(text_6_7 && actualText == 0)
+				gGameApp->createScene3();
 		}
 	}
 
@@ -168,6 +168,7 @@ void EventManager::doScene3()
 
 			if(inExitCount == 1 && x > 150){
 				gSceneMgr->getLight("templeLight")->setVisible(true);
+				gSceneMgr->getLight("shadowLight")->setVisible(false);
 				gSceneMgr->getLight("templeLight")->setDiffuseColour(0, 0, 1);
 				inExitCount++;
 			}
@@ -303,6 +304,7 @@ void EventManager::controlText1()
 		gCCegui->dialogBox->hide();
 		gCanUpdate = true;
 		nextText = false;
+		pulseQ = false;
 		if(actualText == 13)
 			gCCegui->dialogBox->getChildAtIdx(2)->setText("SUJETO 123");
 		actualText = 0;
@@ -390,8 +392,8 @@ Ogre::String EventManager::selectText1(int textNumber)
 		actualText = 12;
 		break;
 	case 13:
-		string = "(Para mover objetos con telequinesis, realiza click derecho sobre el objeto y,)";
-		string = string	+ "\nsosteniendo la pulsación, desplaza el ratón hacia el lugar donde desees llevarlo.";
+		string = "(Para mover objetos con telequinesis, realiza click derecho sobre el objeto y,";
+		string = string	+ "\nsosteniendo la pulsación, desplaza el ratón hacia el lugar donde desees llevarlo.)";
 		actualText = 13;
 		break;
 	default:
@@ -402,9 +404,146 @@ Ogre::String EventManager::selectText1(int textNumber)
 }
 
 //****************************************************
+//Control de los eventos de texto en el escenario 1
+//****************************************************
+void EventManager::controlText2()
+{
+	Ogre::String string = "";
+	Ogre::Real posX = gPlayer->m_sceneObject->mNode->getPosition().x;
+
+	//OSO
+	if(!text_1_3 && posX > 1200)
+	{
+		if(actualText == 0 || actualText == 1){
+			if (actualText == 0)
+				actualText++;
+			gCCegui->dialogBox->show();
+			gCCegui->dialogBox->activate();
+			string = selectText2(actualText);
+			gCCegui->dialogBox->getChildAtIdx(3)->setText(string);
+			actualText++;
+			gCanUpdate = false;
+		}
+		else if (actualText == 2 && nextText){
+			string = selectText2(actualText);
+			gCCegui->dialogBox->getChildAtIdx(3)->setText(string);
+			actualText++;
+			nextText = false;
+		}
+		else if (actualText == 3 && nextText){
+			gCCegui->dialogBox->getChildAtIdx(2)->setText("AYUDA");
+			string = selectText2(actualText);
+			gCCegui->dialogBox->getChildAtIdx(3)->setText(string);
+			actualText++;
+			nextText = false;
+		}
+		else if(actualText == 4 && nextText){
+			gCCegui->dialogBox->getChildAtIdx(2)->setText("SUJETO 123");
+			gCCegui->dialogBox->hide();
+			text_1_3 = true;
+			nextText = false;
+			gCanUpdate = true;
+		}
+	}
+
+	//PUENTE Y ESPADA
+	bool bridge = (!text_4_5 && posX > 1750 && posX < 1850);
+	bool sword = (!text_6_7 && posX > 2400 && posX < 2500);
+	if (bridge || sword){
+		if( !(gCCegui->alertBox->isActive()) ){
+			gCCegui->alertBox->activate();
+			gCCegui->alertBox->show();
+		}
+		if (pulseQ){
+			gCCegui->dialogBox->show();
+			gCCegui->dialogBox->activate();
+			if(bridge){
+				actualText = 4;
+				text_4_5 = true;
+			}
+			else{
+				actualText = 6;
+				text_6_7 = true;
+			}
+			//Mostrar dialogo
+			string = selectText2(actualText);
+			gCCegui->dialogBox->getChildAtIdx(3)->setText(string);
+			//Deshabilitar alertBox y updates
+			gCCegui->alertBox->hide();
+			pulseQ = false;
+			gCanUpdate = false;
+		}
+	}
+	else
+		gCCegui->alertBox->hide();
+
+	//Finalización de dialogos
+	if ( ( (text_4_5 && actualText == 5)||
+			(text_6_7 && actualText == 7) ) && nextText){
+		gCCegui->dialogBox->hide();
+		gCanUpdate = true;
+		nextText = false;
+		actualText = 0;
+	}
+	//Avance de dialogos
+	else if ( ( (text_4_5 && actualText == 4)||
+				(text_6_7 && actualText == 6) ) && nextText){
+		actualText++;
+		string = selectText2(actualText);
+		gCCegui->dialogBox->getChildAtIdx(3)->setText(string);
+		nextText = false;
+	}
+
+}
+//****************************************************
 //Eventos de texto del escenario 2
 //****************************************************
 Ogre::String EventManager::selectText2(int textNumber)
+{
+	Ogre::String string = "";
+	switch (textNumber)
+	{
+	//OSO
+	case 1:
+		string = "¡Pero que...!";
+		break;
+	case 2:
+		string = "¿Cómo demonios ha llegado un oso hasta aquí? No se si podré esquivarlo.";
+		string = string	+ "\nSi me ve me atacará. Puedo intentar matarlo o saltar por encima suyo.";
+		break;
+	case 3:
+		string = "(Ataques: pulsa la tecla \"E\" para desenvainar/envainar tus espadas.";
+		string = string	+ "\nCon las espadas fuera, realiza click izquierdo (ratón) para realizar un ataque.";
+		break;
+	//Puente
+	case 4:
+		string = "Piedras voladoras... ¿Ingeniería nazi o tecnología extraterrestre?";
+		string = string	+ "\nNo quiero saberlo, bastante tengo con los viajes en el tiempo.";
+		break;
+	case 5:
+		string = "Creo que puedo utilizarlas a modo de puente, aunque no parecen muy";
+		string = string	+ "\nestables... siento como si la gravedad de este lugar fuera distinta.";
+		break;
+	//Espada
+	case 6:
+		string = "Esta espada... es idéntica a la mía. Solo fueron otorgadas a aquellos que nos";
+		string = string	+ "\npresentamos voluntarios para el proyecto.";
+		break;
+	case 7:
+		string = "¿Acaso no soy el único al que han enviado aquí? Sea de quien sea, está";
+		string = string	+ "\nfuertemente clavada en la piedra... quizá si tiro de ella...";
+		break;
+	default:
+		break;
+	}
+
+	return string;
+}
+
+//****************************************************
+//Eventos de texto del escenario 3
+//****************************************************
+Ogre::String EventManager::selectText3(int textNumber)
 {
 	Ogre::String string = "";
 				//"1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31"
@@ -412,6 +551,7 @@ Ogre::String EventManager::selectText2(int textNumber)
 	{
 	case 1:
 		string = "";
+		break;
 	case 2:
 		string = "";
 		break;
@@ -428,21 +568,6 @@ Ogre::String EventManager::selectText2(int textNumber)
 		string = "";
 		break;
 	case 7:
-		string = "";
-		break;
-	case 8:
-		string = "";
-		break;
-	case 9:
-		string = "";
-		break;
-	case 10:
-		string = "";
-		break;
-	case 11:
-		string = "";
-		break;
-	case 12:
 		string = "";
 		break;
 	default:
