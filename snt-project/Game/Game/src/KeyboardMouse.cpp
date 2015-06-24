@@ -47,6 +47,10 @@ bool KeyboardMouse::keyPressed( const OIS::KeyEvent &arg )
 		if (gCCegui->dialogBox->isActive())
 			gEventMgr->nextText = true;
 		break;
+	case OIS::KC_Q:
+		if (gCCegui->alertBox->isActive())
+			gEventMgr->pulseQ = true;
+		break;
 	}
 
 	//Jugador

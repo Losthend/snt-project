@@ -86,7 +86,7 @@ void CCegui::loadWindows()
 	alertBox->setSize(CEGUI::USize(CEGUI::UDim(0.03f, 0), CEGUI::UDim(0.05f, 0)));
 	alertBox->setPosition(CEGUI::UVector2(CEGUI::UDim(0.5f, 0),CEGUI::UDim(0.45f, 0)));
 	alertBox->setDisabled(true);
-	alertBox->setText("E");
+	alertBox->setText("Q");
 	wRoot->addChild(alertBox);
 
 	//Por defecto, todas las ventanas ocultas

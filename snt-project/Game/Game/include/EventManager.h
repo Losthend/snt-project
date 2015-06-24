@@ -14,7 +14,9 @@ public:
 	Ogre::String selectText1(int textNumber);
 
 	Ogre::String selectText2(int textNumber);
-
+	
+	//General
+	bool pulseQ;
 	//Escenario 1
 	int actualText;
 	bool nextText;

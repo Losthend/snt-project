@@ -22,6 +22,8 @@ EventManager::EventManager(void)
 	gGameApp->createScene1();
 	gCCegui->gameMenu->d_root->hide();
 	//*********************************************************************
+	//General
+	pulseQ = false;
 	//Escenario 1
 	actualText = 1;
 	nextText = false;
@@ -118,6 +120,9 @@ void EventManager::handleEvent()
 	}
 }
 
+//****************************************************
+//Acciones especiales a realizar durante el escenario 3
+//****************************************************
 void EventManager::doScene3()
 {
 	//NUCLEO DE ENERGIA + CAMBIO DE ESCENARIO
@@ -203,10 +208,15 @@ void EventManager::doScene3()
 	}
 }
 
+//****************************************************
+//Control de los eventos de texto en el escenario 1
+//****************************************************
 void EventManager::controlText1()
 {
 	Ogre::String string = "";
-	//Introducción
+	Ogre::Real posX = gPlayer->m_sceneObject->mNode->getPosition().x;
+
+	//INTRODUCCIÓN
 	if(!text_1_7)
 	{
 		if(actualText == 1){
@@ -218,14 +228,17 @@ void EventManager::controlText1()
 			gCanUpdate = false;
 		}
 		else if (actualText > 1 && actualText <= 7 && nextText){
-			if(actualText == 7)
-				gCCegui->dialogBox->getChildAtIdx(2)->setText("AYUDA");
 			string = selectText1(actualText);
 			gCCegui->dialogBox->getChildAtIdx(3)->setText(string);
-			actualText++;
+			if(actualText == 7){
+				gCCegui->dialogBox->getChildAtIdx(2)->setText("AYUDA");
+				actualText = 0;
+			}
+			else
+				actualText++;
 			nextText = false;
 		}
-		else if (actualText == 8 && nextText){
+		else if (actualText == 0 && nextText){
 			gCCegui->dialogBox->getChildAtIdx(3)->setText("");
 			gCCegui->dialogBox->getChildAtIdx(2)->setText("SUJETO 123");
 			gCCegui->dialogBox->hide();
@@ -234,15 +247,81 @@ void EventManager::controlText1()
 			gCanUpdate = true;
 		}
 	}
-	//Interaccion con la sangre
-	if(!text_8_9)
-	{
-		//To-Do
-		//Posicion del jugador (para mostrar el aviso): gPlayer->m_sceneObject->mNode->getPosition().x
+	
+	//Derrumbamiento, sangre y puerta
+	bool block = ( ((!text_11 && !text_10)||(!text_12_13 && text_10)) && posX > 550 && posX < 750 );
+	bool blood = (!text_8_9 && posX > 775 && posX < 825);
+	bool door = (!text_10 && posX > 900 && posX < 950);
+	if ( block || blood || door ){ 
+		//Activacion del alertBox
+		if( !(gCCegui->alertBox->isActive()) ){
+			gCCegui->alertBox->activate();
+			gCCegui->alertBox->show();
+		}
+		//Pulsacion de Q
+		if (pulseQ){
+			//Activar dialogo
+			gCCegui->dialogBox->show();
+			gCCegui->dialogBox->activate();
+			//Primera interaccion (requisito: no haber interactuado con la puerta)
+			if(block){
+				if (!text_11 && !text_10){
+					actualText = 11;
+					text_11 = true;
+				}
+				//Segunda interaccion (requisito: haber interactuado con la puerta)
+				else if (!text_12_13 && text_10){
+					actualText = 12;
+					text_12_13 = true;
+				}
+			}
+			else if (blood){
+				actualText = 8;
+				text_8_9 = true;
+			}
+			else{
+				actualText = 10;
+				text_10 = true;
+			}
+			//Mostrar dialogo
+			string = selectText1(actualText);
+			gCCegui->dialogBox->getChildAtIdx(3)->setText(string);
+			//Deshabilitar alertBox y updates
+			gCCegui->alertBox->hide();
+			pulseQ = false;
+			gCanUpdate = false;
+		}
 	}
+	else
+		gCCegui->alertBox->hide();
 
+	//Finalización de dialogos
+	if ( ( (text_10 && actualText == 10)||
+			(text_11 && actualText == 11)||
+			(text_8_9 && actualText == 9)||
+			(text_12_13 && actualText == 13) ) && nextText){
+		gCCegui->dialogBox->hide();
+		gCanUpdate = true;
+		nextText = false;
+		if(actualText == 13)
+			gCCegui->dialogBox->getChildAtIdx(2)->setText("SUJETO 123");
+		actualText = 0;
+	}
+	//Avance de dialogos
+	else if ( ( (text_8_9 && actualText == 8)||
+				(text_12_13 && actualText == 12)) && nextText){
+		actualText++;
+		if(actualText == 13)
+			gCCegui->dialogBox->getChildAtIdx(2)->setText("AYUDA");
+		string = selectText1(actualText);
+		gCCegui->dialogBox->getChildAtIdx(3)->setText(string);
+		nextText = false;
+	}
 }
 
+//****************************************************
+//Eventos de texto del escenario 1
+//****************************************************
 Ogre::String EventManager::selectText1(int textNumber)
 {
 	Ogre::String string = "";
@@ -260,8 +339,8 @@ Ogre::String EventManager::selectText1(int textNumber)
 		actualText = 2;
 		break;
 	case 3:
-		string = "Y todo para qué... ¿Para ganar la guerra? ¿Para dominar el mundo?";
-		string = string	+ "\n¿Viajes en el tiempo como arma definitiva? Santo Dios...";
+		string = "Y todo para qué, ¿Para ganar la guerra? Admito que la idea de cambiar el pasado";
+		string = string	+ "\nes brillante y tentadora, el arma definitiva... pero, ¿A que precio?";
 		actualText = 3;
 		break;
 	case 4:
@@ -281,7 +360,7 @@ Ogre::String EventManager::selectText1(int textNumber)
 	case 7:
 		string = "(Puedes acercar/alejar la cámara utilizando el SCROLL del ratón.)";
 		string = string	+ "\n(Para moverte a la izquierda/derecha utiliza la tecla A/D, respectivamente.)";
-		string = string	+ "\n(Pulsa \"E\" al ver el icono con dicha letra para interactuar con el entorno.)";
+		string = string	+ "\n(Pulsa \"Q\" al ver el icono con dicha letra para interactuar con el entorno.)";
 		actualText = 7;
 		break;
 //Interacción con la sangre
@@ -311,8 +390,8 @@ Ogre::String EventManager::selectText1(int textNumber)
 		actualText = 12;
 		break;
 	case 13:
-		string = "(Para mover objetos con telequinesis, realiza click derecho sobre el objeto)";
-		string = string	+ "\ny, sosteniendo la pulsación, desplaza el ratón hacia el lugar donde desees llevarlo.";
+		string = "(Para mover objetos con telequinesis, realiza click derecho sobre el objeto y,)";
+		string = string	+ "\nsosteniendo la pulsación, desplaza el ratón hacia el lugar donde desees llevarlo.";
 		actualText = 13;
 		break;
 	default:
@@ -322,6 +401,9 @@ Ogre::String EventManager::selectText1(int textNumber)
 	return string;
 }
 
+//****************************************************
+//Eventos de texto del escenario 2
+//****************************************************
 Ogre::String EventManager::selectText2(int textNumber)
 {
 	Ogre::String string = "";

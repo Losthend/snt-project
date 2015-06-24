@@ -132,12 +132,12 @@ void GameApplication::createScene1(void)
 	createFont("bunkerFlag1", Ogre::Vector2(75,150), Ogre::Vector3(200,125,-74), "Material/bunker_flag1", Ogre::Vector2(1,1), true);
 	createFont("bunkerFlag2", Ogre::Vector2(75,150), Ogre::Vector3(400,125,-74), "Material/bunker_flag2", Ogre::Vector2(1,1), true);
 	createFont("bunkerFlag3",Ogre::Vector2(75,150), Ogre::Vector3(850,125,-74), "Material/bunker_flag3", Ogre::Vector2(1,1), true);
-	createFont("bunkerDoor2", Ogre::Vector2(50,75), Ogre::Vector3(750,35,-74), "Material/bunker_Door2", Ogre::Vector2(1,1), true);
+	createFont("bunkerDoor2", Ogre::Vector2(50,75), Ogre::Vector3(800,35,-74), "Material/bunker_Door2", Ogre::Vector2(1,1), true);
 	createFont("bunkerBulletHole", Ogre::Vector2(50,50), Ogre::Vector3(80,50,-74), "Material/bunker_BulletHole", Ogre::Vector2(1,1), true);
 	createFont("bunkerwallHole", Ogre::Vector2(150,150), Ogre::Vector3(635,150,-74), "Material/bunker_wallHole", Ogre::Vector2(1,1), true);
 	createFont("bunkerFissure1", Ogre::Vector2(75,100), Ogre::Vector3(331,0,-74), "Material/bunker_Fissure", Ogre::Vector2(1,1), true);
 	createFont("bunkerFissure2", Ogre::Vector2(75,100), Ogre::Vector3(331,1,-75), "Material/bunker_Fissure", Ogre::Vector2(1,1), false);
-	createFont("bunkerBlood", Ogre::Vector2(50,50), Ogre::Vector3(745,1,-48), "Material/bunker_Blood", Ogre::Vector2(1,1), false);
+	createFont("bunkerBlood", Ogre::Vector2(50,50), Ogre::Vector3(795,1,-48), "Material/bunker_Blood", Ogre::Vector2(1,1), false);
 	
 	createObject("bunkerDoor1", Ogre::Vector3(Ogre::Real(7*0.01), Ogre::Real(75*0.01), Ogre::Real(50*0.01)), Ogre::Vector3(950, 35, 0), "Material/bunker_Door1","Cube.mesh");
 	createObject("monsterSkeleton", Ogre::Vector3(Ogre::Real(75*0.1), Ogre::Real(75*0.1), Ogre::Real(75*0.1)), Ogre::Vector3(75, 0, -50), "","monster_skeleton.mesh");
