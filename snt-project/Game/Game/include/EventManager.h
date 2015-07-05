@@ -12,6 +12,7 @@ public:
 
 	void controlText1();
 	void controlText2();
+	void controlText3();
 	Ogre::String selectText1(int textNumber);
 	Ogre::String selectText2(int textNumber);
 	Ogre::String selectText3(int textNumber);
@@ -33,6 +34,10 @@ public:
 	//Escenario 3
 	int inExitCount;
 	bool inExit;
+	bool text_1_4;
+	bool text_5;
+	bool text_6_7_8;
+	bool magic;
 };
 
 //---------------------------------------------------------------------------

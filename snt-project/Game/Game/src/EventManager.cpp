@@ -39,6 +39,10 @@ EventManager::EventManager(void)
 	//Escenario 3
 	inExitCount = 0;
 	inExit = false;
+	text_1_4 = false;
+	text_5 = false;
+	text_6_7_8 = false;
+	magic = false;
 }
 
 EventManager::~EventManager(void)
@@ -108,8 +112,9 @@ void EventManager::handleEvent()
 	//ESCENARIO 3: Templo
 	//****************************************************
 	if(gGameApp->activeScene == 3){
-		//Nucleo y cambio de escenario
-		doScene3();
+		controlText3();
+		if (gCanUpdate)
+			doScene3();
 	}
 
 	//****************************************************
@@ -347,7 +352,7 @@ Ogre::String EventManager::selectText1(int textNumber)
 		break;
 	case 4:
 		string = "Da igual, poco puedo hacer ya. Será mejor que me centre en la misión.";
-		string = string	+ "\nSi logro encontrar la respuesta... quizá, solo quizá, me dejen marchar.";
+		string = string	+ "\nSi logro encontrar la respuesta quizá, solo quizá, me dejen abandonar todo esto.";
 		actualText = 4;
 		break;
 	case 5:
@@ -356,13 +361,13 @@ Ogre::String EventManager::selectText1(int textNumber)
 		actualText = 5;
 		break;
 	case 6:
-		string = "Estoy confuso. Joder... ¿Que me está pasando?";
+		string = "Estoy confuso... ¿Que me está pasando?";
 		actualText = 6;
 		break;
 	case 7:
-		string = "(Puedes acercar/alejar la cámara utilizando el SCROLL del ratón.)";
-		string = string	+ "\n(Para moverte a la izquierda/derecha utiliza la tecla A/D, respectivamente.)";
-		string = string	+ "\n(Pulsa \"Q\" al ver el icono con dicha letra para interactuar con el entorno.)";
+		string = "Puedes acercar/alejar la cámara utilizando el SCROLL del ratón.";
+		string = string	+ "\nPara moverte a la izquierda/derecha utiliza la tecla A/D, respectivamente.";
+		string = string	+ "\nPulsa \"Q\" al ver el icono con dicha letra para interactuar con el entorno.";
 		actualText = 7;
 		break;
 //Interacción con la sangre
@@ -392,8 +397,9 @@ Ogre::String EventManager::selectText1(int textNumber)
 		actualText = 12;
 		break;
 	case 13:
-		string = "(Para mover objetos con telequinesis, realiza click derecho sobre el objeto y,";
-		string = string	+ "\nsosteniendo la pulsación, desplaza el ratón hacia el lugar donde desees llevarlo.)";
+		string = "Para mover objetos con telequinesis, realiza click derecho sobre el objeto y,";
+		string = string	+ "\nsosteniendo la pulsación, desplaza el ratón hacia el lugar donde desees moverlo.";
+		string = string	+ "\nRealiza click izquierdo, mientras sostienes la pulsación, para lanzar el objeto.";
 		actualText = 13;
 		break;
 	default:
@@ -404,7 +410,7 @@ Ogre::String EventManager::selectText1(int textNumber)
 }
 
 //****************************************************
-//Control de los eventos de texto en el escenario 1
+//Control de los eventos de texto en el escenario 2
 //****************************************************
 void EventManager::controlText2()
 {
@@ -509,10 +515,10 @@ Ogre::String EventManager::selectText2(int textNumber)
 		break;
 	case 2:
 		string = "¿Cómo demonios ha llegado un oso hasta aquí? No se si podré esquivarlo.";
-		string = string	+ "\nSi me ve me atacará. Puedo intentar matarlo o saltar por encima suyo.";
+		string = string	+ "\nSi me ve me atacará. Puedo intentar matarlo o saltar por encima suyo y huir.";
 		break;
 	case 3:
-		string = "(Ataques: pulsa la tecla \"E\" para desenvainar/envainar tus espadas.";
+		string = "Ataques: pulsa la tecla \"E\" para desenvainar/envainar tus espadas.";
 		string = string	+ "\nCon las espadas fuera, realiza click izquierdo (ratón) para realizar un ataque.";
 		break;
 	//Puente
@@ -540,6 +546,49 @@ Ogre::String EventManager::selectText2(int textNumber)
 	return string;
 }
 
+
+
+//****************************************************
+//Control de los eventos de texto en el escenario 3
+//****************************************************
+void EventManager::controlText3()
+{
+	Ogre::String string = "";
+	Ogre::Real posX = gPlayer->m_sceneObject->mNode->getPosition().x;
+
+	//Entrada al templo
+	if(!text_1_4)
+	{
+		if(actualText == 0 || actualText == 1){
+			if (actualText == 0)
+				actualText++;
+			gCCegui->dialogBox->show();
+			gCCegui->dialogBox->activate();
+			string = selectText3(actualText);
+			gCCegui->dialogBox->getChildAtIdx(3)->setText(string);
+			actualText++;
+			gCanUpdate = false;
+		}
+		else if ( (actualText == 2 || actualText == 3 ||actualText == 4) && nextText){
+			string = selectText3(actualText);
+			gCCegui->dialogBox->getChildAtIdx(3)->setText(string);
+			actualText++;
+			nextText = false;
+		}
+		else if(actualText == 5 && nextText){
+			gCCegui->dialogBox->hide();
+			text_1_4 = true;
+			nextText = false;
+			gCanUpdate = true;
+		}
+	}
+
+	//Altar y energía
+
+
+}
+
+
 //****************************************************
 //Eventos de texto del escenario 3
 //****************************************************
@@ -549,26 +598,39 @@ Ogre::String EventManager::selectText3(int textNumber)
 				//"1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31"
 	switch (textNumber)
 	{
+	//Entrada al templo
 	case 1:
-		string = "";
+		string = "¡Pero que...!";
 		break;
 	case 2:
-		string = "";
+		string = "Vale, parece un templo egipcio... ahora todo tiene sentido... ¿Sentido?";
+		string = string	+ "\nEnserio, ¿Que demonios está pasando aquí?¿Que es este lugar?";
 		break;
 	case 3:
-		string = "";
+		string = "Dijeron que era un centro de investigación sobre fuentes de energía alternativas.";
+		string = string	+ "\nNadie dijo nada de túneles subterraneos, osos y templos misteriosos.";
 		break;
 	case 4:
-		string = "";
+		string = "No, algo no encaja aquí. Lo peor de todo es que siento... siento...";
+		string = string	+ "\nSiento como si ya hubiera estado aquí antes, lo cual no tiene sentido.";
 		break;
+	//Altar
 	case 5:
-		string = "";
+		string = "Parece una especie de altar, aunque juraría que falta una pieza central.";
 		break;
+	//Energía
 	case 6:
-		string = "";
+		string = "Realmente hermoso. Debe de ser la razón por la que me hicieron venir.";
+		string = string	+ "\nFuentes de energía alternativa... no, esta tecnología parece demasiado avanzada.";
 		break;
 	case 7:
-		string = "";
+		string = "La hierba crece a su alrededor, brota de la dura piedra.";
+		string = string	+ "\nHay un extraño resplandor en su interior y sopla una suave brisa.";
+		string = string	+ "\nSi no fuera una locura, juraría que distingo un verde prado en su interior.";
+		break;
+	case 8:
+		string = "La forma de llegar... la hierba... ¿Teletransporte? Imposible.";
+		string = string	+ "\nPor si eso fuera poco, ¿Como pretendían que sacase esto de aquí?";
 		break;
 	default:
 		break;

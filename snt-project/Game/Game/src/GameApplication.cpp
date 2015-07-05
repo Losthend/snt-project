@@ -317,14 +317,14 @@ void GameApplication::createScene3(void)
 	//****************************************************
 	if(gPlayer == 0)
 	{
-		SceneObject* player = gPhysics->createConvexHullShape("Player", Ogre::Real(5), Ogre::Vector3(350, 150, 0), 1, "Sinbad.mesh");
+		SceneObject* player = gPhysics->createConvexHullShape("Player", Ogre::Real(5), Ogre::Vector3(350, 10, 0), 1, "Sinbad.mesh");
 		gPlayer = new Player(player);
 		gPlayer->m_animMgr = new AnimationManager();
 	}
 
 	//Posicion del jugador
 	btTransform transform = gPlayer->m_sceneObject->mRigidBody->getCenterOfMassTransform();
-	transform.setOrigin(btVector3(350, 150, 0));
+	transform.setOrigin(btVector3(350, 10, 0));
 	gPlayer->m_sceneObject->mRigidBody->setCenterOfMassTransform(transform);
 
 	//****************************************************
