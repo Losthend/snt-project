@@ -352,16 +352,18 @@ Ogre::String EventManager::selectText1(int textNumber)
 		break;
 	case 4:
 		string = "Da igual, poco puedo hacer ya. Será mejor que me centre en la misión.";
-		string = string	+ "\nSi logro encontrar la respuesta quizá, solo quizá, me dejen abandonar todo esto.";
+		string = string	+ "\nSi logro encontrar lo que me pidieron... quizá me dejen abandonar todo esto.";
 		actualText = 4;
 		break;
 	case 5:
-		string = "Segun recuerdo, debo desvelar 3 secretos para hallar la respuesta y poder salir.";
-		string = string	+ "\nUn momento... ¿Respuesta? No recuerdo que hubiera una pregunta.";
+		string = "Debo encontrar el prototipo de una fuente de energía alternativa en la que";
+		string = string	+ "\nestaban trabajando las \"SS\" antes... antes de perder toda comunicación con la";
+		string = string	+ "\nbase. Antes del... incidente.";
 		actualText = 5;
 		break;
 	case 6:
-		string = "Estoy confuso... ¿Que me está pasando?";
+		string = "Decenas de personas desaparecidas de la noche a la mañana. Ningún cuerpo,";
+		string = string	+ "\nninguna petición de ayuda... dios... debí habermelo pensado mejor...";
 		actualText = 6;
 		break;
 	case 7:
@@ -377,7 +379,7 @@ Ogre::String EventManager::selectText1(int textNumber)
 		break;
 	case 9:
 		string = "No tiene sentido, el último comunicado emitido por esta base se";
-		string = string	+ "\nremonta a hace casi un año... será mejor andarse con cuidado.";
+		string = string	+ "\nremonta a hace casi un mes... será mejor andarse con cuidado.";
 		actualText = 9;
 		break;
 //Interacción con la puerta
@@ -603,16 +605,16 @@ Ogre::String EventManager::selectText3(int textNumber)
 		string = "¡Pero que...!";
 		break;
 	case 2:
-		string = "Vale, parece un templo egipcio... ahora todo tiene sentido... ¿Sentido?";
+		string = "Un templo egipcio, vale, ahora todo tiene sentido... ¿¡Sentido!?";
 		string = string	+ "\nEnserio, ¿Que demonios está pasando aquí?¿Que es este lugar?";
 		break;
 	case 3:
 		string = "Dijeron que era un centro de investigación sobre fuentes de energía alternativas.";
-		string = string	+ "\nNadie dijo nada de túneles subterraneos, osos y templos misteriosos.";
+		string = string	+ "\nNadie dijo nada de piedras voladoras y teletransporte a templos misteriosos.";
 		break;
 	case 4:
 		string = "No, algo no encaja aquí. Lo peor de todo es que siento... siento...";
-		string = string	+ "\nSiento como si ya hubiera estado aquí antes, lo cual no tiene sentido.";
+		string = string	+ "\nSiento como si ya hubiera estado aquí antes, lo cual es imposible.";
 		break;
 	//Altar
 	case 5:
@@ -624,12 +626,12 @@ Ogre::String EventManager::selectText3(int textNumber)
 		string = string	+ "\nFuentes de energía alternativa... no, esta tecnología parece demasiado avanzada.";
 		break;
 	case 7:
-		string = "La hierba crece a su alrededor, brota de la dura piedra.";
-		string = string	+ "\nHay un extraño resplandor en su interior y sopla una suave brisa.";
-		string = string	+ "\nSi no fuera una locura, juraría que distingo un verde prado en su interior.";
+		string = "Otra vez esa sensación. Ese \"Déjà vu\", lo siento ahora con más intensidad.";
+		string = string	+ "\nLas extrañas condiciones de este lugar... ¿Es posible que esto sea el causante?";
+		string = string	+ "\nY, de ser así, ¿Quizá este artilugio emite algun tipo de radiación?";
 		break;
 	case 8:
-		string = "La forma de llegar... la hierba... ¿Teletransporte? Imposible.";
+		string = "Demonios, ¿Será peligroso? ¿Me han enviado a una misión suicida?";
 		string = string	+ "\nPor si eso fuera poco, ¿Como pretendían que sacase esto de aquí?";
 		break;
 	default:
