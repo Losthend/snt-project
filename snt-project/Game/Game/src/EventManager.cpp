@@ -19,7 +19,7 @@ EventManager::EventManager(void)
 	//ELIMINAR: Sustituye a la accion del boton START del menu
 	gCCegui->gameMenu->shouldBeDisplayed = false;
 	gCanUpdate = true;
-	gGameApp->createScene2();
+	gGameApp->createScene3();
 	gCCegui->gameMenu->d_root->hide();
 	//*********************************************************************
 	//General
@@ -89,11 +89,13 @@ void EventManager::handleEvent()
 		if(gCanUpdate && specialObj2 != 0 && specialObj2->mNode->getPosition().y < 125){
 			specialObj2->mRigidBody->translate(btVector3(0, btScalar(0.1), 0));
 		}
-		//Cambio de escenario
-		if(gPlayer != 0 && gPlayer->m_sceneObject->mNode->getPosition().y < -100)
-			gGameApp->createScene2();
 		//Eventos de texto
 		controlText1();
+		//Cambio de escenario
+		if(gPlayer != 0 && gPlayer->m_sceneObject->mNode->getPosition().y < -100){
+			gCCegui->alertBox->hide();
+			gGameApp->createScene2();
+		}
 	}
 
 	//****************************************************
@@ -104,6 +106,7 @@ void EventManager::handleEvent()
 		controlText2();
 		if(gPlayer != 0 && text_6_7 && actualText == 0){
 			//Cambio de escenario
+			gCCegui->alertBox->hide();
 			gGameApp->createScene3();
 		}
 	}
@@ -112,16 +115,15 @@ void EventManager::handleEvent()
 	//ESCENARIO 3: Templo
 	//****************************************************
 	if(gGameApp->activeScene == 3){
+		controlText3();
 		if (gCanUpdate)
 			doScene3();
-		controlText3();
 	}
 
 	//****************************************************
 	//ESCENARIO 4: Final
 	//****************************************************
 	if(gGameApp->activeScene == 4){
-		//TO-DO
 		controlText4();
 	}
 }
@@ -209,6 +211,7 @@ void EventManager::doScene3()
 				//Cambio de escenario
 				inExitCount = 0;
 				inExit = false;
+				gCCegui->alertBox->hide();
 				gGameApp->createScene4();
 			}
 		}
@@ -452,6 +455,7 @@ void EventManager::controlText2()
 			text_1_3 = true;
 			nextText = false;
 			gCanUpdate = true;
+			actualText = 0;
 		}
 	}
 
@@ -559,7 +563,7 @@ void EventManager::controlText3()
 	Ogre::Real posX = gPlayer->m_sceneObject->mNode->getPosition().x;
 
 	//Entrada al templo
-	if(!text_1_4)
+	if(!text_1_4 && posX > 340 && posX < 360)
 	{
 		if(actualText == 0 || actualText == 1){
 			if (actualText == 0)
@@ -582,6 +586,7 @@ void EventManager::controlText3()
 			text_1_4 = true;
 			nextText = false;
 			gCanUpdate = true;
+			actualText = 0;
 		}
 	}
 
@@ -693,8 +698,8 @@ void EventManager::controlText4()
 	Ogre::String string = "";
 	Ogre::Real posX = gPlayer->m_sceneObject->mNode->getPosition().x;
 
-	//Entrada al templo
-	if(!text_1_14 && posX > 0)
+	//Final
+	if(!text_1_14 && posX > 0 && posX < 100)
 	{
 		if(actualText == 0 || actualText == 1){
 			if (actualText == 0)
@@ -717,6 +722,7 @@ void EventManager::controlText4()
 			text_1_14 = true;
 			nextText = false;
 			gCanUpdate = true;
+			actualText = 0;
 		}
 	}
 }
