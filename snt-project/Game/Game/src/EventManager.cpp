@@ -19,7 +19,7 @@ EventManager::EventManager(void)
 	//ELIMINAR: Sustituye a la accion del boton START del menu
 	gCCegui->gameMenu->shouldBeDisplayed = false;
 	gCanUpdate = true;
-	gGameApp->createScene3();
+	gGameApp->createScene2();
 	gCCegui->gameMenu->d_root->hide();
 	//*********************************************************************
 	//General
@@ -43,6 +43,8 @@ EventManager::EventManager(void)
 	text_5 = false;
 	text_6_7_8 = false;
 	magic = false;
+	//Escenario 4
+	text_1_14 = false;
 }
 
 EventManager::~EventManager(void)
@@ -98,13 +100,11 @@ void EventManager::handleEvent()
 	//ESCENARIO 2: Cueva
 	//****************************************************
 	if(gGameApp->activeScene == 2){
-		//Iluminacion
-		if(gPlayer != 0){
-			//Eventos de texto
-			controlText2();
+		//Eventos de texto
+		controlText2();
+		if(gPlayer != 0 && text_6_7 && actualText == 0){
 			//Cambio de escenario
-			if(text_6_7 && actualText == 0)
-				gGameApp->createScene3();
+			gGameApp->createScene3();
 		}
 	}
 
@@ -112,9 +112,9 @@ void EventManager::handleEvent()
 	//ESCENARIO 3: Templo
 	//****************************************************
 	if(gGameApp->activeScene == 3){
-		controlText3();
 		if (gCanUpdate)
 			doScene3();
+		controlText3();
 	}
 
 	//****************************************************
@@ -122,6 +122,7 @@ void EventManager::handleEvent()
 	//****************************************************
 	if(gGameApp->activeScene == 4){
 		//TO-DO
+		controlText4();
 	}
 }
 
@@ -517,7 +518,7 @@ Ogre::String EventManager::selectText2(int textNumber)
 		break;
 	case 2:
 		string = "¿Cómo demonios ha llegado un oso hasta aquí? No se si podré esquivarlo.";
-		string = string	+ "\nSi me ve me atacará. Puedo intentar matarlo o saltar por encima suyo y huir.";
+		string = string	+ "\nSi me ve, me atacará. Puedo intentar matarlo o saltar por encima suyo y huir.";
 		break;
 	case 3:
 		string = "Ataques: pulsa la tecla \"E\" para desenvainar/envainar tus espadas.";
@@ -547,7 +548,6 @@ Ogre::String EventManager::selectText2(int textNumber)
 
 	return string;
 }
-
 
 
 //****************************************************
@@ -586,8 +586,52 @@ void EventManager::controlText3()
 	}
 
 	//Altar y energía
+	bool altar = (!text_5 && posX > 500 && posX < 600);
+	bool energy = (!text_6_7_8 && posX > -600 && posX < -500);
+	if (altar || energy){
+		if( !(gCCegui->alertBox->isActive()) ){
+			gCCegui->alertBox->activate();
+			gCCegui->alertBox->show();
+		}
+		if (pulseQ){
+			gCCegui->dialogBox->show();
+			gCCegui->dialogBox->activate();
+			if(altar){
+				actualText = 5;
+				text_5 = true;
+			}
+			else{
+				actualText = 6;
+				text_6_7_8 = true;
+			}
+			//Mostrar dialogo
+			string = selectText3(actualText);
+			gCCegui->dialogBox->getChildAtIdx(3)->setText(string);
+			//Deshabilitar alertBox y updates
+			gCCegui->alertBox->hide();
+			pulseQ = false;
+			gCanUpdate = false;
+		}
+	}
+	else
+		gCCegui->alertBox->hide();
 
-
+	//Finalización de dialogos
+	if ( ( (text_6_7_8 && actualText == 8)||
+			(text_5 && actualText == 5) ) && nextText){
+		gCCegui->dialogBox->hide();
+		gCanUpdate = true;
+		nextText = false;
+		actualText = 0;
+	}
+	//Avance de dialogos
+	else if ( ( (text_6_7_8 && actualText == 6) ||
+				(text_6_7_8 && actualText == 7) ) && nextText){
+		actualText++;
+		string = selectText3(actualText);
+		gCCegui->dialogBox->getChildAtIdx(3)->setText(string);
+		nextText = false;
+	}
 }
 
 
@@ -597,7 +641,6 @@ void EventManager::controlText3()
 Ogre::String EventManager::selectText3(int textNumber)
 {
 	Ogre::String string = "";
-				//"1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31"
 	switch (textNumber)
 	{
 	//Entrada al templo
@@ -640,3 +683,162 @@ Ogre::String EventManager::selectText3(int textNumber)
 
 	return string;
 }
+
+
+//****************************************************
+//Control de los eventos de texto en el escenario 4
+//****************************************************
+void EventManager::controlText4()
+{
+	Ogre::String string = "";
+	Ogre::Real posX = gPlayer->m_sceneObject->mNode->getPosition().x;
+
+	//Entrada al templo
+	if(!text_1_14 && posX > 0)
+	{
+		if(actualText == 0 || actualText == 1){
+			if (actualText == 0)
+				actualText++;
+			gCCegui->dialogBox->show();
+			gCCegui->dialogBox->activate();
+			string = selectText4(actualText);
+			gCCegui->dialogBox->getChildAtIdx(3)->setText(string);
+			actualText++;
+			gCanUpdate = false;
+		}
+		else if ( actualText >= 2 && actualText <= 14 && nextText){
+			string = selectText4(actualText);
+			gCCegui->dialogBox->getChildAtIdx(3)->setText(string);
+			actualText++;
+			nextText = false;
+		}
+		else if(actualText == 15 && nextText){
+			gCCegui->dialogBox->hide();
+			text_1_14 = true;
+			nextText = false;
+			gCanUpdate = true;
+		}
+	}
+}
+
+
+//****************************************************
+//Eventos de texto del escenario 4
+//****************************************************
+Ogre::String EventManager::selectText4(int textNumber)
+{
+	Ogre::String string = "";
+
+	switch (textNumber)
+	{
+	//ROBOT
+	case 1:
+		string = "I-N-I-C-I-A-N-D-O...";
+		break;
+	case 2:
+		string = "Bienvenido, Sujeto 123. Sus avances en la misión van a ser evaluados.";
+		string = string	+ "\nPor favor, especifique lo que usted cree que ha sucedido en esta base.";
+		break;
+	//SUJETO 123
+	case 3:
+		if (text_8_9){
+			string = "De acuerdo... al llegar a la base descubrí restos de sangre, indicios";
+			string = string	+ "\nde que no soy la única persona que ha accedido a las instalaciones.";
+		}
+		else{
+			string = "De acuerdo... al llegar a la base no detecté anomalías.";
+			string = string	+ "\nDesde el último mes nadie ha accedido a las instalaciones.";
+		}
+		break;
+	case 4:
+		if (text_8_9){
+			string = "Encontré una espada, únicamente otorgada a los voluntarios";
+			string = string	+ "\ndel proyecto. Junto a la sangre, creo que, antes de llegar yo,";
+			string = string	+ "\notros miembros de S&T intentaron recuperar la fuente de energía.";
+		}
+		else{
+			string = "Encontré una espada, únicamente otorgada a los voluntarios";
+			string = string	+ "\ndel proyecto. Es posible que antes del incidente alguien fuera enviado";
+			string = string	+ "\na estas instalaciones para inspeccionar la fuente de energía.";
+		}
+		break;
+	case 5:
+		if (text_8_9 && magic){
+			string = "También descubrí algo en el templo. Avisos ocultos dirigidos a mí.";
+			string = string	+ "\nLa sangre, la espada y las notas... Era yo todo este tiempo, ¿Verdad?";
+			string = string	+ "\nEsos \"Déjà vu\"... Todo era una farsa... soy un experimento en un bucle infinito.";
+		}
+		else if (magic){
+			string = "También descubrí algo en el templo. Avisos ocultos dirigidos a mí.";
+			string = string	+ "\nQuien las escribió intentó advertirme de que esto era una farsa.";
+			string = string	+ "\nNunca hubo posibilidad de recuperar el artefacto... es una misión sin retorno.";
+		}
+		else{
+			string = "Encontré la fuente de energía e intenté extraerla, pero he aparecido aquí.";
+			string = string	+ "\nTengo la sensación de haber fallado en mi misión... solo deseo volver a mi hogar y";
+			string = string	+ "\nolvidarme del proyecto S&T. No considero que este cualificado para este trabajo.";
+		}
+		break;
+		//ROBOT
+	case 6:
+		string = "P-R-O-C-E-S-A-N-D-O...";
+		break;
+	case 7:
+		if (text_8_9 && magic){
+			string = "Sujeto 123, ha completado su misión correctamente. Usted ha sido enviado a";
+			string = string	+ "\neste lugar en multiples ocasiones y, gracias a sus aportaciones, se avanzará en";
+			string = string	+ "\nla investigación contra la perdida de memoria sufrida en los viajes temporales.";
+		}
+		else {
+			string = "Sujeto 123:";
+			string = string + "\nNo ha logrado completar la misión de acuerdo a los parametros establecidos.";
+		}
+		break;
+	case 8:
+		string = "S&T agradece su colaboración.Por favor, preparese. ";
+		string = string	+ "\nEn breves será re-enviado al comienzo de la misión.";
+		break;
+	//SUJETO 123
+	case 9:
+		string = "¡Espera, como que re-enviado!";
+		break;
+	//ROBOT
+	case 10:
+		string = "Tres...";
+		break;
+	//SUJETO 123
+	case 11:
+		if (text_8_9 && magic){
+			string = "¡He completado la misión, deben dejarme marchar!";
+		}
+		else{
+			string = "¡Que le den a la misión, quiero abandonar el proyecto!";
+		}
+		break;
+	//ROBOT
+	case 12:
+		string = "Dos...";
+		break;
+	//SUJETO 123
+	case 13:
+		string = "¡NOOOOOOOOO!";
+		break;
+	//ROBOT
+	case 14:
+		string = "Uno.";
+		break;
+	}
+	
+	return string;
+}
+
+
+
+
+
+
+
+
+
+
+

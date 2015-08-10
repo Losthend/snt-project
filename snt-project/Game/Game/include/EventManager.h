@@ -13,9 +13,11 @@ public:
 	void controlText1();
 	void controlText2();
 	void controlText3();
+	void controlText4();
 	Ogre::String selectText1(int textNumber);
 	Ogre::String selectText2(int textNumber);
 	Ogre::String selectText3(int textNumber);
+	Ogre::String selectText4(int textNumber);
 	
 	//General
 	bool pulseQ;
@@ -38,6 +40,8 @@ public:
 	bool text_5;
 	bool text_6_7_8;
 	bool magic;
+	//Escenario 4
+	bool text_1_14;
 };
 
 //---------------------------------------------------------------------------
