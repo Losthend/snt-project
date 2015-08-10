@@ -14,11 +14,12 @@ EventManager::EventManager(void)
 {
 	//Al comenzar, por defecto, no se permite actualizar fisicas y jugador
 	gCanUpdate = false;
-
+	gCanUpdateKeyboard = false;
 	//*********************************************************************
 	//ELIMINAR: Sustituye a la accion del boton START del menu
 	gCCegui->gameMenu->shouldBeDisplayed = false;
 	gCanUpdate = true;
+	gCanUpdateKeyboard = true;
 	gGameApp->createScene3();
 	gCCegui->gameMenu->d_root->hide();
 	//*********************************************************************
@@ -573,7 +574,8 @@ void EventManager::controlText3()
 			string = selectText3(actualText);
 			gCCegui->dialogBox->getChildAtIdx(3)->setText(string);
 			actualText++;
-			gCanUpdate = false;
+			gCanUpdateKeyboard = false;
+			gPlayer->m_direction.x = 0;
 		}
 		else if ( (actualText == 2 || actualText == 3 ||actualText == 4) && nextText){
 			string = selectText3(actualText);
@@ -585,7 +587,7 @@ void EventManager::controlText3()
 			gCCegui->dialogBox->hide();
 			text_1_4 = true;
 			nextText = false;
-			gCanUpdate = true;
+			gCanUpdateKeyboard = true;
 			actualText = 0;
 		}
 	}
@@ -701,6 +703,7 @@ void EventManager::controlText4()
 	//Final
 	if(!text_1_14 && posX > 0 && posX < 100)
 	{
+		//Conversación final
 		if(actualText == 0 || actualText == 1){
 			if (actualText == 0)
 				actualText++;
@@ -708,25 +711,34 @@ void EventManager::controlText4()
 			gCCegui->dialogBox->activate();
 			string = selectText4(actualText);
 			gCCegui->dialogBox->getChildAtIdx(3)->setText(string);
+			gCCegui->dialogBox->getChildAtIdx(2)->setText("FUHRER 1.0");
 			actualText++;
-			gCanUpdate = false;
+			gCanUpdateKeyboard = false;
+			gPlayer->m_direction.x = 0;
 		}
 		else if ( actualText >= 2 && actualText <= 14 && nextText){
 			string = selectText4(actualText);
 			gCCegui->dialogBox->getChildAtIdx(3)->setText(string);
+			//------------------------------------
+			//ROBOT: 1-2-6-7-8-10-12-14
+			if(actualText == 2 || actualText == 6 || actualText == 7 || actualText == 8 || actualText == 10 || actualText == 12 || actualText == 14)
+				gCCegui->dialogBox->getChildAtIdx(2)->setText("FUHRER 1.0");
+			else
+				gCCegui->dialogBox->getChildAtIdx(2)->setText("SUJETO 123");
+			//------------------------------------
 			actualText++;
 			nextText = false;
-		}
+			}
 		else if(actualText == 15 && nextText){
+			gCCegui->dialogBox->getChildAtIdx(2)->setText("SUJETO 123");
 			gCCegui->dialogBox->hide();
 			text_1_14 = true;
 			nextText = false;
-			gCanUpdate = true;
+			gCanUpdateKeyboard = true;
 			actualText = 0;
-		}
+		}			
 	}
 }
-
 
 //****************************************************
 //Eventos de texto del escenario 4

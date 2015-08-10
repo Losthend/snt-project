@@ -4,6 +4,7 @@
 #include "../include/Global.h"
 #include "../include/Player.h"
 #include "../include/GameMenu.h"
+#include "../include/GameApplication.h"
 
 CCegui::CCegui(void)
 {
@@ -81,6 +82,9 @@ void CCegui::loadWindows()
 	//Dialog box
 	gameDialogBox();
 
+	//Pause box
+	gameDeadBox();
+
 	//Menu de aviso de interacción
 	alertBox = wmgr.createWindow("Vanilla/StaticText", "MainWindow/AlertBox");
 	alertBox->setSize(CEGUI::USize(CEGUI::UDim(0.03f, 0), CEGUI::UDim(0.05f, 0)));
@@ -97,6 +101,9 @@ void CCegui::loadWindows()
 	}
 }
 
+//----------------------------------------------------------------
+//"Dialog box" para los eventos de texto del juego
+//----------------------------------------------------------------
 void CCegui::gameDialogBox()
 {
 	CEGUI::WindowManager &wmgr = CEGUI::WindowManager::getSingleton();
@@ -130,9 +137,52 @@ void CCegui::gameDialogBox()
 	dialogBox->addChild(button1);
 }
 
-bool CCegui::handleNext(const CEGUI::EventArgs &e)
+//----------------------------------------------------------------
+//Menu de pausa (tras morir)
+//---------------------------------------------------------------
+void CCegui::gameDeadBox()
+{
+	CEGUI::WindowManager &wmgr = CEGUI::WindowManager::getSingleton();
+
+	deadBox = wmgr.createWindow("Vanilla/FrameWindow", "MainWindow/pauseBox");
+	deadBox->setSize(CEGUI::USize(CEGUI::UDim(0.20f, 0), CEGUI::UDim(0.20f, 0)));
+	deadBox->setPosition(CEGUI::UVector2(CEGUI::UDim(0.40f, 0),CEGUI::UDim(0.25f, 0)));
+	CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow()->addChild(deadBox);
+
+	//Boton de salir
+	CEGUI::Window* button1 = wmgr.createWindow("Vanilla/Button");
+    button1->setSize(CEGUI::USize(CEGUI::UDim(1.0f, 0.0), CEGUI::UDim(0.5f, 0)));
+	button1->setPosition(CEGUI::UVector2(CEGUI::UDim(0.0f, 0),CEGUI::UDim(0.0f, 0)));
+	button1->setText("Salir del juego");
+	button1->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&CCegui::handleExit,this));
+
+	//Boton de reiniciar pantalla
+	CEGUI::Window* button2 = wmgr.createWindow("Vanilla/Button");
+    button2->setSize(CEGUI::USize(CEGUI::UDim(1.0f, 0.0), CEGUI::UDim(0.5f, 0)));
+	button2->setPosition(CEGUI::UVector2(CEGUI::UDim(0.0f, 0),CEGUI::UDim(0.5f, 0)));
+	button2->setText("Reiniciar escenario");
+	button2->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&CCegui::handleReload,this));
+	
+	//El orden en el que se añaden importa! De variarlo, realizar las modificaciones correspondientes en EventManager.cpp
+	//Posicion 0 (dialog box), posicion 1 (otro), posicion 2 (button1) 
+	deadBox->addChild(button1);
+	deadBox->addChild(button2);
+}
+
+bool CCegui::handleExit(const CEGUI::EventArgs &e)
 {
 	gShutDown = true;
+    return true;
+}
+
+bool CCegui::handleReload(const CEGUI::EventArgs &e)
+{
+	if (gGameApp->activeScene == 1)
+		gGameApp->createScene1();
+	else if (gGameApp->activeScene == 2)
+		gGameApp->createScene2();
+	else if (gGameApp->activeScene == 3)
+		gGameApp->createScene3();
     return true;
 }
 

@@ -10,6 +10,7 @@
 #include "../include/GameMenu.h"
 #include "../include/AnimationManager.h"
 #include "../include/EventManager.h"
+#include "../include/GameApplication.h"
 
 KeyboardMouse::KeyboardMouse(void)
 {
@@ -54,17 +55,10 @@ bool KeyboardMouse::keyPressed( const OIS::KeyEvent &arg )
 	}
 
 	//Jugador
-	if(gCanUpdate && gPlayer != 0)
+	if(gCanUpdate && gPlayer != 0 && gCanUpdateKeyboard)
 	{
 		switch (arg.key)
 		{
-			case OIS::KC_ESCAPE:
-				gShutDown = true;
-				break;
-			case OIS::KC_RETURN:
-				if (gCCegui->dialogBox->isActive())
-					gEventMgr->nextText = true;
-				break;
 			case OIS::KC_A:
 				if (gPlayer->m_direction.x == 0)
 					gPlayer->m_direction.x = -1;
@@ -85,10 +79,13 @@ bool KeyboardMouse::keyPressed( const OIS::KeyEvent &arg )
 					gPlayer->m_jump = true;
 				break;
 			case OIS::KC_C:
-				OIS::MouseState ms = gMouse->getMouseState();
-				Ogre::Ray ray = gCamera->getCameraToViewportRay(ms.X.abs/(float)gWindow->getWidth(),ms.Y.abs/(float)gWindow->getHeight()); 
-				Ogre::Vector3 mouseCoord = ray.getPoint(gCamera->getPosition().z);
-				gPhysics->magicGenerator(mouseCoord);
+				if (gGameApp->activeScene == 3){
+					OIS::MouseState ms = gMouse->getMouseState();
+					Ogre::Ray ray = gCamera->getCameraToViewportRay(ms.X.abs/(float)gWindow->getWidth(),ms.Y.abs/(float)gWindow->getHeight()); 
+					Ogre::Vector3 mouseCoord = ray.getPoint(gCamera->getPosition().z);
+					gPhysics->magicGenerator(mouseCoord);
+					gEventMgr->magic = true;
+				}
 				break;
 		}
 	}

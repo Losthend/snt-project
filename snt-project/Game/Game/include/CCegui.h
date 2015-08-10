@@ -13,14 +13,17 @@ public:
 	void initLoads();
 	void loadWindows();
 	void gameDialogBox();
+	void gameDeadBox();
 
-	bool handleNext(const CEGUI::EventArgs &e);
+	bool handleExit(const CEGUI::EventArgs &e);
+	bool handleReload(const CEGUI::EventArgs &e);
 
 	CEGUI::OgreRenderer* mRenderer;
 
 	GameMenu* gameMenu;
 	CEGUI::Window* dialogBox;
 	CEGUI::Window* alertBox;
+	CEGUI::Window* deadBox;
 };
 
 //---------------------------------------------------------------------------

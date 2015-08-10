@@ -19,6 +19,7 @@ OIS::Keyboard*			gKeyboard;
 
 bool					gShutDown;
 bool					gCanUpdate;
+bool					gCanUpdateKeyboard;
 
 PhysicsManager*			gPhysics;
 CCegui*					gCCegui;

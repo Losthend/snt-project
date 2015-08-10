@@ -33,6 +33,7 @@ void GameApplication::createScene1(void)
 	//****************************************************
 	clearScene();
 	gCanUpdate = true;
+	gCanUpdateKeyboard = true;
 	activeScene = 1;
 
 	//****************************************************
@@ -160,6 +161,7 @@ void GameApplication::createScene2(void)
 	//****************************************************
 	clearScene();
 	gCanUpdate = true;
+	gCanUpdateKeyboard = true;
 	activeScene = 2;
 
 	//****************************************************
@@ -310,6 +312,7 @@ void GameApplication::createScene3(void)
 	//****************************************************
 	clearScene();
 	gCanUpdate = true;
+	gCanUpdateKeyboard = true;
 	activeScene = 3;
 
 	//****************************************************
@@ -456,6 +459,7 @@ void GameApplication::createScene4(void)
 	//****************************************************
 	clearScene();
 	gCanUpdate = true;
+	gCanUpdateKeyboard = true;
 	activeScene = 4;
 
 	//****************************************************

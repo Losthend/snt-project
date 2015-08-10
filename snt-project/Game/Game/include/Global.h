@@ -27,6 +27,7 @@ extern OIS::Keyboard*			gKeyboard;
 
 extern bool						gShutDown;
 extern bool						gCanUpdate;
+extern bool						gCanUpdateKeyboard;
 
 extern PhysicsManager*			gPhysics;
 extern CCegui*					gCCegui;
