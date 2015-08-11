@@ -5,6 +5,7 @@
 #include "../include/Player.h"
 #include "../include/GameMenu.h"
 #include "../include/GameApplication.h"
+#include "../include/EventManager.h"
 
 CCegui::CCegui(void)
 {
@@ -96,9 +97,7 @@ void CCegui::loadWindows()
 	//Por defecto, todas las ventanas ocultas
 	size_t numChild = wRoot->getChildCount();
 	for (unsigned i = 0; i < numChild; i++)
-	{
 		wRoot->getChildAtIdx(i)->hide();
-	}
 }
 
 //----------------------------------------------------------------
@@ -177,12 +176,29 @@ bool CCegui::handleExit(const CEGUI::EventArgs &e)
 
 bool CCegui::handleReload(const CEGUI::EventArgs &e)
 {
-	if (gGameApp->activeScene == 1)
-		gGameApp->createScene1();
-	else if (gGameApp->activeScene == 2)
+	//Recarga de escenario (solo puede morir en 2 y 3)
+	if (gGameApp->activeScene == 2){
+		gEventMgr->text_1_3 = false;
+		gEventMgr->text_4_5 = false;
+		gEventMgr->text_6_7 = false;
+		gEventMgr->actualText = 0;
 		gGameApp->createScene2();
-	else if (gGameApp->activeScene == 3)
+	}
+	else if (gGameApp->activeScene == 3){
+		gEventMgr->inExitCount = 0;
+		gEventMgr->inExit = false;
+		gEventMgr->text_1_4 = false;
+		gEventMgr->text_5 = false;
+		gEventMgr->text_6_7_8 = false;
+		gEventMgr->magic = false;
+		gEventMgr->actualText = 0;
 		gGameApp->createScene3();
+	}
+	//Recargar vida
+	gPlayer->m_lifeCounter = 100;
+	//Desactivar deadbox
+	deadBox->hide();
+
     return true;
 }
 

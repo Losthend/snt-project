@@ -649,7 +649,13 @@ void GameApplication::createObject(Ogre::String name, Ogre::Vector3 size, Ogre::
 //---------------------------------------------------------------------------
 void GameApplication::createGroundGrass(Ogre::Vector3 vSize, Ogre::Vector3 vPos, int amount)
 {
-	Ogre::Entity* grass = gSceneMgr->createEntity("grass","manualObjectGrass");
+	Ogre::Entity* grass;
+	
+	if(gSceneMgr->hasEntity("grass"))
+		grass = gSceneMgr->getEntity("grass");
+	else
+		grass = gSceneMgr->createEntity("grass","manualObjectGrass");
+
 	Ogre::StaticGeometry* sg = gSceneMgr->createStaticGeometry("GrassArea");
 
 	sg->setRegionDimensions(Ogre::Vector3(vSize.x, vSize.y, vSize.z));

@@ -42,6 +42,8 @@ public:
 	Object* m_catchObj;
 	//Vector de movimiento/direccion
 	Ogre::Vector3		m_direction;
+	//Vida del jugador
+	Ogre::Real			m_lifeCounter;
 
 };
 

@@ -42,6 +42,8 @@ Player::Player(SceneObject* sceneObject)
 	m_catchObj = 0;
 
 	m_direction = Ogre::Vector3::ZERO;
+
+	m_lifeCounter = 100;
 }
 //---------------------------------------------------------------------------
 Player::~Player(void)

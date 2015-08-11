@@ -76,6 +76,16 @@ void EventManager::handleEvent()
 			gObjects[i]->update();
 		gPlayer->update();
 	}
+	
+	//****************************************************
+	//DEADBOX: Control de la muerte del jugador
+	//****************************************************+
+	if(gPlayer != 0 && gPlayer->m_lifeCounter <= 0 && !(gCCegui->deadBox->isActive())){
+		gCanUpdateKeyboard = false;
+		gCCegui->dialogBox->hide();
+		gCCegui->deadBox->activate();
+		gCCegui->deadBox->show();
+	}
 
 	//****************************************************
 	//EVENTOS DE ESCENARIOS
@@ -463,7 +473,7 @@ void EventManager::controlText2()
 	//PUENTE Y ESPADA
 	bool bridge = (!text_4_5 && posX > 1750 && posX < 1850);
 	bool sword = (!text_6_7 && posX > 2400 && posX < 2500);
-	if (bridge || sword){
+	if ((bridge || sword) && !(gCCegui->deadBox->isActive())){
 		if( !(gCCegui->alertBox->isActive()) ){
 			gCCegui->alertBox->activate();
 			gCCegui->alertBox->show();
@@ -595,7 +605,7 @@ void EventManager::controlText3()
 	//Altar y energía
 	bool altar = (!text_5 && posX > 500 && posX < 600);
 	bool energy = (!text_6_7_8 && posX > -600 && posX < -500);
-	if (altar || energy){
+	if ((altar || energy) && !(gCCegui->deadBox->isActive())){
 		if( !(gCCegui->alertBox->isActive()) ){
 			gCCegui->alertBox->activate();
 			gCCegui->alertBox->show();
