@@ -244,6 +244,20 @@ void Object::type4()
 				}
 				//Movimiento
 				m_sceneObject->mRigidBody->translate(btVector3(m_direction.x*m_moveX, 0, 0));
+				//------------------------------------------------------
+				//Comprobar si colisiona para hacer/recibir daño o no
+				CollisionManager cm = CollisionManager();
+				gPhysics->mWorld->contactPairTest(m_sceneObject->mRigidBody, gPlayer->m_sceneObject->mRigidBody, cm);
+				if (cm.m_collision){
+					//Si el jugador esta atacando, el oso recibe daño (50% de probabilidades)
+					if (gPlayer->m_attack && (std::rand()%100 < 50))
+						m_lifeCounter = m_lifeCounter - 2;
+					//A su vez, el jugador recibe daño (40% de probabilidades)
+					if (std::rand()%100 < 40)
+						gPlayer->m_lifeCounter = gPlayer->m_lifeCounter - 2;
+				}
+				cm.~CollisionManager();
+				//-----------------------------------------------------
 			}
 		}
 		//Si su vida es menor de 10
@@ -258,8 +272,10 @@ void Object::type4()
 				mAnimDie->setLoop(true);
 				mAnimDie->setEnabled(true);
 				mAnimDie->addTime(Ogre::Real(FPS));
-				if (mAnimDie->getLength()*0.90 < mAnimDie->getTimePosition())
+				if (mAnimDie->getLength()*0.90 < mAnimDie->getTimePosition()){
 					m_lifeCounter = 0;
+					gPhysics->mWorld->removeCollisionObject(m_sceneObject->mRigidBody);
+				}
 			}
 	}
 }
@@ -319,7 +335,14 @@ void Object::type6()
 //---------------------------------------------------------------------------
 void Object::type7()
 {
-	m_sceneObject->mRigidBody->applyTorqueImpulse(btVector3(0,0,300));
+	m_sceneObject->mRigidBody->applyTorqueImpulse(btVector3(0,0,1000));
+
+	//Comprobar si colisiona para hacer daño o no al jugador
+	CollisionManager cm = CollisionManager();
+	gPhysics->mWorld->contactPairTest(m_sceneObject->mRigidBody, gPlayer->m_sceneObject->mRigidBody, cm);
+	if (cm.m_collision)
+			gPlayer->m_lifeCounter = gPlayer->m_lifeCounter - 2;
+	cm.~CollisionManager();
 }
 
 //---------------------------------------------------------------------------

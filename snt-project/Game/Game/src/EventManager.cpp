@@ -81,7 +81,7 @@ void EventManager::handleEvent()
 	//DEADBOX: Control de la muerte del jugador
 	//****************************************************+
 	if(gPlayer != 0 && gPlayer->m_lifeCounter <= 0 && !(gCCegui->deadBox->isActive())){
-		gCanUpdateKeyboard = false;
+		gCanUpdate = false;
 		gCCegui->dialogBox->hide();
 		gCCegui->deadBox->activate();
 		gCCegui->deadBox->show();
@@ -120,6 +120,9 @@ void EventManager::handleEvent()
 			gCCegui->alertBox->hide();
 			gGameApp->createScene3();
 		}
+		//Control de muerte
+		if(gPlayer->m_sceneObject->mNode->getPosition().y < -500)
+			gPlayer->m_lifeCounter = 0;
 	}
 
 	//****************************************************
@@ -574,7 +577,7 @@ void EventManager::controlText3()
 	Ogre::Real posX = gPlayer->m_sceneObject->mNode->getPosition().x;
 
 	//Entrada al templo
-	if(!text_1_4 && posX > 340 && posX < 360)
+	if(!text_1_4 )
 	{
 		if(actualText == 0 || actualText == 1){
 			if (actualText == 0)
