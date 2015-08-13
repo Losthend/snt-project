@@ -267,7 +267,7 @@ void GameApplication::createScene2(void)
 	gObjects.push_back(new Object(1, sceneObj));
 	
 	//ENEMIGO
-	sceneObj = gPhysics->createConvexHullShape("bear", Ogre::Real(40), Ogre::Vector3(1400, -250, 0), 10, "bear.mesh");
+	sceneObj = gPhysics->createConvexHullShape("bear", Ogre::Real(40), Ogre::Vector3(1400, -250, 0), 1, "bear.mesh");
 	sceneObj->mRigidBody->getMotionState()->getWorldTransform(transform);
 	transform.setRotation(btQuaternion(0,1,0,1));
 	sceneObj->mRigidBody->setMotionState(new btDefaultMotionState(transform));

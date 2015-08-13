@@ -52,6 +52,11 @@ bool KeyboardMouse::keyPressed( const OIS::KeyEvent &arg )
 		if (gCCegui->alertBox->isActive())
 			gEventMgr->pulseQ = true;
 		break;
+	case OIS::KC_K:
+		for(unsigned x = 0; x < gObjects.size(); x++)
+			if(gObjects[x]->m_sceneObject->mNode->getName() == "bear")
+				gObjects[x]->m_lifeCounter = 9;
+		break;
 	}
 
 	//Jugador

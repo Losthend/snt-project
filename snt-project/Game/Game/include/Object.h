@@ -30,6 +30,8 @@ public:
 	//Vector de movimiento/direccion
 	Ogre::Vector3		m_direction;
 	bool				m_lookAt;
+	//Vida del objeto
+	Ogre::Real			m_lifeCounter;
 
 };
 

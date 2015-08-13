@@ -40,6 +40,12 @@ Object::Object(int objType, SceneObject* sceneObject)
 		m_moveX = 1;
 		m_moveY = 2;
 		break;
+	case 4:
+		m_moveX = 2;
+		m_moveY = 2;
+		m_sceneObject->mRigidBody->setLinearFactor(btVector3(0,1,0));
+		m_sceneObject->mRigidBody->setAngularFactor(btVector3(0,0,0));
+		break;
 	default:
 		m_moveX = 3;
 		m_moveY = 2;
@@ -49,6 +55,8 @@ Object::Object(int objType, SceneObject* sceneObject)
 	m_direction = Ogre::Vector3::ZERO;
 
 	m_lookAt = true;
+
+	m_lifeCounter = 100;
 }
 
 //---------------------------------------------------------------------------
@@ -79,15 +87,19 @@ void Object::update()
 	//Objetos tipo 3: Gallinas
 	else if(m_objType == 3)
 		type3();
-	//Objetos tipo 3: Osos
+	//Objetos tipo 4: Osos
 	else if(m_objType == 4)
 		type4();
+	//Objetos tipo 5: Puente
 	else if(m_objType == 5)
 		type5();
+	//Objetos tipo 6: Plataforma
 	else if(m_objType == 6)
 		type6();
+	//Objetos tipo 7: Trampa
 	else if(m_objType == 7)
 		type7();
+	//Objetos tipo 8: Jefe
 	else if(m_objType == 8)
 		type8();
 
@@ -173,17 +185,83 @@ void Object::type3()
 void Object::type4()
 {
 	//die idel_a idle_b idle_stand run
-	Ogre::AnimationState* mAnim = m_sceneObject->mEntity->getAnimationState("idel_a");
+	Ogre::AnimationState* mAnimIdel = m_sceneObject->mEntity->getAnimationState("idel_a");
+	Ogre::AnimationState* mAnimStand = m_sceneObject->mEntity->getAnimationState("idle_stand");
+	Ogre::AnimationState* mAnimRun = m_sceneObject->mEntity->getAnimationState("run");
+	Ogre::AnimationState* mAnimDie = m_sceneObject->mEntity->getAnimationState("die");
 
 	//IDEA
-	//Si el jugador esta a X distancia, se mantiene quieto "idel_a"
-	//Si el jugador esta a Y distancia, se pone en alerta "idle_stand"
-	//Si el jugador esta a Z distancia, ataca "run"
-	//Si su vida es menor de 10, reproduce una vez la muerte "die" y pone la vida a cero para no realizar ninguna accion mas
-
-	mAnim->setLoop(true);
-	mAnim->setEnabled(true);
-	mAnim->addTime(Ogre::Real(FPS)*2);
+	if (m_lifeCounter > 0){
+		//Si la vida es mayor que 10
+		if(m_lifeCounter > 10){
+			//Comprobar distancia
+			Ogre::Real distance = m_sceneObject->mNode->_getWorldAABB().squaredDistance(gPlayer->m_sceneObject->mNode->getPosition());
+			//Accion 1: Quieto
+			if (distance > 30000){
+				mAnimStand->setLoop(false);
+				mAnimStand->setEnabled(false);
+				mAnimStand->setTimePosition(0);
+				mAnimIdel->setLoop(false);
+				mAnimIdel->setEnabled(false);
+				mAnimIdel->setLoop(true);
+				mAnimIdel->setEnabled(true);
+				mAnimIdel->addTime(Ogre::Real(FPS)*2);
+			}
+			//Accion 2: Alerta
+			else if (distance > 12000){
+				mAnimIdel->setLoop(false);
+				mAnimIdel->setEnabled(false);
+				mAnimRun->setLoop(false);
+				mAnimRun->setEnabled(false);
+				mAnimStand->setLoop(true);
+				mAnimStand->setEnabled(true);
+				mAnimStand->addTime(Ogre::Real(FPS)*2);
+			}
+			//Accion 3: Atacar
+			else{
+				mAnimIdel->setLoop(false);
+				mAnimIdel->setEnabled(false);
+				mAnimStand->setLoop(false);
+				mAnimStand->setEnabled(false);
+				mAnimStand->setTimePosition(0);
+				mAnimRun->setLoop(true);
+				mAnimRun->setEnabled(true);
+				mAnimRun->addTime(Ogre::Real(FPS)*2);
+				//Corriendo en direccion al jugador
+				Ogre::Real playerX = gPlayer->m_sceneObject->mNode->getPosition().x;
+				Ogre::Real objectX = m_sceneObject->mNode->getPosition().x;
+				if (objectX <= playerX)
+					m_direction.x = 1;
+				else
+					m_direction.x = -1;
+				//Cambio de direccion
+				btTransform transform;
+				m_sceneObject->mRigidBody->getMotionState()->getWorldTransform(transform);
+				if (transform.getRotation().getY() != m_direction.x){
+					transform.setRotation(btQuaternion(0,m_direction.x,0,1));
+					m_sceneObject->mRigidBody->setMotionState(new btDefaultMotionState(transform));
+					m_lookAt = !m_lookAt;
+				}
+				//Movimiento
+				m_sceneObject->mRigidBody->translate(btVector3(m_direction.x*m_moveX, 0, 0));
+			}
+		}
+		//Si su vida es menor de 10
+		else{
+				mAnimIdel->setLoop(false);
+				mAnimIdel->setEnabled(false);
+				mAnimStand->setLoop(false);
+				mAnimStand->setEnabled(false);
+				mAnimRun->setLoop(false);
+				mAnimRun->setEnabled(false);
+				//Reproduce una vez la muerte "die" y pone la vida a cero para no realizar ninguna accion mas
+				mAnimDie->setLoop(true);
+				mAnimDie->setEnabled(true);
+				mAnimDie->addTime(Ogre::Real(FPS));
+				if (mAnimDie->getLength()*0.90 < mAnimDie->getTimePosition())
+					m_lifeCounter = 0;
+			}
+	}
 }
 
 //---------------------------------------------------------------------------

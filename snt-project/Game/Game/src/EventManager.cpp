@@ -20,7 +20,7 @@ EventManager::EventManager(void)
 	gCCegui->gameMenu->shouldBeDisplayed = false;
 	gCanUpdate = true;
 	gCanUpdateKeyboard = true;
-	gGameApp->createScene3();
+	gGameApp->createScene2();
 	gCCegui->gameMenu->d_root->hide();
 	//*********************************************************************
 	//General
