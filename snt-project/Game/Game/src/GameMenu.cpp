@@ -79,9 +79,7 @@ void GameMenu::onEnteringSample()
     d_centerButtonsBlendInInst->setPosition(d_centerButtonsBlendInInst->getDefinition()->getDuration());
     d_centerButtonsBlendInInst->apply();
 
-    d_root->getChild("InnerButtonsContainer/PopupLinesLoad")->setVisible(false);
     d_root->getChild("InnerButtonsContainer/PopupLinesQuit")->setVisible(false);
-    d_root->getChild("InnerButtonsContainer/PopupLinesOptions")->setVisible(false);
 
     resetAnimations();
 
@@ -173,33 +171,6 @@ bool GameMenu::handleNaviSelectionIconAnimStart(const CEGUI::EventArgs& args)
     return false;
 }
 
-bool GameMenu::handleStartPopupLinesLoadDisplay(const CEGUI::EventArgs& args)
-{
-    makeAllSelectionIconsInvisible();
-
-    stopStartPopupLinesAnimations();
-    d_popupLinesLoadAnimInst->start();
-
-    d_root->getChild("InnerButtonsContainer/LoadSelectionIcon")->setVisible(true);
-
-    return false;
-}
-
-bool GameMenu::handleStartPopupLinesOptionsDisplay(const CEGUI::EventArgs& args)
-{
-    makeAllSelectionIconsInvisible();
-
-    stopStartPopupLinesAnimations();
-    d_popupLinesOptionsAnimInst->start();
-
-    d_root->getChild("InnerButtonsContainer/AudioSelectionIcon")->setVisible(true);
-    d_root->getChild("InnerButtonsContainer/VideoSelectionIcon")->setVisible(true);
-    d_root->getChild("InnerButtonsContainer/ControlsSelectionIcon")->setVisible(true);
-
-    return false;
-}
-
-
 bool GameMenu::handleStartPopupLinesQuitDisplay(const CEGUI::EventArgs& args)
 {
     makeAllSelectionIconsInvisible();
@@ -244,31 +215,15 @@ void GameMenu::makeAllSelectionIconsInvisible()
     CEGUI::EventArgs fireArgs;
 
     d_root->getChild("InnerButtonsContainer/NoSelectionIcon")->setVisible(false);
-    d_root->getChild("InnerButtonsContainer/SelectSelectionIcon")->setVisible(false);
     d_root->getChild("InnerButtonsContainer/YesSelectionIcon")->setVisible(false);
-    d_root->getChild("InnerButtonsContainer/AudioSelectionIcon")->setVisible(false);
-    d_root->getChild("InnerButtonsContainer/VideoSelectionIcon")->setVisible(false);
-    d_root->getChild("InnerButtonsContainer/ControlsSelectionIcon")->setVisible(false);
-    d_root->getChild("InnerButtonsContainer/DeleteSelectionIcon")->setVisible(false);
-    d_root->getChild("InnerButtonsContainer/Name2SelectionIcon")->setVisible(false);
-    d_root->getChild("InnerButtonsContainer/LoadSelectionIcon")->setVisible(false);
-    d_root->getChild("InnerButtonsContainer/NewSelectionIcon")->setVisible(false);
 }
 
 void GameMenu::stopStartPopupLinesAnimations()
 {
-    d_popupLinesLoadAnimInst->setPosition(d_popupLinesLoadAnimInst->getDefinition()->getDuration());
-    d_popupLinesLoadAnimInst->apply();
-    d_popupLinesLoadAnimInst->pause();
     d_popupLinesQuitAnimInst->setPosition(d_popupLinesQuitAnimInst->getDefinition()->getDuration());
     d_popupLinesQuitAnimInst->apply();
     d_popupLinesQuitAnimInst->pause();
-    d_popupLinesOptionsAnimInst->setPosition(d_popupLinesOptionsAnimInst->getDefinition()->getDuration());
-    d_popupLinesOptionsAnimInst->apply();
-    d_popupLinesOptionsAnimInst->pause();
 
-    d_root->getChild("InnerButtonsContainer/PopupLinesLoad")->setVisible(false);
-    d_root->getChild("InnerButtonsContainer/PopupLinesOptions")->setVisible(false);
     d_root->getChild("InnerButtonsContainer/PopupLinesQuit")->setVisible(false);
 
 }
@@ -325,16 +280,9 @@ void GameMenu::setupAnimations()
 
     CEGUI::Animation* buttonFadeInAnim = animMgr.getAnimation("ButtonFadeIn");
     d_buttonFadeInAnimInst1 = animMgr.instantiateAnimation(buttonFadeInAnim);
-    CEGUI::Window* window = d_root->getChild("InnerButtonsContainer/ButtonOptions");
+    
+	CEGUI::Window* window = d_root->getChild("InnerButtonsContainer/ButtonQuit");
     d_buttonFadeInAnimInst1->setTargetWindow(window);
-    d_buttonFadeInAnimInst2 = animMgr.instantiateAnimation(buttonFadeInAnim);
-
-    window = d_root->getChild("InnerButtonsContainer/ButtonLoad");
-    d_buttonFadeInAnimInst2->setTargetWindow(window);
-    d_buttonFadeInAnimInst3 = animMgr.instantiateAnimation(buttonFadeInAnim);
-
-    window = d_root->getChild("InnerButtonsContainer/ButtonQuit");
-	d_buttonFadeInAnimInst3->setTargetWindow(window);
 
     CEGUI::Animation* naviBotMoveInAnim = animMgr.getAnimation("NaviBotCenterMoveIn");
     d_naviBotMoveInInst = animMgr.instantiateAnimation(naviBotMoveInAnim);
@@ -427,8 +375,6 @@ void GameMenu::startEntranceAnimations()
     d_insideImage4RotateInInst->start();
     d_insideImageRingsContainerSizeInInst->start();
     d_buttonFadeInAnimInst1->start();
-    d_buttonFadeInAnimInst2->start();
-    d_buttonFadeInAnimInst3->start();
     d_naviBotMoveInInst->start();
 }
 
@@ -439,20 +385,12 @@ void GameMenu::resetAnimations()
     //so the values will be taken correctly after starting them again
     d_buttonFadeInAnimInst1->setPosition(d_buttonFadeInAnimInst1->getDefinition()->getDuration());
     d_buttonFadeInAnimInst1->apply();
-    d_buttonFadeInAnimInst2->setPosition(d_buttonFadeInAnimInst2->getDefinition()->getDuration());
-    d_buttonFadeInAnimInst2->apply();
-    d_buttonFadeInAnimInst3->setPosition(d_buttonFadeInAnimInst3->getDefinition()->getDuration());
-    d_buttonFadeInAnimInst3->apply();
     d_naviBotMoveInInst->setPosition(d_naviBotMoveInInst->getDefinition()->getDuration());
     d_naviBotMoveInInst->apply();
 }
 
 void GameMenu::setupButtonClickHandlers()
 {
-    CEGUI::Window* buttonLoad = d_root->getChild("InnerButtonsContainer/ButtonLoad");
-    buttonLoad->subscribeEvent(CEGUI::Window::EventMouseClick, CEGUI::Event::Subscriber(&GameMenu::handleStartPopupLinesLoadDisplay, this));
-    CEGUI::Window* buttonOptions = d_root->getChild("InnerButtonsContainer/ButtonOptions");
-    buttonOptions->subscribeEvent(CEGUI::Window::EventMouseClick, CEGUI::Event::Subscriber(&GameMenu::handleStartPopupLinesOptionsDisplay, this));
     CEGUI::Window* buttonQuit = d_root->getChild("InnerButtonsContainer/ButtonQuit");
     buttonQuit->subscribeEvent(CEGUI::Window::EventMouseClick, CEGUI::Event::Subscriber(&GameMenu::handleStartPopupLinesQuitDisplay, this));
 }
@@ -460,18 +398,6 @@ void GameMenu::setupButtonClickHandlers()
 void GameMenu::setupInnerButtonsSubOptionsLabels()
 {
     CEGUI::Window* label;
-    label = d_root->getChild("InnerButtonsContainer/PopupLinesLoad/LabelLoad");
-    label->subscribeEvent(CEGUI::Window::EventMouseEntersArea, CEGUI::Event::Subscriber(&GameMenu::handleInnerButtonsLabelEntered, this));
-    label->subscribeEvent(CEGUI::Window::EventMouseLeavesArea, CEGUI::Event::Subscriber(&GameMenu::handleInnerButtonsLabelLeft, this));
-    label = d_root->getChild("InnerButtonsContainer/PopupLinesOptions/LabelVideo");
-    label->subscribeEvent(CEGUI::Window::EventMouseEntersArea, CEGUI::Event::Subscriber(&GameMenu::handleInnerButtonsLabelEntered, this));
-    label->subscribeEvent(CEGUI::Window::EventMouseLeavesArea, CEGUI::Event::Subscriber(&GameMenu::handleInnerButtonsLabelLeft, this));
-    label = d_root->getChild("InnerButtonsContainer/PopupLinesOptions/LabelAudio");
-    label->subscribeEvent(CEGUI::Window::EventMouseEntersArea, CEGUI::Event::Subscriber(&GameMenu::handleInnerButtonsLabelEntered, this));
-    label->subscribeEvent(CEGUI::Window::EventMouseLeavesArea, CEGUI::Event::Subscriber(&GameMenu::handleInnerButtonsLabelLeft, this));
-    label = d_root->getChild("InnerButtonsContainer/PopupLinesOptions/LabelControls");
-    label->subscribeEvent(CEGUI::Window::EventMouseEntersArea, CEGUI::Event::Subscriber(&GameMenu::handleInnerButtonsLabelEntered, this));
-    label->subscribeEvent(CEGUI::Window::EventMouseLeavesArea, CEGUI::Event::Subscriber(&GameMenu::handleInnerButtonsLabelLeft, this));
     label = d_root->getChild("InnerButtonsContainer/PopupLinesQuit/LabelYes");
     label->subscribeEvent(CEGUI::Window::EventMouseEntersArea, CEGUI::Event::Subscriber(&GameMenu::handleInnerButtonsLabelEntered, this));
     label->subscribeEvent(CEGUI::Window::EventMouseLeavesArea, CEGUI::Event::Subscriber(&GameMenu::handleInnerButtonsLabelLeft, this));
@@ -498,12 +424,6 @@ void GameMenu::setupPopupLinesAnimations()
 
     CEGUI::Animation* sizeGrowth = animMgr.getAnimation("SizeGrowth");
 
-    window = d_root->getChild("InnerButtonsContainer/PopupLinesLoad");
-    d_popupLinesLoadAnimInst = animMgr.instantiateAnimation(sizeGrowth);
-    d_popupLinesLoadAnimInst->setTarget(window);
-    window = d_root->getChild("InnerButtonsContainer/PopupLinesOptions");
-    d_popupLinesOptionsAnimInst = animMgr.instantiateAnimation(sizeGrowth);
-    d_popupLinesOptionsAnimInst->setTarget(window);
     window = d_root->getChild("InnerButtonsContainer/PopupLinesQuit");
     d_popupLinesQuitAnimInst = animMgr.instantiateAnimation(sizeGrowth);
     d_popupLinesQuitAnimInst->setTarget(window);
@@ -518,11 +438,6 @@ void GameMenu::setupSelectionIconAnimations()
     CEGUI::Animation* iconAnimationStop = animMgr.getAnimation("StopRotate");
     CEGUI::AnimationInstance* iconAnimInst;
 
-    window = d_root->getChild("InnerButtonsContainer/LoadSelectionIcon");
-    iconAnimInst = animMgr.instantiateAnimation(iconAnimationLoop);
-    iconAnimInst->setTargetWindow(window);
-    iconAnimInst = animMgr.instantiateAnimation(iconAnimationStop);
-    iconAnimInst->setTargetWindow(window);
     window = d_root->getChild("InnerButtonsContainer/NoSelectionIcon");
     iconAnimInst = animMgr.instantiateAnimation(iconAnimationLoop);
     iconAnimInst->setTargetWindow(window);
@@ -533,39 +448,5 @@ void GameMenu::setupSelectionIconAnimations()
     iconAnimInst->setTargetWindow(window);
     iconAnimInst = animMgr.instantiateAnimation(iconAnimationStop);
     iconAnimInst->setTargetWindow(window);
-    window = d_root->getChild("InnerButtonsContainer/SelectSelectionIcon");
-    iconAnimInst = animMgr.instantiateAnimation(iconAnimationLoop);
-    iconAnimInst->setTargetWindow(window);
-    iconAnimInst = animMgr.instantiateAnimation(iconAnimationStop);
-    iconAnimInst->setTargetWindow(window);
-    window = d_root->getChild("InnerButtonsContainer/AudioSelectionIcon");
-    iconAnimInst = animMgr.instantiateAnimation(iconAnimationLoop);
-    iconAnimInst->setTargetWindow(window);
-    iconAnimInst = animMgr.instantiateAnimation(iconAnimationStop);
-    iconAnimInst->setTargetWindow(window);
-    window = d_root->getChild("InnerButtonsContainer/VideoSelectionIcon");
-    iconAnimInst = animMgr.instantiateAnimation(iconAnimationLoop);
-    iconAnimInst->setTargetWindow(window);
-    iconAnimInst = animMgr.instantiateAnimation(iconAnimationStop);
-    iconAnimInst->setTargetWindow(window);
-    window = d_root->getChild("InnerButtonsContainer/ControlsSelectionIcon");
-    iconAnimInst = animMgr.instantiateAnimation(iconAnimationLoop);
-    iconAnimInst->setTargetWindow(window);
-    iconAnimInst = animMgr.instantiateAnimation(iconAnimationStop);
-    iconAnimInst->setTargetWindow(window);
-        window = d_root->getChild("InnerButtonsContainer/Name2SelectionIcon");
-    iconAnimInst = animMgr.instantiateAnimation(iconAnimationLoop);
-    iconAnimInst->setTargetWindow(window);
-    iconAnimInst = animMgr.instantiateAnimation(iconAnimationStop);
-    iconAnimInst->setTargetWindow(window);
-        window = d_root->getChild("InnerButtonsContainer/NewSelectionIcon");
-    iconAnimInst = animMgr.instantiateAnimation(iconAnimationLoop);
-    iconAnimInst->setTargetWindow(window);
-    iconAnimInst = animMgr.instantiateAnimation(iconAnimationStop);
-    iconAnimInst->setTargetWindow(window);
-        window = d_root->getChild("InnerButtonsContainer/DeleteSelectionIcon");
-    iconAnimInst = animMgr.instantiateAnimation(iconAnimationLoop);
-    iconAnimInst->setTargetWindow(window);
-    iconAnimInst = animMgr.instantiateAnimation(iconAnimationStop);
-    iconAnimInst->setTargetWindow(window);
+    
 }

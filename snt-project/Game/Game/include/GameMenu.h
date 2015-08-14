@@ -58,8 +58,6 @@ protected:
     bool handleCheckIfNaviIconAnimationNeedsChange(const CEGUI::EventArgs& args);
     bool handleNaviSelectionIconAnimStart(const CEGUI::EventArgs& args);
 
-    bool handleStartPopupLinesLoadDisplay(const CEGUI::EventArgs& args);
-    bool handleStartPopupLinesOptionsDisplay(const CEGUI::EventArgs& args);
     bool handleStartPopupLinesQuitDisplay(const CEGUI::EventArgs& args);
 
     bool handleInnerButtonsLabelEntered(const CEGUI::EventArgs& args);
@@ -80,8 +78,6 @@ protected:
     CEGUI::AnimationInstance* d_insideImageRingsContainerSizeInInst;
 
     CEGUI::AnimationInstance* d_buttonFadeInAnimInst1;
-    CEGUI::AnimationInstance* d_buttonFadeInAnimInst2;
-    CEGUI::AnimationInstance* d_buttonFadeInAnimInst3;
 
     CEGUI::AnimationInstance* d_naviBotMoveInInst;
     CEGUI::AnimationInstance* d_startButtonBlendInAnimInst;
@@ -93,8 +89,6 @@ protected:
     CEGUI::AnimationInstance* d_centerButtonsPartialBlendOutInst;
     CEGUI::AnimationInstance* d_centerButtonsBlendInInst;
 
-    CEGUI::AnimationInstance* d_popupLinesLoadAnimInst;
-    CEGUI::AnimationInstance* d_popupLinesOptionsAnimInst;
     CEGUI::AnimationInstance* d_popupLinesQuitAnimInst;
 
     CEGUI::Window* d_botNaviCenter;

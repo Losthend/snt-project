@@ -165,8 +165,7 @@ bool BaseApplication::configure(void)
     if(mRoot->showConfigDialog())
     {
         //Si devuelve true, el usuario a realizado click en OK, por lo que inicializa la ventana
-        // Here we choose to let the system create a default rendering window by passing 'true'.
-        mWindow = mRoot->initialise(true, "Game of the year");
+        mWindow = mRoot->initialise(true, "S&T");
         return true;
     }
     else

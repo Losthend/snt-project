@@ -17,11 +17,11 @@ EventManager::EventManager(void)
 	gCanUpdateKeyboard = false;
 	//*********************************************************************
 	//ELIMINAR: Sustituye a la accion del boton START del menu
-	gCCegui->gameMenu->shouldBeDisplayed = false;
-	gCanUpdate = true;
-	gCanUpdateKeyboard = true;
-	gGameApp->createScene2();
-	gCCegui->gameMenu->d_root->hide();
+	//gCCegui->gameMenu->shouldBeDisplayed = false;
+	//gCanUpdate = true;
+	//gCanUpdateKeyboard = true;
+	//gGameApp->createScene2();
+	//gCCegui->gameMenu->d_root->hide();
 	//*********************************************************************
 	//General
 	pulseQ = false;
