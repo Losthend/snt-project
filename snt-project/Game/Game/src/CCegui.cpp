@@ -86,6 +86,9 @@ void CCegui::loadWindows()
 	//Pause box
 	gameDeadBox();
 
+	//End box
+	gameEndBox();
+
 	//Menu de aviso de interacción
 	alertBox = wmgr.createWindow("Vanilla/StaticText", "MainWindow/AlertBox");
 	alertBox->setSize(CEGUI::USize(CEGUI::UDim(0.03f, 0), CEGUI::UDim(0.05f, 0)));
@@ -166,6 +169,45 @@ void CCegui::gameDeadBox()
 	//Posicion 0 (dialog box), posicion 1 (otro), posicion 2 (button1) 
 	deadBox->addChild(button1);
 	deadBox->addChild(button2);
+}
+
+//----------------------------------------------------------------
+//Menu tras finalizar el juego
+//---------------------------------------------------------------
+void CCegui::gameEndBox()
+{
+	CEGUI::WindowManager &wmgr = CEGUI::WindowManager::getSingleton();
+
+	endBox = wmgr.createWindow("Vanilla/FrameWindow", "MainWindow/pauseBox");
+	endBox->setSize(CEGUI::USize(CEGUI::UDim(0.75f, 0), CEGUI::UDim(0.18f, 0)));
+	endBox->setPosition(CEGUI::UVector2(CEGUI::UDim(0.15f, 0),CEGUI::UDim(0.75f, 0)));
+	endBox->setDisabled(true);
+	CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow()->addChild(endBox);
+	
+	CEGUI::Window* titlebar = wmgr.createWindow("Vanilla/Titlebar");
+    titlebar->setSize(CEGUI::USize(CEGUI::UDim(1, 0.0), CEGUI::UDim(0.1f, 0)));
+	titlebar->setPosition(CEGUI::UVector2(CEGUI::UDim(0, 0),CEGUI::UDim(0.10f, 0)));
+	titlebar->setText("¡GRACIAS POR JUGAR A S&T!");
+
+	CEGUI::Window* textLabel = wmgr.createWindow("Vanilla/StaticText");
+    textLabel->setSize(CEGUI::USize(CEGUI::UDim(1, 0.0), CEGUI::UDim(0.75f, 0)));
+	textLabel->setPosition(CEGUI::UVector2(CEGUI::UDim(0, 0),CEGUI::UDim(0, 0)));
+	Ogre::String string = "Proyecto final de carrera realizado por: Raúl Fernández Latorre";
+	string = string	+ "\nGrado en ingeniería informática de gestión y sistemas de información.";
+	string = string	+ "\nUniversidad del Pais Vasco (UPV/EHU)";
+	textLabel->setText(string);
+
+	CEGUI::Window* button1 = wmgr.createWindow("Vanilla/Button");
+    button1->setSize(CEGUI::USize(CEGUI::UDim(0.3f, 0.0), CEGUI::UDim(0.2f, 0)));
+	button1->setPosition(CEGUI::UVector2(CEGUI::UDim(0.70f, 0),CEGUI::UDim(0.80f, 0)));
+	button1->setText("Salir (ESCAPE)");
+	button1->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&CCegui::handleExit,this));
+
+	//El orden en el que se añaden importa! De variarlo, realizar las modificaciones correspondientes en EventManager.cpp
+	//Posicion 0 (dialog box), posicion 1 (otro), posicion 2 (button1) 
+	endBox->addChild(titlebar);
+	endBox->addChild(textLabel);
+	endBox->addChild(button1);
 }
 
 bool CCegui::handleExit(const CEGUI::EventArgs &e)

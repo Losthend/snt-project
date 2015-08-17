@@ -14,6 +14,7 @@ public:
 	void loadWindows();
 	void gameDialogBox();
 	void gameDeadBox();
+	void gameEndBox();
 
 	bool handleExit(const CEGUI::EventArgs &e);
 	bool handleReload(const CEGUI::EventArgs &e);
@@ -24,6 +25,7 @@ public:
 	CEGUI::Window* dialogBox;
 	CEGUI::Window* alertBox;
 	CEGUI::Window* deadBox;
+	CEGUI::Window* endBox;
 };
 
 //---------------------------------------------------------------------------

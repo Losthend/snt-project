@@ -17,11 +17,11 @@ EventManager::EventManager(void)
 	gCanUpdateKeyboard = false;
 	//*********************************************************************
 	//ELIMINAR: Sustituye a la accion del boton START del menu
-	gCCegui->gameMenu->shouldBeDisplayed = false;
-	gCanUpdate = true;
-	gCanUpdateKeyboard = true;
-	gGameApp->createScene3();
-	gCCegui->gameMenu->d_root->hide();
+	//gCCegui->gameMenu->shouldBeDisplayed = false;
+	//gCanUpdate = true;
+	//gCanUpdateKeyboard = true;
+	//gGameApp->createScene5();
+	//gCCegui->gameMenu->d_root->hide();
 	//*********************************************************************
 	//General
 	pulseQ = false;
@@ -139,6 +139,15 @@ void EventManager::handleEvent()
 	//****************************************************
 	if(gGameApp->activeScene == 4){
 		controlText4();
+	}
+
+	//****************************************************
+	//ESCENARIO 5: Epilogo
+	//****************************************************
+	if(gGameApp->activeScene == 5){
+		gCCegui->endBox->activate();
+		gCCegui->endBox->show();
+		gGameApp->activeScene == 0;
 	}
 }
 
@@ -749,6 +758,7 @@ void EventManager::controlText4()
 			nextText = false;
 			gCanUpdateKeyboard = true;
 			actualText = 0;
+			gGameApp->createScene5();
 		}			
 	}
 }

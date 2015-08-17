@@ -567,6 +567,57 @@ void GameApplication::createScene4(void)
 }
 
 //---------------------------------------------------------------------------
+//ESCENARIO 5
+//---------------------------------------------------------------------------
+void GameApplication::createScene5(void)
+{
+	//****************************************************
+	//Liberar espacio 
+	//****************************************************
+	clearScene();
+	gCanUpdate = true;
+	gCanUpdateKeyboard = true;
+	activeScene = 5;
+
+	//****************************************************
+	//JUGADOR 
+	//****************************************************
+	if(gPlayer == 0){
+		SceneObject* player = gPhysics->createConvexHullShape("Player", Ogre::Real(5), Ogre::Vector3(0, 10, 0), 1, "Sinbad.mesh");
+		gPlayer = new Player(player);
+		gPlayer->m_animMgr = new AnimationManager();
+	}
+
+	//****************************************************
+	//ESCENARIO 5: Epilogo
+	//****************************************************
+	gSceneMgr->setAmbientLight(Ogre::ColourValue(0.7f, 0.7f, 0.7f));
+	SceneObject* sceneObj;
+
+	//ASCENSOR
+	createFont("elevatorWall2", Ogre::Vector2(100,100), Ogre::Vector3(0,50,-75), "Material/elevator_Wall", Ogre::Vector2(1,1), true);
+	createFont("elevatorNote", Ogre::Vector2(40,40), Ogre::Vector3(0,50,-74), "Material/elevator_Note", Ogre::Vector2(1,1), true);
+
+	sceneObj = gPhysics->createGroundShape("elevatorFloor", Ogre::Vector3(100, 5, 150), Ogre::Vector3(0, 0, 0), Ogre::Vector2(1,1), "Material/elevator_Floor");
+	gObjects.push_back(new Object(1, sceneObj));
+
+	sceneObj = gPhysics->createPrimitiveShape("elevatorWall1", Ogre::Vector3(Ogre::Real(5*0.1), Ogre::Real(100*0.1), Ogre::Real(150*0.1)), Ogre::Vector3(-50, 50, 0), 0, "Cube.mesh", true);
+	sceneObj->mEntity->setMaterialName("Material/elevator_Wall");
+	gObjects.push_back(new Object(1, sceneObj)); 
+	sceneObj = gPhysics->createPrimitiveShape("elevatorRoof", Ogre::Vector3(Ogre::Real(98*0.1), Ogre::Real(5*0.1), Ogre::Real(150*0.1)), Ogre::Vector3(-2, 100, 0), 0, "Cube.mesh", true);
+	sceneObj->mEntity->setMaterialName("Material/elevator_Floor");
+	gObjects.push_back(new Object(1, sceneObj));
+
+	sceneObj = gPhysics->createPrimitiveShape("elevatorDoor", Ogre::Vector3(Ogre::Real(2*0.1), Ogre::Real(100*0.1), Ogre::Real(150*0.1)), Ogre::Vector3(49, 50, 0), 1, "Cube.mesh", true);
+	sceneObj->mEntity->setMaterialName("Material/elevator_Wall");
+	sceneObj->mRigidBody->setGravity(btVector3(0,0,0));
+	sceneObj->mRigidBody->setLinearFactor(btVector3(0,1,0));
+	sceneObj->mRigidBody->setAngularFactor(btVector3(0,0,0));
+	specialObject0 = new Object(1, sceneObj);
+	gObjects.push_back(specialObject0); 
+}
+
+//---------------------------------------------------------------------------
 //Liberar espacio
 //---------------------------------------------------------------------------
 void GameApplication::clearScene(void)
