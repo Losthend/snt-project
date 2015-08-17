@@ -80,6 +80,10 @@ bool KeyboardMouse::keyPressed( const OIS::KeyEvent &arg )
 				break;
 			case OIS::KC_C:
 				if (gGameApp->activeScene == 3){
+					if(!gEventMgr->magic){
+						gSceneMgr->getSceneNode("templeBlood01")->setVisible(false);
+						gSceneMgr->getSceneNode("templeBlood02")->setVisible(true);
+					}
 					OIS::MouseState ms = gMouse->getMouseState();
 					Ogre::Ray ray = gCamera->getCameraToViewportRay(ms.X.abs/(float)gWindow->getWidth(),ms.Y.abs/(float)gWindow->getHeight()); 
 					Ogre::Vector3 mouseCoord = ray.getPoint(gCamera->getPosition().z);

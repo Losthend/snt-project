@@ -18,10 +18,11 @@ public:
 	Object* specialObject0;
 	Object* specialObject1;
 	
+	void createFont(Ogre::String name, Ogre::Vector2 size, Ogre::Vector3 pos, Ogre::String material, Ogre::Vector2 repeat, bool unit);
+
 private:
 	void clearScene(void);
 	void createGroundGrass(Ogre::Vector3 vSize, Ogre::Vector3 vPos, int amount);
-	void createFont(Ogre::String name, Ogre::Vector2 size, Ogre::Vector3 pos, Ogre::String material, Ogre::Vector2 repeat, bool unit);
 	void createObject(Ogre::String name, Ogre::Vector3 size, Ogre::Vector3 pos, Ogre::String material, Ogre::String mesh);
 };
 

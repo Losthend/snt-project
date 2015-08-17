@@ -234,6 +234,42 @@ material Material/temple_Hieroglyph4
 
 }
 
+material Material/temple_Blood01
+{
+	technique
+        {
+                pass
+                {
+                        scene_blend alpha_blend
+                	depth_write off
+
+                        texture_unit
+                        {
+                                texture temple_Blood01.png
+                        }
+                }
+        }
+
+}
+
+material Material/temple_Blood02
+{
+	technique
+        {
+                pass
+                {
+                        scene_blend alpha_blend
+                	depth_write off
+
+                        texture_unit
+                        {
+                                texture temple_Blood02.png
+                        }
+                }
+        }
+
+}
+
 material /global/structures/stone_palisade
 {
 	technique

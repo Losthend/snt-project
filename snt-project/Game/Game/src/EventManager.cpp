@@ -17,11 +17,11 @@ EventManager::EventManager(void)
 	gCanUpdateKeyboard = false;
 	//*********************************************************************
 	//ELIMINAR: Sustituye a la accion del boton START del menu
-	//gCCegui->gameMenu->shouldBeDisplayed = false;
-	//gCanUpdate = true;
-	//gCanUpdateKeyboard = true;
-	//gGameApp->createScene2();
-	//gCCegui->gameMenu->d_root->hide();
+	gCCegui->gameMenu->shouldBeDisplayed = false;
+	gCanUpdate = true;
+	gCanUpdateKeyboard = true;
+	gGameApp->createScene3();
+	gCCegui->gameMenu->d_root->hide();
 	//*********************************************************************
 	//General
 	pulseQ = false;
@@ -97,7 +97,7 @@ void EventManager::handleEvent()
 	if(gGameApp->activeScene == 1){
 		//Puerta del ascensor
 		SceneObject* specialObj2 = gGameApp->specialObject0->m_sceneObject;
-		if(gCanUpdate && specialObj2 != 0 && specialObj2->mNode->getPosition().y < 125){
+		if(gCanUpdateKeyboard && specialObj2 != 0 && specialObj2->mNode->getPosition().y < 125){
 			specialObj2->mRigidBody->translate(btVector3(0, btScalar(0.1), 0));
 		}
 		//Eventos de texto
@@ -249,7 +249,7 @@ void EventManager::controlText1()
 			string = selectText1(actualText);
 			gCCegui->dialogBox->getChildAtIdx(3)->setText(string);
 			actualText++;
-			gCanUpdate = false;
+			gCanUpdateKeyboard = false;
 		}
 		else if (actualText > 1 && actualText <= 7 && nextText){
 			string = selectText1(actualText);
@@ -268,7 +268,7 @@ void EventManager::controlText1()
 			gCCegui->dialogBox->hide();
 			text_1_7 = true;
 			nextText = false;
-			gCanUpdate = true;
+			gCanUpdateKeyboard = true;
 		}
 	}
 	

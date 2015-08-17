@@ -341,7 +341,7 @@ void Object::type7()
 	CollisionManager cm = CollisionManager();
 	gPhysics->mWorld->contactPairTest(m_sceneObject->mRigidBody, gPlayer->m_sceneObject->mRigidBody, cm);
 	if (cm.m_collision)
-			gPlayer->m_lifeCounter = gPlayer->m_lifeCounter - 2;
+			gPlayer->m_lifeCounter = gPlayer->m_lifeCounter - 10;
 	cm.~CollisionManager();
 }
 

@@ -344,6 +344,12 @@ void GameApplication::createScene3(void)
 	createFont("templeHieroglyph2", Ogre::Vector2(150,125), Ogre::Vector3(50,125,-149), "Material/temple_Hieroglyph2", Ogre::Vector2(1,1), true);
 	createFont("templeHieroglyph3", Ogre::Vector2(145,145), Ogre::Vector3(-325,125,-149), "Material/temple_Hieroglyph3", Ogre::Vector2(1,1), true);
 	createFont("templeHieroglyph4", Ogre::Vector2(50,50), Ogre::Vector3(-250,75,-149), "Material/temple_Hieroglyph4", Ogre::Vector2(1,1), true);
+	
+	createFont("templeBlood01", Ogre::Vector2(50,50), Ogre::Vector3(-250,140,-149), "Material/temple_Blood01", Ogre::Vector2(1,1), true);
+	createFont("templeBlood02", Ogre::Vector2(100,75), Ogre::Vector3(-240,130,-149), "Material/temple_Blood02", Ogre::Vector2(1,1), true);
+
+	gSceneMgr->getSceneNode("templeBlood01")->setVisible(true);
+	gSceneMgr->getSceneNode("templeBlood02")->setVisible(false);
 
 	createObject("templeColumn1", Ogre::Vector3(2, Ogre::Real(0.55), 2), Ogre::Vector3(-100, 60, -140), "Material/temple_Column","Column.mesh");
 	createObject("templeColumn2", Ogre::Vector3(2, Ogre::Real(0.55), 2), Ogre::Vector3(200, 60, -140), "Material/temple_Column","Column.mesh");
