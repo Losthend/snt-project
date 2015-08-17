@@ -96,6 +96,12 @@ protected:
     CEGUI::Window* d_navigationTravelIcon;
     CEGUI::Window* d_navigationSelectionIcon;
     CEGUI::Window* d_botNaviContainer;
+
+	CEGUI::Window* d_exitButtonClickArea;
+	bool handleExitButtonClickArea(const CEGUI::EventArgs& args);
+
+	CEGUI::Window* d_cancelExitButtonClickArea;
+	bool handleCancelExitButtonClickArea(const CEGUI::EventArgs& args);
 };
 
 #endif

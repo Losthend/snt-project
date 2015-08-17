@@ -346,10 +346,28 @@ void GameMenu::setupWindows()
 
     d_navigationSelectionIcon->subscribeEvent(CEGUI::AnimationInstance::EventAnimationStarted, CEGUI::Event::Subscriber(&GameMenu::handleNaviSelectionIconAnimStart, this));
 
+	//Boton para "Salir del juego"
+	d_exitButtonClickArea = d_root->getChild("InnerButtonsContainer/PopupLinesQuit/LabelYes");   
+    d_exitButtonClickArea->subscribeEvent(CEGUI::Window::EventMouseClick, CEGUI::Event::Subscriber(&GameMenu::handleExitButtonClickArea, this));
+
+	//Boton para cancelar "Salir del juego"
+	d_cancelExitButtonClickArea = d_root->getChild("InnerButtonsContainer/PopupLinesQuit/LabelNo");   
+    d_cancelExitButtonClickArea->subscribeEvent(CEGUI::Window::EventMouseClick, CEGUI::Event::Subscriber(&GameMenu::handleCancelExitButtonClickArea, this));
+
     setupNaviIconAnimationEventHandlers();
 
     setupInnerButtonsSubOptionsLabels();
+}
 
+bool GameMenu::handleExitButtonClickArea(const CEGUI::EventArgs& args){
+	gShutDown = true;
+	return true;
+}
+
+bool GameMenu::handleCancelExitButtonClickArea(const CEGUI::EventArgs& args){
+	d_root->getChild("InnerButtonsContainer/PopupLinesQuit")->setVisible(false);
+	makeAllSelectionIconsInvisible();
+	return true;
 }
 
 void GameMenu::setupNaviIconAnimationEventHandlers()
